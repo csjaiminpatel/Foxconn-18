@@ -1,0 +1,85 @@
+{
+  "apiBaseUrl": "https://ls51.prod.orion.cz.foxconn.com/",
+  "excelService": "https://excelator.prod.orion.cz.foxconn.com",
+  "userSettingsService": "https://dev.orion.cz.foxconn.com/api/",
+  "documentationLink": "https://{DivisionCode}wiki.prod.orion.cz.foxconn.com/",
+  "environment": "prod",
+  "disableCommitManagement": false,
+  "signalRHub": "wss://dev.orion.cz.foxconn.com/api/notificationhub",
+  "svQlikAppId": "71863248-3f58-48ad-8470-b06d55ab55e1",
+  "svQlikAppIdByPlant": {
+    "LS51": "8742d4cc-b272-447b-b03e-ed7ad357f95c",
+    "CZ03": "71863248-3f58-48ad-8470-b06d55ab55e1",
+    "CZ05": "71863248-3f58-48ad-8470-b06d55ab55e1",
+    "HC07": "71863248-3f58-48ad-8470-b06d55ab55e1",
+    "EN01": "71863248-3f58-48ad-8470-b06d55ab55e1",
+    "HC03": "71863248-3f58-48ad-8470-b06d55ab55e1"
+  },
+  "qap": {
+    "url": "https://qlik.cz.foxconn.com/single/",
+    "appId": "bd4f6fbf-e528-4677-bfca-b2e6472f3745",
+    "sheet": "21b93da4-b46d-4a03-843b-b614a7dc9876",
+    "domain": "foxconn-cz"
+  },
+  "language": {
+    "default": {
+      "code": "en",
+      "language": "en-EN",
+      "description": "English"
+    },
+    "languages": [
+      {
+        "code": "cz",
+        "language": "cs-CZ",
+        "description": "Čeština"
+      },
+      {
+        "code": "en",
+        "language": "en-EN",
+        "description": "English"
+      }
+    ]
+  },
+  "login": {
+    "apiLoginUrl": "",
+    "apiLogoutUrl": ""
+  },
+  "feedback": {
+    "saveFeedback": "api/v1-tk/UserFeedback/SaveFeedback"
+  },
+  "plantHealthCheck": {
+    "checkHealth": "api/-/health"
+  },
+  "activePlants": {
+    "getactiveplants": "getactiveplants"
+  },
+  "modulesBaseUrl": {
+    "configurator": {
+      "workflows": "api/v1-tk/WorkFlow/Library/GetWorkFlows",
+      "workflow": "api/v1-tk/WorkFlow/Library/GetWorkFlow",
+      "copyWorkflow": "api/v1-tk/WorkFlow/Library/CopyWorkFlow",
+      "releaseWorkFlow": "api/v1-tk/WorkFlow/Library/ReleaseWorkFlow",
+      "getWorkflows": "api/v1-tk/WorkFlow/Library/GetWorkFlows",
+      "getWorkflow": "api/v1-tk/WorkFlow/Library/GetWorkFlow",
+      "getPlants": "api/v1-tk/adapter/workflow/getPlants",
+      "getElements": "api/v1-tk/WorkFlow/Catalogue/GetElements",
+      "getElementParameters": "api/v1-tk/WorkFlow/Catalogue/GetElementParameters",
+      "getHistory": "api/v1-tk/WorkFlow/Library/GetHistory",
+      "saveWorkflow": "api/v1-tk/WorkFlow/Library/SaveWorkFlow",
+      "deleteWorkflow": "api/v1-tk/WorkFlow/Library/DeleteWorkFlow",
+      "releaseWorkflow": "api/v1-tk/WorkFlow/Library/ReleaseWorkFlow",
+      "getWorkFlowRevisions": "api/v1-tk/WorkFlow/Library/GetWorkFlowRevisions",
+      "saveProcess": "api/v1-tk/WorkFlow/Library/SaveProcess",
+      "importWorkFlow": "api/v1-tk/WorkFlow/Library/ImportWorkFlow",
+      "exportWorkflow": "api/v1-tk/WorkFlow/Library/ExportWorkFlow",
+      "lockWorkflow": "api/v1-tk/WorkFlow/Library/LockWorkflow",
+      "unlockWorkflow": "api/v1-tk/WorkFlow/Library/unlockWorkflow",
+      "getWorkFlowLocks": "api/v1-tk/WorkFlow/Library/GetWorkFlowLocks"
+    },
+    "process": {
+      "getProcessParameters": "api/v1-tk/WorkFlow/Catalogue/GetProcessParameters",
+      "getConnectorParameters": "api/v1-tk/Workflow/Catalogue/GetConnectorParameters"
+    },
+    "plants": []
+  }
+}
