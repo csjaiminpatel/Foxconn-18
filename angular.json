@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "fxcn-18": {
+    "orion18": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/fxcn-18",
+            "outputPath": "dist/orion18",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -35,6 +35,9 @@
               "src/styles.scss"
             ],
             "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["public/styles"]
+            },
             "budgets": [
               {
                 "type": "initial",
@@ -47,8 +50,8 @@
             "orion-adfs": {
               "fileReplacements": [
                 {
-                  "replace": "apps/orion/src/environments/environment.ts",
-                  "with": "apps/orion/src/environments/environment.adfs.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.adfs.ts"
                 }
               ],
               "optimization": true,
@@ -61,8 +64,8 @@
             "deploy": {
               "fileReplacements": [
                 {
-                  "replace": "apps/orion/src/environments/environment.ts",
-                  "with": "apps/orion/src/environments/environment.deploy.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.deploy.ts"
                 }
               ],
               "optimization": true,
@@ -75,21 +78,16 @@
             "orion-cs": {
               "fileReplacements": [
                 {
-                  "replace": "apps/orion/src/environments/environment.ts",
-                  "with": "apps/orion/src/environments/environment.orion-cs.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.orion-cs.ts"
                 }
               ]
-            },
-            "development": {
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
             },
             "prod-dev": {
               "fileReplacements": [
                 {
-                  "replace": "apps/orion/src/environments/environment.ts",
-                  "with": "apps/orion/src/environments/environment.prod.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
                 }
               ],
               "assets": [
@@ -103,8 +101,8 @@
             "stag": {
               "fileReplacements": [
                 {
-                  "replace": "apps/orion/src/environments/environment.ts",
-                  "with": "apps/orion/src/environments/environment.stag.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.stag.ts"
                 }
               ],
               "assets": [
@@ -121,17 +119,29 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": {
-              "buildTarget": "fxcn-18:build:production"
+            "stag": {
+              "buildTarget": "orion18:build:stag"
             },
-            "development": {
-              "buildTarget": "fxcn-18:build:development"
+            "prod": {
+              "buildTarget": "orion18:build:prod"
+            },
+            "orion-adfs": {
+              "buildTarget": "orion18:build:orion-adfs"
+            },
+            "orion-cs": {
+              "buildTarget": "orion18:build:orion-cs"
+            },
+            "prod-dev": {
+              "buildTarget": "orion18:build:prod-dev"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "orion-cs"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "orion18:build"
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -149,7 +159,8 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/material-design-icons/iconfont/material-icons.css"
             ],
             "scripts": []
           }
@@ -167,8 +178,24 @@
     }
   },
   "cli": {
+    "analytics": false,
+    "warnings": {
+      "versionMismatch": false
+    },
     "schematicCollections": [
       "angular-eslint"
-    ]
+    ],
+    "packageManager": "npm"
+  },
+  "schematics": {
+    "@nrwl/schematics:application": {
+      "style": "scss"
+    },
+    "@nrwl/schematics:library": {
+      "style": "scss"
+    },
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
   }
 }

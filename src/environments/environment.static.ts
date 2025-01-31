@@ -1,0 +1,158 @@
+export const STATIC_CONF = {
+  "language": {
+    "default": {
+      "code": "en", "language": "en-EN", "description": "English"
+    }, "languages": [{
+      "code": "cz", "language": "cs-CZ", "description": "Čeština"
+    }, {
+      "code": "en", "language": "en-EN", "description": "English"
+    }]
+  },
+  "login": {
+    "apiLoginUrl": "", "apiLogoutUrl": ""
+  },
+  "feedback": {
+    "saveFeedback": "api/v1/UserFeedback/SaveFeedback"
+  },
+  "plantHealthCheck": {
+    "checkHealth": "api/-/health"
+  },
+  "tokenConfig":{
+    "tokenExpireOffsetInSeconds": 30, // in Seconds
+    "idleTimeOutInMilliseconds": 3480000 // in milliSeconds
+  },
+  "activePlants": {
+    "getactiveplants": "v1/getactiveplants"
+  },
+  "modulesBaseUrl": {
+    "configurator": {
+      "workflows": "api/v1/WorkFlow/Library/GetWorkFlows",
+      "workflow": "api/v1/WorkFlow/Library/GetWorkFlow",
+      "copyWorkflow": "api/v1/WorkFlow/Library/CopyWorkFlow",
+      "releaseWorkFlow": "api/v1/WorkFlow/Library/ReleaseWorkFlow",
+      "getWorkflows": "api/v1/WorkFlow/Library/GetWorkFlows",
+      "getWorkflow": "api/v1/WorkFlow/Library/GetWorkFlow",
+      "getPlants": "api/v1/adapter/workflow/getPlants",
+      "getElements": "api/v1/WorkFlow/Catalogue/GetElements",
+      "getElementParameters": "api/v1/WorkFlow/Catalogue/GetElementParameters",
+      "getHistory": "api/v1/WorkFlow/Library/GetHistory",
+      "saveWorkflow": "api/v1/WorkFlow/Library/SaveWorkFlow",
+      "deleteWorkflow": "api/v1/WorkFlow/Library/DeleteWorkFlow",
+      "releaseWorkflow": "api/v1/WorkFlow/Library/ReleaseWorkFlow",
+      "getWorkFlowRevisions": "api/v1/WorkFlow/Library/GetWorkFlowRevisions",
+      "saveProcess": "api/v1/WorkFlow/Library/SaveProcess",
+      "importWorkFlow": "api/v1/WorkFlow/Library/ImportWorkFlow",
+      "exportWorkflow": "api/v1/WorkFlow/Library/ExportWorkFlow",
+      "lockWorkflow": "api/v1/WorkFlow/Library/LockWorkflow",
+      "unlockWorkflow": "api/v1/WorkFlow/Library/unlockWorkflow",
+      "getWorkFlowLocks": "api/v1/WorkFlow/Library/GetWorkFlowLocks"
+    }, "process": {
+      "getProcessParameters": "api/v1/WorkFlow/Catalogue/GetProcessParameters",
+      "getConnectorParameters": "api/v1/Workflow/Catalogue/GetConnectorParameters"
+    }, "materialManagement": {
+      "userSettings": "UserSettings",
+      "commits": "api/v1/MaterialManagement/Commits",
+      "purchaseOrders": "api/v1/MaterialManagement/PurchaseOrders",
+      "dummyCommits": "api/v1/MaterialManagement/DummyCommits",
+      "bufferRules": "api/v1/MaterialManagement/BufferRules",
+      "supplyVisibility": "api/v2/MaterialManagement/SupplyVisibility",
+      "approvedVendorList": "api/v1/MaterialManagement/ApprovedVendorList",
+      "partNumbers": "api/v1/MaterialManagement/PartNumbers",
+      "mmViews": "api/v2/MaterialManagement/MMViewConfiguration/GetMaterialManagementViews",
+      "views": "api/v2/MaterialManagement/MMViewConfiguration/GetMaterialManagementViews",
+      "createView": "api/v2/MaterialManagement/MMViewConfiguration/CreateMaterialManagementView",
+      "updateView": "api/v2/MaterialManagement/MMViewConfiguration/UpdateMaterialManagementView",
+      "deleteView": "api/v2/MaterialManagement/MMViewConfiguration/DeleteMaterialManagementView",
+      "singleValues": "api/v2/MaterialManagement/MMViewConfiguration/GetFixListCalculationLineOrderViewByMMViewID",
+      "singleValuesUpdate": "api/v2/MaterialManagement/MMViewConfiguration/SaveListMaterialManagementFix",
+      "multiValues": "api/v2/MaterialManagement/MMViewConfiguration/GetListCalculationLineOrderViewByMMViewID",
+      "multiValuesUpdate": "api/v2/MaterialManagement/MMViewConfiguration/SaveListMaterialManagementViewCalculationLine",
+      "createCalculationLine": "api/v2/MaterialManagement/MMViewConfiguration/CreateCalculationLine",
+      "getCalculationLineByID": "api/v2/MaterialManagement/MMViewConfiguration/getCalculationLineByID",
+      "deleteCalculationLine": "api/v2/MaterialManagement/MMViewConfiguration/deleteCalculationLine",
+      "deleteCalculationLineById": "api/v2/MaterialManagement/MMViewConfiguration/deleteCalculationLineID",
+      "updateCalculationLine": "api/v2/MaterialManagement/MMViewConfiguration/UpdateCalculationLine",
+      "addCalculationLineDetail": "api/v2/MaterialManagement/MMViewConfiguration/AddCalculationLineDetail",
+      "createCalculationLineDetail": "api/v2/MaterialManagement/MMViewConfiguration/CreateCalculationLineDetail",
+      "updateCalculationLineDetail": "api/v2/MaterialManagement/MMViewConfiguration/UpdateCalculationLineDetail",
+      "deleteCalculationLineDetail": "api/v2/MaterialManagement/MMViewConfiguration/DeleteCalculationLineDetail",
+      "createCalculationLineConditionalFormat": "api/v2/materialmanagement/mmviewconfiguration/createcalculationlineconditionalformating",
+      "updateCalculationLineConditionalFormat": "api/v2/MaterialManagement/MMviewConfiguration/UpdateCalculationLineConditionalFormating",
+      "deleteCalculationLineConditionalFormat": "api/v2/materialmanagement/mmviewconfiguration/deletecalculationlineconditionalformating",
+      "getSVCommentsByVendorPN": "api/v1/NotesAndComments/Comment/GetCommentsByRecord",
+      "createSVComment": "api/v1/NotesAndComments/Comment/InsertComment",
+      "updateSVComment": "api/v1/NotesAndComments/Comment/UpdateComment",
+      "deleteSVComment": "api/v1/NotesAndComments/Comment/DeleteComment",
+      "getNotesByUser": "api/v1/NotesAndComments/Note/GetNotesByUser",
+      "getNotesByRecord": "api/v1/NotesAndComments/Note/GetNotesByRecord",
+      "createSVNote": "api/v1/NotesAndComments/Note/InsertNote",
+      "updateSVNote": "api/v1/NotesAndComments/Note/UpdateNote",
+      "deleteSVNote": "api/v1/NotesAndComments/Note/DeleteNote",
+      "downloadVendorList": "api/v1/MaterialManagement/PartNumbers/GetUploadContacts",
+      "uploadVendorList": "api/v1/MaterialManagement/PartNumbers/PostUploadContacts",
+      "uploadFlagList": "api/v1/materialmanagement/partnumbers/getpartnumbervendorcodeflags ",
+      "uploadPortfolio":"api/v1/materialmanagement/partnumbers/PostUploadContacts",
+      "uploadQuotation":"api/v1/Quotations/PostUploadQuotation",
+      "pnSectionName": "api/v1/MaterialManagement/PartNumbers/GetPartNumberSectionNames",
+      "pnSectionNameByContact": "/api/v1/MaterialManagement/PartNumbers/GetPartNumberSectionNamesByContact",
+      "vendorSectionName": "api/v1/MaterialManagement/PartNumbers/GetVendorCodeSectionNames",
+      "vendorSectionNameByContact": "/api/v1/MaterialManagement/PartNumbers/GetVendorCodeSectionNamesByContact",
+      "setPartNumberVendorCodeSectionName": "api/v1/MaterialManagement/PartNumbers/CreatePartNumberVendorCodeSectionName",
+      "getBuyersPartNumbersList": "api/v1/MaterialManagement/ApprovedVendorList/GetBuyerPNs",
+      "getPNsPrecalculateProjectionByFilter": "api/v2/MaterialManagement/SupplyVisibilityReadOnly/GetPNsPrecalculateProjectionByFilter",
+      "getPrecalculateProjections": "api/v2/MaterialManagement/SupplyVisibility/GetPrecalculateProjections",
+      "getPrecalculateProjection": "api/v2/MaterialManagement/SupplyVisibility/GetPrecalculateProjection",
+      "chartData": "api/v1/ExternalDataStore/GetCsvJson?Path=SupplyVS/Charts/",
+      "qlikGetDataFromApp": "api/v1/QlikDataExchange/GetDataFromApp",
+      "autoComplete": "api/v2/MaterialManagement/MMViewConfiguration/GetAllCalculationsforAutoComplete/",
+      "getVendorCodes": "api/v1/MaterialManagement/PartNumbers/GetVendorCodes",
+      "virtualPartNumbers": "api/v1/MaterialManagement/VirtualPartNumbers",
+      "ValidatePartNumberVendorCode": "api/v1/MaterialManagement/PartNumbers/ValidatePartNumberVendorCode/",
+      "userDataRule": "api/v1/UserdataRule",
+      "contacts": "api/v1/Contacts/GetContacts",
+      "vendorsContacts": "api/v1/identityhub/getidentitybykey",
+      "partNumbersContacts": "api/v1/identityhub/getidentitybykey",
+      "VendorNotification":"api/v1/Contacts",
+      "getIdentityByKey": "api/v1/identityhub/getidentitybykey",
+      "Notification":"api/v1/Contacts",
+      "getSVPredefinedComment": "api/v1/NotesAndComments/PredefinedComment/GetPredefinedComments",
+      "createSVPredefinedComment": "api/v1/NotesAndComments/PredefinedComment/InsertPredefinedComment",
+      "updateSVPredefinedComment": "api/v1/NotesAndComments/PredefinedComment/UpdatePredefinedComment",
+      "deleteSVPredefinedComment": "api/v1/NotesAndComments/PredefinedComment/DeletePredefinedComment",
+      "getProjectionsByPrecalculations": "api/v2/MaterialManagement/SupplyVisibility/GetProjectionsByPrecalculation",
+      "sharedWidgets": "SharedWidgets",
+      "dashboards": "Dashboards",
+      "templateSettings":"TemplateSettings",
+      "forecastDate": "api/v1/MaterialManagement/PlannedOrders/GetPlannedOrderPlanningDate?SyncSAP=false",
+      "syncPlo": "api/v1/materialmanagement/plannedorders/synchronizeplannedorders",
+      "getDefaultFormSettingFields": "api/v1/materialmanagement/commits/getdefaultformsettingfields",
+      "commitsReadOnlyFields": "api/v1/materialmanagement/commits/getreadonlyfields",
+      "GetMandatoryFields": "api/v1/materialmanagement/commits/GetMandatoryFields",
+      "commitsFilterAdditions": "api/v1/materialmanagement/commits/getcommitsbyfilteradditions",
+      "notifications": "Notifications",
+      "carriers": "api/v1/logistics/carriers",
+      "countries": "api/v1/countries",
+      "transportType": "api/v1/logistics/typeoftransports",
+      "vendors": "api/v1/materialmanagement/vendors",
+      "partnumbers": "api/v1/materialmanagement/partnumbers",
+      "waterfall": "api/v1/materialmanagement/waterfall/generate",
+      "getVendorsByContacts": "api/v1/MaterialManagement/Vendors/GetVendorsByContacts",
+      "getPartNumbersByContacts": "api/v1/MaterialManagement/PartNumbers/GetPartNumbersByContacts",
+      "getAdditionInfoByPartNumber": "api/v1/MaterialManagement/PartNumbers/GetPartNumberAdditionInfos",
+      "updatePartNumberAdditionInfo": "api/v1/MaterialManagement/PartNumbers/UpdatePartNumberAdditionInfo",
+      "downloadCalculationLineDetail": "api/v2/MaterialManagement/MMViewConfiguration/getuploadcalculationlinedetail",
+      "uploadCalculationLineDetail": "api/v2/MaterialManagement/MMViewConfiguration/postuploadcalculationlinedetail",
+      "identityList":"api/v1/identityhub/getidentitylist",
+      "quotations":"api/v1/quotations",
+      "quotationVendor":"api/v1/quotations/quotationvendor",
+      "auditLog":"api/v1/auditlogs",
+      "getDefaultVendorFormSettingFields":"api/v1/MaterialManagement/Vendors/GetDefaultFormSettingFields",
+      "getDefaultCarrierFormSettingFields":"api/v1/Logistics/Carriers/GetDefaultFormSettingFields",
+      "getApplication":"api/v1/QapDataExchange/ApplicationConfig",
+      "getVendorsWithNames":"api/v1/materialmanagement/Vendors/GetVendorsWithNames",
+      "globalNotifications": "GlobalNotifications",
+      "shipments": "api/v1/logistics/shipments"
+    },
+    "plants": []
+  }
+}

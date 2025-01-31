@@ -1,0 +1,24 @@
+{
+  "environment": "prod",
+  "disableCommitManagement": false,
+  "excelService": "https://excelator.prod.orion.cz.foxconn.com",
+  "apiBaseUrl": "https://ls51.prod.orion.cz.foxconn.com/",
+  "userSettingsService": "https://prod.orion.cz.foxconn.com/api/",
+  "documentationLink": "https://{DivisionCode}wiki.prod.orion.cz.foxconn.com/",
+  "signalRHub": "wss://prod.orion.cz.foxconn.com/api/notificationhub",
+  "svQlikAppId": "71863248-3f58-48ad-8470-b06d55ab55e1",
+  "svQlikAppIdByPlant": {
+    "LS51": "33586b5b-4182-4f7c-98ef-0a3a0289921d",
+    "CZ03": "71863248-3f58-48ad-8470-b06d55ab55e1",
+    "CZ05": "71863248-3f58-48ad-8470-b06d55ab55e1",
+    "HC07": "71863248-3f58-48ad-8470-b06d55ab55e1",
+    "EN01": "71863248-3f58-48ad-8470-b06d55ab55e1",
+    "HC03": "71863248-3f58-48ad-8470-b06d55ab55e1"
+  },
+  "qap": {
+    "url": "https://qlik.cz.foxconn.com/single/",
+    "appId": "bd4f6fbf-e528-4677-bfca-b2e6472f3745",
+    "sheet": "21b93da4-b46d-4a03-843b-b614a7dc9876",
+    "domain": "foxconn-cz"
+  }
+}
