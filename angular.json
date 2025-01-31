@@ -12,7 +12,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "orion-platform",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -34,31 +34,89 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "2mb",
+                "maximumError": "6mb"
+              }
+            ]
           },
           "configurations": {
-            "production": {
-              "budgets": [
+            "orion-adfs": {
+              "fileReplacements": [
                 {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "replace": "apps/orion/src/environments/environment.ts",
+                  "with": "apps/orion/src/environments/environment.adfs.ts"
                 }
               ],
-              "outputHashing": "all"
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true
+            },
+            "deploy": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/orion/src/environments/environment.ts",
+                  "with": "apps/orion/src/environments/environment.deploy.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true
+            },
+            "orion-cs": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/orion/src/environments/environment.ts",
+                  "with": "apps/orion/src/environments/environment.orion-cs.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
-            }
-          },
-          "defaultConfiguration": "production"
+            },
+            "prod-dev": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/orion/src/environments/environment.ts",
+                  "with": "apps/orion/src/environments/environment.prod.ts"
+                }
+              ],
+              "assets": [
+                {
+                  "input": "apps/orion/src",
+                  "glob": "favicon_prod.ico",
+                  "output": "/"
+                }
+              ]
+            },
+            "stag": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/orion/src/environments/environment.ts",
+                  "with": "apps/orion/src/environments/environment.stag.ts"
+                }
+              ],
+              "assets": [
+                {
+                  "input": "apps/orion/src",
+                  "glob": "favicon_stag.ico",
+                  "output": "/"
+                }
+              ]
+            },
+            "dev": {}
+          }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
