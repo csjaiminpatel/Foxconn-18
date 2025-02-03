@@ -4,11 +4,12 @@ import { provideAuth } from 'angular-auth-oidc-client';
 
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { AuthService } from './modules/auth/services/auth.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(),AuthService,
     provideAuth({
       config : {
         authority: "https://auth.prod.orion.cz.foxconn.com/realms/OrionProd",
