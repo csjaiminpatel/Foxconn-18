@@ -1,14 +1,16 @@
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAuth } from 'angular-auth-oidc-client';
 
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { ConfigService } from './services/config.service';
 import { AuthService } from './modules/auth/services/auth.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
     provideHttpClient(),AuthService,
     provideAuth({
       config : {
@@ -16,7 +18,6 @@ export const appConfig: ApplicationConfig = {
         redirectUrl: `${window.location.origin}/home`,
         authWellknownEndpointUrl: "https://auth.prod.orion.cz.foxconn.com/realms/OrionProd",
         clientId: "orionweb-dev-x698wqpF8lLaHEWfCVDkOoczTW",
-        // client_secret: "fsWmHB63ZybMtvIkdYIqUKwP7sewuggV",
         responseType: "code",
         scope: "openid profile",
         postLogoutRedirectUri: `${window.location.origin}/home`,
@@ -28,19 +29,18 @@ export const appConfig: ApplicationConfig = {
         forbiddenRoute: "/forbidden",
         unauthorizedRoute: "/unauthorized",
         logLevel: 0,
-        // eagerLoadAuthWellKnownEndpoints: false,
         maxIdTokenIatOffsetAllowedInSeconds: 600,
         autoUserInfo: false,
         issValidationOff: true,
         triggerAuthorizationResultEvent: true,
         historyCleanupOff: true,
-        // jwksUri_route: "/protocol/openid-connect/certs",
-        // authorizationEndpoint: "https://auth.prod.orion.cz.foxconn.com/realms/OrionProd/protocol/openid-connect/auth",
-        // token_route: "/protocol/openid-connect/token",
-        // userinfo_route: "/userinfo",
-        // endSessionEndpoint: "https://auth.prod.orion.cz.foxconn.com/realms/OrionProd/protocol/openid-connect/logout",
-        // config_version: "0.1"
       }
     }),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (configService: ConfigService) => () => configService.loadConfig(),
+      deps: [ConfigService],
+      multi: true
+    }
   ]
 };
