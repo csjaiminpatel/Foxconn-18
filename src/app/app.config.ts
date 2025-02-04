@@ -6,12 +6,14 @@ import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { ConfigService } from './services/config.service';
 import { AuthService } from './modules/auth/services/auth.service';
+import { provideStore } from '@ngxs/store';
+import { AuthenticationState } from './modules/auth/store/authentication.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),AuthService,
+    provideHttpClient(),
     provideAuth({
       config : {
         authority: "https://auth.prod.orion.cz.foxconn.com/realms/OrionProd",
@@ -36,11 +38,14 @@ export const appConfig: ApplicationConfig = {
         historyCleanupOff: true,
       }
     }),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (configService: ConfigService) => () => configService.loadConfig(),
-      deps: [ConfigService],
-      multi: true
-    }
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: (configService: ConfigService) => () => configService.loadConfig(),
+    //   deps: [ConfigService],
+    //   multi: true
+    // },
+    AuthService,
+    provideStore([AuthenticationState]),
+
   ]
 };

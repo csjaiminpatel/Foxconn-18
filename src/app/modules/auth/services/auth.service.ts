@@ -1,23 +1,29 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  OidcSecurityService,
-} from 'angular-auth-oidc-client';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { environment } from '../../../../environments/environment';
 import { detectIncognito } from 'detectincognitojs';
+import {
+  EnumAuthVars,
+  EnumAuthFlags,
+  EnumSharedSessionEvents,
+  SessionExchangeFormat,
+  authUrlPaths,
+} from '../models/auth.model';
+import { firstValueFrom, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private isPrivateMode: boolean = false;
-  isAuthenticated$ : boolean = false;
+  isAuthenticated$: boolean = false;
   idToken: any;
   private hasStorage?: boolean;
-  private writeLogs:boolean = true; //NOTE Turn on for debug login flow log
+  private writeLogs: boolean = true; //NOTE Turn on for debug login flow log
   private readonly tabId: string = uuidv4();
-  private readonly idleTimeOutInMilliseconds: number = environment.tokenConfig.idleTimeOutInMilliseconds;
+  private readonly idleTimeOutInMilliseconds: number =
+    environment.tokenConfig.idleTimeOutInMilliseconds;
   private idleTimeOut: number = this.idleTimeOutInMilliseconds / 1000;
   private idleTimeOutChecker: any = null;
   private idleTimeOutCheckerIntervalInSeconds = 10;
@@ -29,10 +35,11 @@ export class AuthService {
   // private refreshSessionDialogRef: MatDialogRef<RefreshSessionComponent, any>;
   private isRefreshingSession = false;
 
-  constructor(
-    private readonly router: Router,
-    private readonly oidcSecurityService: OidcSecurityService,
-  ) {
+  private readonly router = inject(Router);
+  private readonly oidcSecurityService = inject(OidcSecurityService);
+  private readonly httpClient = inject(HttpClient);
+
+  constructor() {
     this.setIdleTimeoutChecker();
 
     detectIncognito()
@@ -49,12 +56,18 @@ export class AuthService {
           : null;
       });
 
-          //Required to work with session/local storage
+    //Required to work with session/local storage
     this.hasStorage = typeof Storage !== 'undefined';
     if (this.hasStorage) {
-      this.writeLogs ? this.writeLog("[01-024] Has Permission of Session/Local Storage") : null
+      this.writeLogs
+        ? this.writeLog('[01-024] Has Permission of Session/Local Storage')
+        : null;
     } else {
-      this.writeLogs ? this.writeLog("[01-025] does not have Permission of Session/Local Storage") : null
+      this.writeLogs
+        ? this.writeLog(
+            '[01-025] does not have Permission of Session/Local Storage',
+          )
+        : null;
     }
 
     localStorage.setItem(EnumAuthVars.LastActivityTimestamp, 'Init');
@@ -64,7 +77,9 @@ export class AuthService {
       this.isAuthenticated$ = authResult.isAuthenticated;
     });
 
-    this.writeLogs ? this.writeLog("[01-023] Constructor for authentication is completed") : false;
+    this.writeLogs
+      ? this.writeLog('[01-023] Constructor for authentication is completed')
+      : false;
   }
 
   setIdleTimeoutChecker() {
@@ -107,10 +122,9 @@ export class AuthService {
     // self.openRefreshSessionDialog();
   }
 
-
   private sendLocalStorageEvent(eventName: string, data?: any) {
     const tabData: SessionExchangeFormat = {
-      tabId: this.tabId,
+      tabId: this.tabId, 
       tabPayload: data,
     };
     localStorage.setItem(eventName, JSON.stringify(tabData));
@@ -159,11 +173,19 @@ export class AuthService {
     //   return true;
     // }
     if (this.isRefreshingSession) {
-      this.writeLogs ? this.writeLog("[01-039] checkIfRefreshingProcess - Refreshing Session") : null
+      this.writeLogs
+        ? this.writeLog(
+            '[01-039] checkIfRefreshingProcess - Refreshing Session',
+          )
+        : null;
       return true;
     }
     if (!sessionStorage.getItem(EnumAuthFlags.IsAuthFinished)) {
-      this.writeLogs ? this.writeLog("[01-40] checkIfRefreshingProcess - EnumAuthFlags.IsAuthFinished Not Present In Session ") : null
+      this.writeLogs
+        ? this.writeLog(
+            '[01-40] checkIfRefreshingProcess - EnumAuthFlags.IsAuthFinished Not Present In Session ',
+          )
+        : null;
       return true;
     }
     //ADD other condition to monitor refresh session
@@ -208,39 +230,56 @@ export class AuthService {
     console.log(key);
     data ? console.log(data) : null;
   }
-  
-  
-}
 
-export enum EnumSharedSessionEvents {
-  Request = 'SharedEvent_1',
-  Reply = 'SharedEvent_2',
-  RenewToken = 'SharedEvent_3',
-  SessionExpired = 'SharedEvent_4',
-  //IMPLEMENT :- Other Events
+  getIsAuthorized() {
+    return this.oidcSecurityService.isAuthenticated$;
+  }
 
-  Logout = 'SharedEvent_20',
-}
+  async getUserName() {
+    const { upn, email, name } = await firstValueFrom(
+      this.oidcSecurityService.getPayloadFromIdToken(),
+    );
+    let emailSplit: string[] = [] ;
+    emailSplit =email ? email.split('@') : [];
 
-export enum EnumAuthFlags {
-  IsAuthFinished = 'AuthFlag_1',
-  IsTokenRenewByInterval = 'AuthFlag_2',
-  RefreshSession = 'AuthFlag_3',
-  ImmediateRefreshSession = 'AuthFlag_4',
-  OidcInitiated = 'AuthFlag_5',
-  //IMPLEMENT :- Other Flags
+    const username = (name ? name : emailSplit.shift()) as string;
 
-  IsLoggedOffLocal = 'AuthFlag_19',
-  Logout = 'AuthFlag_20',
-}
+    return username || email || upn;
+  }
 
-export enum EnumAuthVars {
-  SessionCounter = 'AuthVar_1',
-  LastActivityTimestamp = 'AuthVar_2',
-  idleTimeOutChecker = 'AuthVar_3',
-}
+  async getUpn() {
+    const { upn, email } = await firstValueFrom(
+      this.oidcSecurityService.getPayloadFromIdToken(),
+    );
+    return email || upn;
+  }
 
-export interface SessionExchangeFormat {
-  tabId: string;
-  tabPayload?: any;
+  async getPrimarySid() {
+    const { primarysid } = await firstValueFrom(
+      this.oidcSecurityService.getPayloadFromIdToken(),
+    );
+    return primarysid;
+  }
+
+  loginApplication({
+    username,
+    password,
+  }: {
+    username: string;
+    password: string;
+  }): Observable<any> {
+    const apiBaserUrl = environment.login.apiLoginUrl;
+    return this.httpClient.post(`${apiBaserUrl}${authUrlPaths.LOGIN}`, {
+      username,
+      password,
+    });
+  }
+
+  logout(): Observable<any> {
+    const apiBaserUrl = environment.login.apiLoginUrl;
+    return this.httpClient.post(`${apiBaserUrl}${authUrlPaths.LOGOUT}`, null);
+  }
+  fetchPlants() {
+    return environment.modulesBaseUrl.plants;
+  }
 }

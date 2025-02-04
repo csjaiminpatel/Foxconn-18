@@ -10,8 +10,7 @@ export class ConfigService {
   private config: any;
 
   private http: HttpClient = inject(HttpClient);
-  constructor() {
-  }
+
 
   async loadConfig() {
     try {

@@ -1,0 +1,47 @@
+<div class="sidenav" id="sidenav-hover" (mouseenter)="onHover($event)" (mouseleave)="onHover($event)">
+    <nav>
+        <div class="sidenav-header">
+            <a routerLink="/dashboard" (mousedown)="middleClickHandle('/dashboard', $event)" class="brand"
+                tabindex="-1">
+                <img src="img/core/orion-brand.svg" alt="Logo" />
+                <span>Orion <span class="environment">{{ env2 }}</span></span>
+            </a>
+        </div>
+        <hr class="horizontal light" />
+
+        <div class="sidenav-tree">
+            <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+                <mat-tree-node *matTreeNodeDef="let node; when: hasChild"
+                    (click)="onToggle(treeControl.isExpanded(node))" matTreeNodeToggle>
+                    @if (node.visible) {
+                    @switch (node.type) {
+                    @case (0) {
+                    <span class="material-icons">{{ node.icon ? node.icon : 'inventory_2' }}</span>
+                    <span routerLinkActive="router-link-active" class="description">{{
+                        node.name
+                        }}</span>
+                    <button mat-icon-button [attr.aria-label]="'Toggle ' + node.name">
+                        <mat-icon class="mat-icon-rtl-mirror">
+                            {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+                        </mat-icon>
+                    </button>
+                    }}}
+                </mat-tree-node>
+
+                <mat-tree-node *matTreeNodeDef="let node" (click)="onChildClick(node)" id="child-{{ node.index }}">
+
+                    @if (node.visible) {
+                    @switch (node.type) {
+                    @case (0) {
+
+                    <span>{{ node.icon }}</span>
+                    <span id="childMenu-{{ node.index }}" class="description">{{ node.name }}</span>
+                    }
+                    }
+                    }
+                </mat-tree-node>
+            </mat-tree>
+        </div>
+    </nav>
+</div>
