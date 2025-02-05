@@ -1,0 +1,41 @@
+.mat-accordion {
+    .mat-expansion-panel,
+    .mat-expansion-panel:not(.mat-expanded) {
+        box-shadow: none;
+        transition: none;
+        .mat-expansion-panel-header {
+            // justify-content: space-between;
+            padding: 0;
+            &:hover:not([aria-disabled="true"]) {
+                background: transparent;
+            }
+            .mat-expansion-panel-header-title {
+                margin-right: $size - 0.625;
+            }
+            .mat-expansion-indicator{
+                margin-left: $size;
+            }
+            .mat-content {
+                font-size: $size + 0.1rem;
+                color: $accordion-header-color;
+                font-weight: 500;
+                flex: none;
+            }
+        }
+        .mat-expansion-panel-content {
+            .mat-expansion-panel-body {
+                padding: $size;
+                #gridContainer {
+                    height: auto;
+                    .dx-datagrid {
+                        .dx-datagrid-rowsview {
+                            .dx-scrollable-content {
+                                padding-bottom: 0rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

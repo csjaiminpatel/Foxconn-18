@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <clipPath id="clip-Custom_Size_3">
+      <rect width="500" height="500"/>
+    </clipPath>
+  </defs>
+  <g id="Custom_Size_3" data-name="Custom Size – 3" clip-path="url(#clip-Custom_Size_3)">
+    <g id="Path_8" data-name="Path 8" transform="translate(90 90)" fill="none">
+      <path d="M160,0A160,160,0,1,1,0,160,160,160,0,0,1,160,0Z" stroke="none"/>
+      <path d="M 160 50 C 99.3458251953125 50 50 99.3458251953125 50 160 C 50 220.6541748046875 99.3458251953125 270 160 270 C 220.6541748046875 270 270 220.6541748046875 270 160 C 270 99.3458251953125 220.6541748046875 50 160 50 M 160 0 C 248.3655395507812 0 320 71.63446044921875 320 160 C 320 248.3655395507812 248.3655395507812 320 160 320 C 71.63446044921875 320 0 248.3655395507812 0 160 C 0 71.63446044921875 71.63446044921875 0 160 0 Z" stroke="none" fill="#707070"/>
+    </g>
+    <rect id="Rectangle_2" data-name="Rectangle 2" width="50" height="104" transform="matrix(0.695, -0.719, 0.719, 0.695, 317.228, 349.861)" fill="#707070"/>
+    <circle id="Ellipse_3" data-name="Ellipse 3" cx="57.5" cy="57.5" r="57.5" transform="translate(193 193)" fill="#7b58bf"/>
+  </g>
+</svg>

@@ -1,0 +1,54 @@
+.form-control {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: $size;
+  mat-form-field {
+    width: auto;
+    margin-bottom: $size - 0.7rem;
+    margin-right: $size - 0.1rem;
+  }
+  mat-checkbox {
+    width: auto;
+    margin-bottom: $size - 0.7rem;
+    margin-top: $size + 0.2rem;
+    margin-right: $size - 0.1rem;
+  }
+}
+.form-group{
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: $size;
+  mat-form-field {
+    width: 30%;
+    //margin-bottom: $size - 0.7rem;
+    margin-right: $size - 0.1rem;
+  }
+  mat-checkbox {
+    width: 30%;
+    // margin-bottom: $size - 0.7rem;
+    // margin-top: $size + 0.2rem;
+    margin-right: $size - 0.1rem;
+  }
+}
+.vender-notification{
+  .form-control {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: $size;
+    mat-form-field {
+      width: auto;
+      margin-bottom: $size - 0.7rem;
+      margin-right: $size - 0.1rem;
+    }
+    mat-checkbox {
+      width: auto;
+      margin-bottom: $size - 0.7rem;
+      margin-top: $size + 0.2rem;
+      margin-right: $size - 0.1rem;
+    }
+  }
+}
+.select-search{
+  width: 90%!important;
+  padding: 15px 15px 0;
+}

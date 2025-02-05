@@ -1,0 +1,43 @@
+.flag {
+    font-size: $size - 0.2rem;
+    border-radius: $size + 9rem;
+    background: $darkgrey;
+    padding: $size - 0.5rem;
+    margin-left: $size - 0.5rem;
+    margin-right: $size - 0.5rem;
+    .icon-container {
+      width: $size + 0.2rem;
+      height: $size + 0.2rem;
+      background: $white;
+      border-radius: $size - 0.4rem;
+      margin-right: $size - 0.5rem;
+      color: $black;
+      .material-icons {
+        font-size: $size - 0.2rem;
+      }
+    }
+    .remove {
+      background: $white;
+      color: $black;
+      border-radius: 50%;
+      width: $size + 0.2rem;
+      height: $size + 0.2rem;
+      margin-left: $size - 0.5rem;
+      padding: 0;
+      line-height: 1px;
+      font-size: $size;
+    }
+  }
+  .bg-danger {
+    background: linear-gradient(195deg, #f14949, #e81a1a);
+    color: $white;
+  }
+  .bg-warning {
+    background: linear-gradient(195deg, #f1cf49, #e8961a);
+    color: $black;
+  }
+  .bg-primary {
+    background: linear-gradient(195deg, #ec407a, #d81b60);
+    color: $white;
+  }
+  

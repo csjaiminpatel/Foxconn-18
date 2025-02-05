@@ -1,0 +1,27 @@
+@mixin no-wrap {
+  white-space: nowrap;
+}
+
+@mixin cursor-hand {
+  cursor: pointer;
+  cursor: hand;
+}
+
+@mixin form-scrollbar() {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #e1e1e1;
+    opacity: 0.5;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: silver;
+    opacity: 0.8;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: gray;
+    width: 10px;
+  }
+}

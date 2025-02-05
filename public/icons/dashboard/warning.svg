@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="640" height="480" viewBox="0 0 640 480" xml:space="preserve">
+<defs>
+</defs>
+<g transform="matrix(0.89 0 0 0.89 321.61 242.15)" id="Path_24"  >
+<path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,0); fill-rule: nonzero; opacity: 1;"  transform=" translate(-254, -235.92)" d="M 542.3 480 L 253.088 -9 h 0 C 181.25 113.426 -34.35 480.844 -34.35 480.844 h 0 L 542.34 480 Z M 232 168 a 24 24 0 0 1 48 0 V 296 c 0 13.25 -10.75 24 -23.1 24 S 232 309.3 232 296 Z m 24 248 a 31.44 31.44 0 1 1 31.44 -31.44 A 31.445 31.445 0 0 1 256 416 Z" stroke-linecap="round" />
+</g>
+</svg>

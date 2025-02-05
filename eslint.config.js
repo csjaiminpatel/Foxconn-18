@@ -1,43 +1,98 @@
-// @ts-check
-const eslint = require("@eslint/js");
-const tseslint = require("typescript-eslint");
-const angular = require("angular-eslint");
+import js from "@eslint/js";
+import ts from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import angular from "@angular-eslint/eslint-plugin";
+import angularTemplate from "@angular-eslint/eslint-plugin-template";
 
-module.exports = tseslint.config(
+export default [
+  js.configs.recommended, // Default JavaScript linting rules
   {
-    files: ["**/*.ts"],
-    extends: [
-      eslint.configs.recommended,
-      ...tseslint.configs.recommended,
-      ...tseslint.configs.stylistic,
-      ...angular.configs.tsRecommended,
-    ],
-    processor: angular.processInlineTemplates,
+    files: ["*.ts"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: "./tsconfig.json",
+        sourceType: "module",
+      },
+    },
+    plugins: {
+      "@typescript-eslint": ts,
+      "@angular-eslint": angular,
+    },
     rules: {
-      "@angular-eslint/directive-selector": [
+      // TypeScript Rules
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
+      ],
+      "@typescript-eslint/no-inferrable-types": [
+        "error",
+        { ignoreParameters: true },
+      ],
+      "@typescript-eslint/no-shadow": "error",
+      "@typescript-eslint/no-misused-new": "error",
+      "@typescript-eslint/no-non-null-assertion": "warn",
+      "@typescript-eslint/no-unused-expressions": "error",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+
+      // Best Practices
+      "prefer-const": "error",
+      "no-var": "error",
+      eqeqeq: ["error", "smart"],
+      radix: "error",
+      "no-eval": "error",
+      "no-debugger": "error",
+      "no-console": ["error", { allow: ["warn", "error"] }],
+      "no-bitwise": "error",
+      "no-duplicate-imports": "error",
+      "no-empty": "warn",
+      "no-empty-interface": "error",
+      "object-curly-spacing": ["error", "always"],
+      "sort-imports": [
+        "error",
+        { ignoreCase: true, ignoreDeclarationSort: true },
+      ],
+      "import/order": [
         "error",
         {
-          type: "attribute",
-          prefix: "app",
-          style: "camelCase",
+          groups: ["builtin", "external", "internal"],
+          alphabetize: { order: "asc", caseInsensitive: true },
         },
       ],
+
+      // Angular-Specific Rules
       "@angular-eslint/component-selector": [
         "error",
-        {
-          type: "element",
-          prefix: "app",
-          style: "kebab-case",
-        },
+        { type: "element", prefix: "app", style: "kebab-case" },
+      ],
+      "@angular-eslint/directive-selector": [
+        "error",
+        { type: "attribute", prefix: "app", style: "camelCase" },
+      ],
+      "@angular-eslint/no-output-on-prefix": "error",
+      "@angular-eslint/use-lifecycle-interface": "error",
+      "@angular-eslint/use-pipe-transform-interface": "error",
+      "@angular-eslint/no-input-rename": "error",
+      "@angular-eslint/no-output-rename": "error",
+      "@angular-eslint/component-class-suffix": [
+        "error",
+        { suffixes: ["Component"] },
+      ],
+      "@angular-eslint/directive-class-suffix": [
+        "error",
+        { suffixes: ["Directive"] },
       ],
     },
   },
   {
-    files: ["**/*.html"],
-    extends: [
-      ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility,
-    ],
-    rules: {},
-  }
-);
+    files: ["*.html"],
+    plugins: {
+      "@angular-eslint/template": angularTemplate,
+    },
+    rules: {
+      // Linting rules for Angular templates
+    },
+  },
+];

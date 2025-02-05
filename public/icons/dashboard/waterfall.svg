@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="87" height="87" viewBox="0 0 87 87">
+  <defs>
+    <clipPath id="clip-Waterfall_1">
+      <rect width="87" height="87"/>
+    </clipPath>
+  </defs>
+  <g id="Waterfall_1" data-name="Waterfall – 1" clip-path="url(#clip-Waterfall_1)">
+    <g id="Group_26" data-name="Group 26" transform="translate(-421 -172.5)">
+      <g id="waterfall_chart_black_24dp" transform="translate(414.457 170.457)">
+        <g id="Group_22" data-name="Group 22">
+          <path id="Path_22" data-name="Path 22" d="M0,0H100.086V100.086H0Z" fill="none"/>
+        </g>
+        <g id="Group_24" data-name="Group 24" transform="translate(12.511 16.681)">
+          <g id="Group_23" data-name="Group 23">
+            <path id="Path_23" data-name="Path 23" d="M65.554,4H78.064V70.724H65.554ZM3,41.532H15.511V70.724H3ZM48.873,4H61.383V16.511H48.873ZM32.192,8.17H44.7V24.851H32.192ZM19.681,29.021H32.192V45.7H19.681Z" transform="translate(-3 -4)" fill="#bababa"/>
+          </g>
+        </g>
+      </g>
+      <g id="waterfall_chart_black_24dp-2" data-name="waterfall_chart_black_24dp" transform="translate(412.457 164.457)">
+        <g id="Group_22-2" data-name="Group 22">
+          <path id="Path_22-2" data-name="Path 22" d="M0,0H100.086V100.086H0Z" fill="none"/>
+        </g>
+        <g id="Group_24-2" data-name="Group 24" transform="translate(12.511 16.681)">
+          <g id="Group_23-2" data-name="Group 23">
+            <path id="Path_23-2" data-name="Path 23" d="M65.554,4H78.064V70.724H65.554ZM3,41.532H15.511V70.724H3ZM48.873,4H61.383V16.511H48.873ZM32.192,8.17H44.7V24.851H32.192ZM19.681,29.021H32.192V45.7H19.681Z" transform="translate(-3 -4)" fill="#7b58bf"/>
+          </g>
+        </g>
+      </g>
+      <g id="waterfall_chart_black_24dp-3" data-name="waterfall_chart_black_24dp" transform="translate(410.457 157.457)">
+        <g id="Group_22-3" data-name="Group 22">
+          <path id="Path_22-3" data-name="Path 22" d="M0,0H100.086V100.086H0Z" fill="none"/>
+        </g>
+        <g id="Group_24-3" data-name="Group 24" transform="translate(12.511 16.681)">
+          <g id="Group_23-3" data-name="Group 23">
+            <path id="Path_23-3" data-name="Path 23" d="M65.554,4H78.064V70.724H65.554ZM3,41.532H15.511V70.724H3ZM48.873,4H61.383V16.511H48.873ZM32.192,8.17H44.7V24.851H32.192ZM19.681,29.021H32.192V45.7H19.681Z" transform="translate(-3 -4)" fill="#707070"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

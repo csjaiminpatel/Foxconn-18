@@ -1,0 +1,385 @@
+table {
+  tbody {
+    tr {
+      td {
+        .edit-cell {
+          .close {
+            right: $size + 0.2rem;
+            top: $size - 0.4rem;
+            background: transparent;
+            font-size: $size + 0.5rem;
+            z-index: 333;
+          }
+          .sidebar {
+            width: $size + 2.75rem;
+            background: $default-background;
+            .TabButton {
+              width: $size + 2.75rem;
+              height: $size + 2.75rem;
+              color: $black;
+              &.active {
+                background: $tabbtn-active;
+              }
+              span {
+                color: $black;
+                font-size: $size - 0.35rem;
+                padding-top: $size - 0.69rem;
+                width: $size + 2.5rem;
+              }
+            }
+          }
+          .slider-content {
+            .edit-contents {
+              .tab1 {
+                .tab-content {
+                  p {
+                    color: $tab-font;
+                  }
+                  .view-1 {
+                    table {
+                      tbody {
+                        tr {
+                          color: $tab-font;
+                          td {
+                            font-size: $size - 0.125rem;
+                            padding: $size - 0.7rem;
+                          }
+                        }
+                      }
+                    }
+                  }
+
+                  .view-2 {
+                    table {
+                      border-collapse: collapse;
+                      thead {
+                        th {
+                          padding: $size - 0.5rem;
+                          font-size: $size - 0.3rem;
+                          color: $table-head-color;
+                        }
+                      }
+                      tbody {
+                        tr {
+                          color: $tab-font;
+
+                          &:nth-child(even) {
+                            background: $table-striped;
+                          }
+                          td {
+                            font-size: $size - 0.125rem;
+                            padding: $size - 0.5rem;
+                            &:hover {
+                              .td-add-button {
+                                display: block;
+                              }
+                            }
+                            .td-add-button {
+                              display: none;
+                              padding: 0;
+                              line-height: 1px;
+                              right: $size - 0.5rem;
+                              border-radius: $size + 0.1rem;
+                              width: $size + 1.2rem;
+                              height: $size + 1.2rem;
+                              background: linear-gradient(195deg, #ec407a, #d81b60);
+                              transition: all 0.5s ease-in;
+                              span {
+                                font-size: $size;
+                                color: $white;
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+
+                  .view-3 {
+                    table {
+                      border-collapse: collapse;
+                      thead {
+                        th {
+                          padding: $size - 0.5rem;
+                          font-size: $size - 0.3rem;
+                          color: $table-head-color;
+                          border: 1px solid $table-border-color;
+                        }
+                      }
+                      tbody {
+                        tr {
+                          color: $tab-font;
+                          font-size: $size - 0.125;
+                          td {
+                            padding: $size $size - 0.5rem;
+                            border: 1px solid $table-border-color;
+                            &:nth-child(odd) {
+                              background: $table-striped;
+                            }
+                            &:hover {
+                              .td-add-button {
+                                display: block;
+                              }
+                            }
+                            .td-add-button {
+                              display: none;
+                              padding: 0;
+                              line-height: 1px;
+                              right: $size - 0.5rem;
+                              border-radius: $size + 0.1rem;
+                              width: $size + 1.2rem;
+                              height: $size + 1.2rem;
+                              background: linear-gradient(195deg, #ec407a, #d81b60);
+                              transition: all 0.5s ease-in;
+                              span {
+                                font-size: $size;
+                                color: $white;
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              .tab3 {
+                .tab-content {
+                  fieldset {
+                    border: 1px solid $tab-btn-active-brdr;
+                    border-width: 1px;
+                    border-radius: $size;
+                    //padding: $size;
+                    legend {
+                      padding: $size - 1rem $size - 0.5rem;
+                      font-size: $size - 0.2rem;
+                      color: $table-head-color;
+                    }
+                  }
+                }
+              }
+              .tab4{
+                .tab-content{
+                  .dx-datagrid {
+                    height: auto !important;
+                    .dx-scrollable-content{
+                      padding-bottom: 0rem !important;
+                    }
+                    .dx-datagrid-headers {
+                      table{
+                        tbody{
+                          tr{
+                            td{
+                              // width: 40% !important;
+                            }
+                          }
+                        }
+
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.border-bottom {
+  border-bottom: 1px solid $default-background;
+}
+
+.table-sm {
+  border-collapse: collapse;
+  thead {
+    tr {
+      border-bottom: 1px dotted $tab-btn-active-brdr;
+      th {
+        padding: $size - 0.5rem $size - 0.7rem;
+        font-size: $size - 0.3rem;
+        color: $table-head-color;
+      }
+    }
+  }
+  tbody {
+    tr {
+      td {
+        font-size: $size - 0.125;
+        color: $tab-font;
+        font-size: $size - 0.125;
+        padding: $size - 0.5rem $size - 0.7rem;
+      }
+      &:nth-child(even) {
+        background: $table-striped;
+      }
+    }
+  }
+}
+.dx-cust-table{
+  .dx-scrollable-simulated {
+    .dx-scrollable-content {
+      padding-bottom: $size;
+    }
+  }
+}
+
+.commits-table {
+  .dx-datagrid {
+    .dx-datagrid-headers {
+      table {
+        tbody {
+          tr {
+            td {
+              padding: 7px !important;
+            }
+          }
+        }
+      }
+    }
+    .dx-datagrid-rowsview {
+      .dx-datagrid-content {
+        .dx-datagrid-table {
+          .dx-row > td {
+            padding-top: 0rem !important;
+            padding-bottom: 0rem !important;
+            padding-right: 7px !important;
+            padding-left: 7px !important;
+          }
+          .dx-master-detail-row > td {
+            padding: 0rem !important;
+          }
+        }
+        .dx-datagrid {
+          .dx-datagrid-headers {
+            table {
+              tbody {
+                tr {
+                  td {
+                    padding: 7px !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.cdk-virtual-scroll-content-wrapper {
+  position: relative !important;
+}
+
+.contacts{
+  .table-sm{
+    .dx-datagrid{
+      .dx-datagrid-pager {
+        border-top: none !important;
+      }
+      .dx-column-lines > td {
+        border-left: none !important;
+        border-right: none !important;
+      }
+
+      .dx-datagrid-headers{
+        table{
+          tbody{
+            tr{
+              td{
+                color: $table-head-color;
+                font-weight: bolder;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+$fontSizes: 11, 13, 15, 17, 19;
+// Define a list of heights
+$heights: 25, 30, 35, 40, 45, 50, 55, 60;
+
+// Generate height classes from the list
+@each $height in $heights {
+  .height-#{$height} {
+    --column-height: #{$height}px;
+    table td, table th {
+      height: #{$height}px !important;
+      --column-height: #{$height}px;
+      padding-block: 0 !important;
+      vertical-align: middle;
+    }
+    table {
+      table {
+        .mat-header-row, .mat-row {
+          height: #{$height}px !important;
+          --column-height: #{$height}px;
+        }
+      }
+      table td, table th{
+        height: #{$height}px !important;
+        --column-height: #{$height}px;
+        padding: 0 !important;
+        vertical-align: middle;
+        button.table-action-button{
+          height: auto;
+          padding: 0 !important;
+          vertical-align: middle;
+          .material-icons, .material-symbols-outlined{
+            height: #{$height}px !important;
+            padding: 0 !important;
+            vertical-align: middle;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+@each $size in $fontSizes {
+  .font-#{$size} {
+    table table td, table table th {
+      font-size: #{$size}px !important;
+    }
+  }
+}
+
+
+#contacts-table{
+  .dx-datagrid-rowsview{
+    .dx-row{
+      border-bottom: none !important;
+    }
+    table{
+      tbody{
+        tr{
+          td{
+            padding-top: $size - 0.5rem !important;
+            padding-bottom: $size - 0.5rem !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+.dx-datagrid-table {
+  .dx-datagrid-rowsview {
+    .dx-datagrid-table {
+      .dx-row:last-child {
+        display: none;
+        height: 0% !important;
+      }
+    }
+  }
+}

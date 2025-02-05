@@ -1,0 +1,34 @@
+.dx-scrollbar-vertical {
+  width: 1.2rem !important;
+  .dx-scrollbar-hoverable {
+    width: 1.25rem !important;
+  }
+  .dx-scrollable-scroll {
+    width: 1.25rem !important;
+  }
+}
+
+.dx-scrollbar-horizontal {
+  height: 1.2rem !important;
+  .dx-scrollbar-hoverable {
+    height: 2.25rem !important;
+  }
+  .dx-scrollable-scroll {
+    height: 1.25rem !important;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-image: linear-gradient(0deg, #c2c2c2 20%, #c2c2c2 100%);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+}

@@ -1,0 +1,75 @@
+@import '~@angular/material/theming';
+@import './component-themes.scss';
+
+@include mat-core();
+
+$jam-red: (
+  500 : #A31946,
+  600 : #C61535,
+    contrast: (
+      50 : #000000,
+      100 : #000000,
+      200 : #000000,
+      300 : #ffffff,
+      400 : #ffffff,
+      500 : #ffffff,
+      600 : #ffffff,
+      700 : #ffffff,
+      800 : #ffffff,
+      900 : #ffffff,
+      A100 : #000000,
+      A200 : #ffffff,
+      A400 : #ffffff,
+      A700 : #ffffff,
+    )
+);
+
+$midnight-blue: (
+  500 : #312978,
+  600: #292358,
+    contrast: (
+      50 : #000000,
+      100 : #000000,
+      200 : #000000,
+      300 : #ffffff,
+      400 : #ffffff,
+      500 : #ffffff,
+      600 : #ffffff,
+      700 : #ffffff,
+      800 : #ffffff,
+      900 : #ffffff,
+      A100 : #000000,
+      A200 : #000000,
+      A400 : #ffffff,
+      A700 : #ffffff,
+    )
+);
+
+$danger-red: (
+  500 : #a31946,// #eb532f,
+  600: #cc0d0d,
+    contrast: (
+      50 : #000000,
+      100 : #000000,
+      200 : #000000,
+      300 : #ffffff,
+      400 : #ffffff,
+      500 : #ffffff,
+      600 : #ffffff,
+      700 : #ffffff,
+      800 : #ffffff,
+      900 : #ffffff,
+      A100 : #000000,
+      A200 : #000000,
+      A400 : #ffffff,
+      A700 : #ffffff,
+    )
+);
+
+$orion-primary: mat-palette($jam-red);
+$orion-accent: mat-palette($midnight-blue);
+$orion-warn: mat-palette($danger-red);
+$orion-theme: mat-light-theme($orion-primary, $orion-accent, $orion-warn);
+
+@include angular-material-theme($orion-theme);
+@include component-themes($orion-theme);

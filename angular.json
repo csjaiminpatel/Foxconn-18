@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "fxcn-18": {
+    "orion18": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -12,12 +12,12 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "orion-platform",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/fxcn-18",
+            "outputPath": "dist/orion18",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -32,48 +32,120 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/devextreme/dist/css/dx.light.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles",
+                "node_modules"
+              ]
+            },
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "2mb",
+                "maximumError": "6mb"
+              }
+            ]
           },
           "configurations": {
-            "production": {
-              "budgets": [
+            "orion-adfs": {
+              "fileReplacements": [
                 {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.adfs.ts"
                 }
               ],
-              "outputHashing": "all"
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true
             },
-            "development": {
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
-            }
-          },
-          "defaultConfiguration": "production"
+            "deploy": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.deploy.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true
+            },
+            "orion-cs": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.orion-cs.ts"
+                }
+              ]
+            },
+            "prod-dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "assets": [
+                {
+                  "input": "apps/orion/src",
+                  "glob": "favicon_prod.ico",
+                  "output": "/"
+                }
+              ]
+            },
+            "stag": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.stag.ts"
+                }
+              ],
+              "assets": [
+                {
+                  "input": "apps/orion/src",
+                  "glob": "favicon_stag.ico",
+                  "output": "/"
+                }
+              ]
+            },
+            "dev": {}
+          }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": {
-              "buildTarget": "fxcn-18:build:production"
+            "stag": {
+              "buildTarget": "orion18:build:stag"
             },
-            "development": {
-              "buildTarget": "fxcn-18:build:development"
+            "prod": {
+              "buildTarget": "orion18:build:prod"
+            },
+            "orion-adfs": {
+              "buildTarget": "orion18:build:orion-adfs"
+            },
+            "orion-cs": {
+              "buildTarget": "orion18:build:orion-cs"
+            },
+            "prod-dev": {
+              "buildTarget": "orion18:build:prod-dev"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "orion-cs"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n"
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "orion18:build"
+          }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -91,7 +163,8 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/material-design-icons/iconfont/material-icons.css"
             ],
             "scripts": []
           }
@@ -109,8 +182,24 @@
     }
   },
   "cli": {
+    "analytics": false,
+    "warnings": {
+      "versionMismatch": false
+    },
     "schematicCollections": [
       "angular-eslint"
-    ]
+    ],
+    "packageManager": "npm"
+  },
+  "schematics": {
+    "@nrwl/schematics:application": {
+      "style": "scss"
+    },
+    "@nrwl/schematics:library": {
+      "style": "scss"
+    },
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
   }
 }
