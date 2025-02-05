@@ -1,0 +1,44 @@
+.tab-content {
+    p {
+      color: $tab-font;
+    }
+    .btn {
+      border-color: transparent;
+      color: $black;
+      background: transparent;
+      padding: $size - 0.75rem;
+      height: $size + 1.1rem;
+      &.btn:hover {
+        color: $tab-btn-active;
+      }
+      &.btn.active {
+        color: $tab-btn-active;
+        border: 1px solid $tab-btn-active-brdr;
+        border-width: 1px;
+        border-radius: $size - 0.75rem;
+      }
+    }
+}
+.mat-icon-button{
+  .material-icons {
+      font-size: 20px;
+  }
+}
+.view-btn {
+  .btn {
+    border-color: transparent;
+    color: $black;
+    background: transparent;
+    padding: $size - 0.75rem;
+    height: $size + 1.1rem;
+    &.active {
+      color: $tab-btn-active;
+      border: 1px solid $tab-btn-active-brdr;
+      border-width: 1px;
+      border-radius: $size - 0.75rem;
+    }
+    &:hover {
+      color: $tab-btn-active;
+    }
+  }
+}

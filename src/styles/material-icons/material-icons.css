@@ -1,0 +1,73 @@
+@font-face {
+  font-family: "Material Icons Outlined";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/MaterialIconsOutlined-Regular.woff2") format("woff2"),
+    url("./fonts/MaterialIconsOutlined-Regular.woff") format("woff");
+  font-size: 24px;
+}
+@font-face {
+  font-family: "Material Icons Round";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/MaterialIconsRound-Regular.woff") format("woff"),
+    url("./fonts/MaterialIconsRound-Regular.woff2") format("woff2");
+  font-size: 24px;
+}
+@font-face {
+  font-family: "Material Icons Two Tone";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/MaterialIconsTwoTone-Regular.woff2") format("woff2"),
+    url("./fonts/MaterialIconsTwoTone-Regular.woff") format("woff");
+  font-size: 24px;
+}
+@font-face {
+  font-family: "Material Icons Sharp";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/MaterialIconsSharp-Regular.woff2") format("woff2"),
+    url("./fonts/MaterialIconsSharp-Regular.woff") format("woff");
+  font-size: 24px;
+}
+
+.material-icons {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Default size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Define font-family-based classes for each style */
+.material-icons {
+  font-family: "Material Icons";
+}
+
+.material-icons-outlined {
+  font-family: "Material Icons Outlined";
+}
+
+.material-icons-round {
+  font-family: "Material Icons Round";
+}
+.material-icons {
+  font-family: "Material Icons Round";
+}
+
+.material-icons-two-tone {
+  font-family: "Material Icons Two Tone";
+}
+
+.material-icons-sharp {
+  font-family: "Material Icons Sharp";
+}
+
+/*# sourceMappingURL=material-icons.css.map */

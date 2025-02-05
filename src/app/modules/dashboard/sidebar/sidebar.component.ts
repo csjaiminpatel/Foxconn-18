@@ -36,15 +36,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
-
-
 export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly router = inject(Router);
   private readonly store = inject(Store);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
-
-  @Input() isCollapse = true;
 
   private noOfChildren = 0;
   userRights: string[] = [];
@@ -86,8 +82,10 @@ export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.userRights = this.store.selectSnapshot(AuthenticationState.menuAccessRightList) || [];
-    this.router.events.pipe(takeUntilDestroyed(this.destroyRef))
+    this.userRights =
+      this.store.selectSnapshot(AuthenticationState.menuAccessRightList) || [];
+    this.router.events
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((event) => {
         if (event instanceof NavigationEnd) {
           const { url } = event;

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <clipPath id="clip-filter_icon">
+      <rect width="500" height="500"/>
+    </clipPath>
+  </defs>
+  <g id="filter_icon" data-name="filter icon" clip-path="url(#clip-filter_icon)">
+    <g id="Group_10" data-name="Group 10">
+      <rect id="Rectangle_4" data-name="Rectangle 4" width="356" height="40" transform="translate(72 131)" fill="#6040b0"/>
+      <rect id="Rectangle_5" data-name="Rectangle 5" width="238" height="45" transform="translate(131 225)" fill="#707070"/>
+      <rect id="Rectangle_6" data-name="Rectangle 6" width="82" height="45" transform="translate(209 324)" fill="#c1c1c1"/>
+    </g>
+  </g>
+</svg>

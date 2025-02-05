@@ -65,8 +65,8 @@ export class AuthService {
     } else {
       this.writeLogs
         ? this.writeLog(
-            '[01-025] does not have Permission of Session/Local Storage',
-          )
+          '[01-025] does not have Permission of Session/Local Storage',
+        )
         : null;
     }
 
@@ -124,7 +124,7 @@ export class AuthService {
 
   private sendLocalStorageEvent(eventName: string, data?: any) {
     const tabData: SessionExchangeFormat = {
-      tabId: this.tabId, 
+      tabId: this.tabId,
       tabPayload: data,
     };
     localStorage.setItem(eventName, JSON.stringify(tabData));
@@ -175,16 +175,16 @@ export class AuthService {
     if (this.isRefreshingSession) {
       this.writeLogs
         ? this.writeLog(
-            '[01-039] checkIfRefreshingProcess - Refreshing Session',
-          )
+          '[01-039] checkIfRefreshingProcess - Refreshing Session',
+        )
         : null;
       return true;
     }
     if (!sessionStorage.getItem(EnumAuthFlags.IsAuthFinished)) {
       this.writeLogs
         ? this.writeLog(
-            '[01-40] checkIfRefreshingProcess - EnumAuthFlags.IsAuthFinished Not Present In Session ',
-          )
+          '[01-40] checkIfRefreshingProcess - EnumAuthFlags.IsAuthFinished Not Present In Session ',
+        )
         : null;
       return true;
     }
@@ -239,8 +239,8 @@ export class AuthService {
     const { upn, email, name } = await firstValueFrom(
       this.oidcSecurityService.getPayloadFromIdToken(),
     );
-    let emailSplit: string[] = [] ;
-    emailSplit =email ? email.split('@') : [];
+    let emailSplit: string[] = [];
+    emailSplit = email ? email.split('@') : [];
 
     const username = (name ? name : emailSplit.shift()) as string;
 

@@ -35,7 +35,7 @@ export class SignalRService {
     private configService: ConfigService,
     private signalrNotificationService: SignalrNotificationService,
     protected store: Store
-  ) {}
+  ) { }
 
   getTokenReady(): Observable<any> {
     return this.isTokenReady.asObservable();

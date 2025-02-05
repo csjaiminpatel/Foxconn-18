@@ -1,0 +1,131 @@
+@mixin snackbar($theme) {
+  $warn: mat-color(map-get($theme, warn));
+  $warn-text: mat-color(map-get($theme, warn), default-contrast);
+
+  .notification-error {
+    background-color: $warn;
+    color: $warn-text;
+  }
+
+  .notification-error button {
+    background-color: $warn;
+    color: $warn-text;
+  }
+}
+
+@mixin login-header-theme($theme) {
+  $primary: map-get($theme, primary);
+
+  .auth-form--container {
+    &-header h1 {
+      color: mat-color($primary);
+    }
+  }
+}
+
+@mixin theme-auth-container($theme) {
+  $background: map-get($theme, background);
+
+  .main-auth--container {
+    background-color: mat-color($background, background);
+  }
+}
+
+@mixin configurator-menu($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $background: map-get($theme, background);
+
+  .settings--container {
+    background-color: darken(mat-color($primary), 7);
+    color: mat-color($background, card);
+  }
+}
+
+@mixin timeline($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $background: map-get($theme, background);
+
+  /* The circles on the timeline */
+  .timeline-active::after {
+    background-color: mat-color($accent);
+  }
+
+  .timeline-inactive::after {
+    background-color: mat-color($primary);
+  }
+}
+$selectcolor: (
+    default: grey,
+    dark: #333,
+    primary: rgb(163, 25, 70),
+    secondary: rgb(49, 41, 120),
+    warning: rgb(247, 202, 141),
+    danger: rgb(235, 83, 47),
+    success:rgb(58, 183, 176),
+    info: rgb(86, 168, 221)
+  ); 
+$colors: (
+    default: #fff,
+    dark: #333,
+    primary: linear-gradient(45deg, rgb(163, 25, 70), rgb(192, 21, 53)),
+    secondary: linear-gradient(45deg, rgb(49, 41, 120), rgb(41, 35, 88)),
+    warning: linear-gradient(45deg, rgb(247, 202, 141), rgb(247, 169, 61)),
+    danger: linear-gradient(45deg, rgb(235, 83, 47), rgb(204, 13, 13)),
+    success: linear-gradient(45deg, rgb(58, 183, 176), rgb(38, 144, 138)),
+    info: linear-gradient(45deg, rgb(86, 168, 221), rgb(9, 103, 117))
+  );
+//$width: 2rem, $height: 2rem, $border-radius: .5rem, $border-width: 1px, $border-color: #eee;
+@mixin theme-indicator($listtype) {
+    
+    @each $color, $value in $colors {
+      &.#{$color} {
+          @if $listtype == 'color-box' {
+              width: 2rem;
+              height: 2rem;
+              border-radius: .5rem;
+              border: 1px solid #eee;
+              margin-left: auto;
+              background: $value;
+          }
+          @else if $listtype == 'chartbg' {
+            background: $value;
+          }
+        }
+  }
+}
+.chart-wrap{
+  @include theme-indicator(chartbg);
+}
+
+.filtering-wrap{
+  @include theme-indicator(chartbg);
+}
+
+@mixin select-indicator() {
+    
+  @each $clr, $val in $selectcolor {
+    &.#{$clr} {
+      border-color: $val!important;
+      //border-bottom: 0.313rem solid $val!important;
+      box-shadow: 0px 2px 0 3px $val;
+      @if ($clr == 'default'){
+        background: rgba(238,238,238, 0.2);
+      }@else{
+        background: rgba($val, 0.2);
+      }
+    }
+  }
+}
+.list-group-item{
+  &.selected{
+    @include select-indicator(); 
+  }
+  
+}
+.color-picker-container{
+  .selected-color-box{
+    @include theme-indicator(color-box);
+  }
+}

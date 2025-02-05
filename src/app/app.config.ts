@@ -1,21 +1,34 @@
-import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAuth } from 'angular-auth-oidc-client';
-
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
-import { ConfigService } from './services/config.service';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { AuthService } from './modules/auth/services/auth.service';
 import { provideStore } from '@ngxs/store';
 import { AuthenticationState } from './modules/auth/store/authentication.state';
+import { provideTranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, '/i18n/app/', '.json?v=0001');
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+    provideTranslateService({
+      loader: {
+        provide: TranslateHttpLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+      defaultLanguage: 'en',
+      useDefaultLang: true,
+    }),
     provideHttpClient(),
     provideAuth({
-      config : {
+      config: {
         authority: "https://auth.prod.orion.cz.foxconn.com/realms/OrionProd",
         redirectUrl: `${window.location.origin}/home`,
         authWellknownEndpointUrl: "https://auth.prod.orion.cz.foxconn.com/realms/OrionProd",

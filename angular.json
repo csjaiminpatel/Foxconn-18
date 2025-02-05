@@ -32,11 +32,15 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/devextreme/dist/css/dx.light.css"
             ],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": ["public/styles"]
+              "includePaths": [
+                "src/styles",
+                "node_modules"
+              ]
             },
             "budgets": [
               {

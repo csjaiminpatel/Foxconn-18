@@ -9,10 +9,10 @@ import { NavigationStart, Router } from '@angular/router';
 export class SignalrNotificationService {
   public subject = new Subject<ReceiveNotificationMessage>();
   public keepAfterRouteChange = true;
-  
+
   constructor(
     public router: Router
-  ) { 
+  ) {
     router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         if (this.keepAfterRouteChange) {

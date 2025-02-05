@@ -1,0 +1,9 @@
+@import './mixins-material';
+
+@mixin component-themes($theme) {
+  @include configurator-menu($orion-theme);
+  @include snackbar($orion-theme);
+  @include login-header-theme($theme);
+  @include theme-auth-container($theme);
+  @include timeline($theme);
+}

@@ -3,15 +3,15 @@ import { UserRights } from "../models/auth.model";
 // Actions
 export class LoginApplication {
   static readonly type = '[Authentication] Login Application';
-  constructor(public readonly username: string, public readonly password: string) {}
+  constructor(public readonly username: string, public readonly password: string) { }
 }
 
 export class LoginApplicationTest {
   static readonly type = '[Authentication] Login Application Test';
-  constructor(public readonly username: string) {}
+  constructor(public readonly username: string) { }
 }
 
-export class Logout { 
+export class Logout {
   static readonly type = '[Authentication] Logout';
 }
 
@@ -22,7 +22,7 @@ export class LogoutTest {
 // Mutation Actions
 export class LoginSuccess {
   static readonly type = '[Authentication] Login Success';
-  constructor(public readonly token: string, public readonly username: string) {}
+  constructor(public readonly token: string, public readonly username: string) { }
 }
 
 export class LoginCanceled {
@@ -37,7 +37,7 @@ export class LoginApplicationDomain {
     public readonly username: string,
     public readonly password: string,
     public readonly plant: string
-  ) {}
+  ) { }
 }
 
 export class LogoutDomain {
@@ -51,7 +51,7 @@ export class LoginSuccessDomain {
     public readonly token: string,
     public readonly plant: string,
     public readonly username: string
-  ) {}
+  ) { }
 }
 
 export class LoginErrorDomain {
@@ -82,7 +82,7 @@ export class LoginAdfsSuccess {
     public readonly username: string,
     public readonly upn: string,
     public readonly primarySid: string
-  ) {}
+  ) { }
 }
 
 /**
@@ -98,22 +98,22 @@ export class FetchAdfsPlants {
 
 export class SetActivePlant {
   static readonly type = '[Authentication] Set Active Plant';
-  constructor(public readonly plant: string) {}
+  constructor(public readonly plant: string) { }
 }
 
 export class SetUserRights {
   static readonly type = '[Authentication] Set User Rights';
-  constructor(public readonly userRights: UserRights) {}
+  constructor(public readonly userRights: UserRights) { }
 }
 
 export class SetUserRightsSuccess {
   static readonly type = '[Authentication] Set User Rights Success';
-  constructor(public readonly userRights: UserRights) {}
+  constructor(public readonly userRights: UserRights) { }
 }
 
 export class SetManageCommitsRights {
   static readonly type = '[Authentication] Set Manage Commits Rights';
-  constructor(public readonly permission: boolean) {}
+  constructor(public readonly permission: boolean) { }
 }
 
 export class SetUserRole {

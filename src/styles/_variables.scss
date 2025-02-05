@@ -1,0 +1,102 @@
+/* Colors */
+$default-background: #efefef;
+$white: #ffffff;
+$gray: #5c5c5c;
+$silver: silver;
+$black: black;
+$light-gray: #f8f8f8;
+$light-gray-active: #ededed;
+$light-gray-header: rgba(0, 0, 0, 0.54);
+$plump-purple: #551eb9;
+$darkgrey: #a9a9a9;
+$panelBackground: $white;
+
+/*Extended Collor pallete*/
+$jam-red: #a31946; //primary 1
+$ruby-red: #c61535; //primary 2
+$primary-gradient: linear-gradient(165deg, #a31946, #c61535);
+
+$midnight-blue: #312978; //secondary 1
+$indigo-blue: #292358; //secondary 2
+$secondary-gradient: linear-gradient(165deg, #312978, #292358);
+
+$light-harvest-gold: #f7ca8d; //warning 1
+$harvest-gold: #f7a940; //warning 2
+$warning-gradient: linear-gradient(165deg, #f7ca8d, #f7a940);
+
+$sky-blue: #56a8dd; //info 1
+$sea-blue: #0967b1; //info 2
+$info-gradient: linear-gradient(165deg, #56a8dd, #0967b1);
+
+$light-emerald-green: #3ab7b0; //success 1
+$emerald-green: #26908a; //success2
+$success-gradient: linear-gradient(165deg, #3ab7b0, #26908a);
+
+$cover-grey: #403e57; //overpanel
+
+$light-fire-orange: #eb532f; //danger1
+$fire-red: #cc0d0d; //danger2
+$danger-gradient: linear-gradient(165deg, #eb532f, #cc0d0d);
+
+$light-dark: #6c6b6b; //dark1
+$dark: #1a0206; //dark2
+$dark-gradient: linear-gradient(165deg, #6c6b6b, #1a0206);
+
+/*shadows for gradients*/
+$shadow-primary: 0 0 10px 0 rgba(195, 21, 53, 0.5);
+$shadow-secondary: 0 0 10px 0 rgba(41, 35, 88, 0.5);
+$shadow-warning: 0 0 10px 0 rgba(247, 169, 64, 0.5);
+$shadow-info: 0 0 10px 0 rgba(9, 103, 177, 0.5);
+$shadow-success: 0 0 10px 0 rgba(38, 144, 138, 0.5);
+$shadow-danger: 0 0 10px 0 rgba(204, 13, 13, 0.5);
+$shadow-dark: 0 0 10px 0 rgba(26, 2, 6, 0.5);
+
+$icon-color :#777777;
+
+
+
+/* tab */
+$tabbtn-active: #d7d7d7;
+$tab-font: #7b809a;
+$tab-btn-active: #9a9a9a;
+$tab-btn-active-brdr: #dedede;
+$table-striped: #edeff2;
+$table-border-color: #ddd;
+$table-head-color: #707070;
+
+/* accordion */
+$accordion-header-color:#344767;
+
+/* Core */
+$form-group-title-color: $secondary-gradient;
+$purple: $secondary-gradient;
+$purple-light: $secondary-gradient;
+
+/* Messages */
+$error: #a31946;
+
+/* View */
+$padding: 1rem;
+
+/* Material Management */
+$shortage: #f64a87;
+$shortage-light: #f86e9f;
+$excess: #5b93d3;
+$excess-light: #7ca9dc;
+
+// SideNav Bar
+$nav-bg: $secondary-gradient;
+$width: 100%;
+$sidenav-main-width: 4.875rem;
+$sideNav-width: 6rem;
+$sideNav-hover-width: 16rem;
+$sidenav-font: 0.9rem;
+$sidenav-padding-top: 0.3rem;
+$sidenav-font-sm: 0.6rem;
+$sidenav-top: 3.438rem;
+$sidenav-padding: 1rem;
+$sidenav-logo: 1.25rem;
+
+
+/*top toolbar*/
+$top-toolbar-height: 56px;

@@ -17,7 +17,7 @@ export const STATIC_CONF = {
   "plantHealthCheck": {
     "checkHealth": "api/-/health"
   },
-  "tokenConfig":{
+  "tokenConfig": {
     "tokenExpireOffsetInSeconds": 30, // in Seconds
     "idleTimeOutInMilliseconds": 3480000 // in milliSeconds
   },
@@ -91,8 +91,8 @@ export const STATIC_CONF = {
       "downloadVendorList": "api/v1/MaterialManagement/PartNumbers/GetUploadContacts",
       "uploadVendorList": "api/v1/MaterialManagement/PartNumbers/PostUploadContacts",
       "uploadFlagList": "api/v1/materialmanagement/partnumbers/getpartnumbervendorcodeflags ",
-      "uploadPortfolio":"api/v1/materialmanagement/partnumbers/PostUploadContacts",
-      "uploadQuotation":"api/v1/Quotations/PostUploadQuotation",
+      "uploadPortfolio": "api/v1/materialmanagement/partnumbers/PostUploadContacts",
+      "uploadQuotation": "api/v1/Quotations/PostUploadQuotation",
       "pnSectionName": "api/v1/MaterialManagement/PartNumbers/GetPartNumberSectionNames",
       "pnSectionNameByContact": "/api/v1/MaterialManagement/PartNumbers/GetPartNumberSectionNamesByContact",
       "vendorSectionName": "api/v1/MaterialManagement/PartNumbers/GetVendorCodeSectionNames",
@@ -112,9 +112,9 @@ export const STATIC_CONF = {
       "contacts": "api/v1/Contacts/GetContacts",
       "vendorsContacts": "api/v1/identityhub/getidentitybykey",
       "partNumbersContacts": "api/v1/identityhub/getidentitybykey",
-      "VendorNotification":"api/v1/Contacts",
+      "VendorNotification": "api/v1/Contacts",
       "getIdentityByKey": "api/v1/identityhub/getidentitybykey",
-      "Notification":"api/v1/Contacts",
+      "Notification": "api/v1/Contacts",
       "getSVPredefinedComment": "api/v1/NotesAndComments/PredefinedComment/GetPredefinedComments",
       "createSVPredefinedComment": "api/v1/NotesAndComments/PredefinedComment/InsertPredefinedComment",
       "updateSVPredefinedComment": "api/v1/NotesAndComments/PredefinedComment/UpdatePredefinedComment",
@@ -122,7 +122,7 @@ export const STATIC_CONF = {
       "getProjectionsByPrecalculations": "api/v2/MaterialManagement/SupplyVisibility/GetProjectionsByPrecalculation",
       "sharedWidgets": "SharedWidgets",
       "dashboards": "Dashboards",
-      "templateSettings":"TemplateSettings",
+      "templateSettings": "TemplateSettings",
       "forecastDate": "api/v1/MaterialManagement/PlannedOrders/GetPlannedOrderPlanningDate?SyncSAP=false",
       "syncPlo": "api/v1/materialmanagement/plannedorders/synchronizeplannedorders",
       "getDefaultFormSettingFields": "api/v1/materialmanagement/commits/getdefaultformsettingfields",
@@ -142,14 +142,14 @@ export const STATIC_CONF = {
       "updatePartNumberAdditionInfo": "api/v1/MaterialManagement/PartNumbers/UpdatePartNumberAdditionInfo",
       "downloadCalculationLineDetail": "api/v2/MaterialManagement/MMViewConfiguration/getuploadcalculationlinedetail",
       "uploadCalculationLineDetail": "api/v2/MaterialManagement/MMViewConfiguration/postuploadcalculationlinedetail",
-      "identityList":"api/v1/identityhub/getidentitylist",
-      "quotations":"api/v1/quotations",
-      "quotationVendor":"api/v1/quotations/quotationvendor",
-      "auditLog":"api/v1/auditlogs",
-      "getDefaultVendorFormSettingFields":"api/v1/MaterialManagement/Vendors/GetDefaultFormSettingFields",
-      "getDefaultCarrierFormSettingFields":"api/v1/Logistics/Carriers/GetDefaultFormSettingFields",
-      "getApplication":"api/v1/QapDataExchange/ApplicationConfig",
-      "getVendorsWithNames":"api/v1/materialmanagement/Vendors/GetVendorsWithNames",
+      "identityList": "api/v1/identityhub/getidentitylist",
+      "quotations": "api/v1/quotations",
+      "quotationVendor": "api/v1/quotations/quotationvendor",
+      "auditLog": "api/v1/auditlogs",
+      "getDefaultVendorFormSettingFields": "api/v1/MaterialManagement/Vendors/GetDefaultFormSettingFields",
+      "getDefaultCarrierFormSettingFields": "api/v1/Logistics/Carriers/GetDefaultFormSettingFields",
+      "getApplication": "api/v1/QapDataExchange/ApplicationConfig",
+      "getVendorsWithNames": "api/v1/materialmanagement/Vendors/GetVendorsWithNames",
       "globalNotifications": "GlobalNotifications",
       "shipments": "api/v1/logistics/shipments"
     },

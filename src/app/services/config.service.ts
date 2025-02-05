@@ -38,5 +38,5 @@ export class ConfigService {
       return undefined;  // Return default value if key is missing
     }
   }
-  
+
 }

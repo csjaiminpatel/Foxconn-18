@@ -1,6 +1,6 @@
 import { State, StateContext, Selector, createSelector, Action } from '@ngxs/store';
-import {HttpClient} from '@angular/common/http';
-import {tap} from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
 // import {AuthenticationService} from './authentication.service';
 import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../../environments/environment';
@@ -53,7 +53,7 @@ import { LoginAdfsSuccess, SetUserRights, SetUserRightsSuccess, SetManageCommits
       searchCommits: false,
       cancelCommits: false,
       deleteCommits: false,
-      deletePLO:false,
+      deletePLO: false,
       documentsView: false,
       documentsCreate: false,
       documentsDelete: false,
@@ -66,10 +66,10 @@ export class AuthenticationState {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private configService = inject(ConfigService);
-  
-  async ngxsOnInit({dispatch}: StateContext<AuthenticationStateModel>) {
+
+  async ngxsOnInit({ dispatch }: StateContext<AuthenticationStateModel>) {
     await this.configService.loadConfig();
-    
+
     this.authService.getIsAuthorized().subscribe(async (isAuthorized) => {
       if (isAuthorized) {
         const username = await this.authService.getUserName();
@@ -77,32 +77,32 @@ export class AuthenticationState {
         const primarySid = await this.authService.getPrimarySid();
 
         dispatch(new LoginAdfsSuccess(username, upn, primarySid));
-      } 
+      }
     });
   }
 
   @Selector()
-  static token({token}: AuthenticationStateModel) {
+  static token({ token }: AuthenticationStateModel) {
     return token;
   }
 
   @Selector()
-  static plants({plants}: AuthenticationStateModel) {
+  static plants({ plants }: AuthenticationStateModel) {
     return plants;
   }
 
   @Selector()
-  static plant({plant}: AuthenticationStateModel) {
+  static plant({ plant }: AuthenticationStateModel) {
     return createSelector([AuthenticationState], (state: AuthenticationStateModel) => {
       return state.plants.find((p) => p.Code === plant);
     });
   }
 
   @Selector()
-  static activePlant({plant, plants}: AuthenticationStateModel) {
+  static activePlant({ plant, plants }: AuthenticationStateModel) {
     //TODO Remove this line of code after sometime
-    plant = typeof(plant) == 'object' ? plant.Code : plant;
-    const storedPlant = plants.find((p) => p.Code === plant );
+    plant = typeof (plant) == 'object' ? plant.Code : plant;
+    const storedPlant = plants.find((p) => p.Code === plant);
     if (storedPlant) {
       return storedPlant.Code;
     }
@@ -110,7 +110,7 @@ export class AuthenticationState {
   }
 
   @Selector()
-  static getActiveplant({plant}: AuthenticationStateModel, ) {
+  static getActiveplant({ plant }: AuthenticationStateModel,) {
     // VISUALIZATOR HACK, REMOVE AFTER VISUALIZATOR WILL NOT BE USED ANYMORE
     const plantType: 'visualizator' | 'configurator' =
       typeof plant === 'object' ? 'visualizator' : 'configurator';
@@ -125,85 +125,85 @@ export class AuthenticationState {
   }
 
   @Selector()
-  static isLoggedIn({isLoggedIn}: AuthenticationStateModel) {
+  static isLoggedIn({ isLoggedIn }: AuthenticationStateModel) {
     return isLoggedIn;
   }
 
   @Selector()
-  static tenants({tenants}: AuthenticationStateModel) {
+  static tenants({ tenants }: AuthenticationStateModel) {
     return tenants;
   }
 
   @Selector()
-  static activeTenant({activeTenant}: AuthenticationStateModel) {
+  static activeTenant({ activeTenant }: AuthenticationStateModel) {
     return activeTenant;
   }
 
   @Selector()
-  static username({username}: AuthenticationStateModel) {
+  static username({ username }: AuthenticationStateModel) {
     return username;
   }
   @Selector()
-  static upn({upn}: AuthenticationStateModel) {
+  static upn({ upn }: AuthenticationStateModel) {
     return upn;
   }
   @Selector()
-  static primarySid({primarySid}: AuthenticationStateModel) {
+  static primarySid({ primarySid }: AuthenticationStateModel) {
     return primarySid;
   }
 
   @Selector()
-  static commitModuleRights({commitsModuleRights}: AuthenticationStateModel) {
+  static commitModuleRights({ commitsModuleRights }: AuthenticationStateModel) {
     return commitsModuleRights;
   }
 
   @Selector()
-  static configurationRights({configurationRights}: AuthenticationStateModel) {
+  static configurationRights({ configurationRights }: AuthenticationStateModel) {
     return configurationRights;
   }
 
   @Selector()
-  static dashboardRights({dashboardRights}: AuthenticationStateModel) {
+  static dashboardRights({ dashboardRights }: AuthenticationStateModel) {
     return dashboardRights;
   }
 
   @Selector()
-  static vendorListRights({vendorListRights}: AuthenticationStateModel) {
+  static vendorListRights({ vendorListRights }: AuthenticationStateModel) {
     return vendorListRights;
   }
 
   @Selector()
-  static supplyVisibilityRights({supplyVisibilityRights}: AuthenticationStateModel) {
+  static supplyVisibilityRights({ supplyVisibilityRights }: AuthenticationStateModel) {
     return supplyVisibilityRights;
   }
 
   @Selector()
-  static finantialModuleRights({finantialModuleRights}: AuthenticationStateModel) {
+  static finantialModuleRights({ finantialModuleRights }: AuthenticationStateModel) {
     return finantialModuleRights;
   }
 
   @Selector()
-  static dateTypeRights({dateTypeRights}: AuthenticationStateModel) {
+  static dateTypeRights({ dateTypeRights }: AuthenticationStateModel) {
     return dateTypeRights;
   }
-  
+
   @Selector()
-  static dateTypeRightList({dateTypeRightList}: AuthenticationStateModel) {
+  static dateTypeRightList({ dateTypeRightList }: AuthenticationStateModel) {
     return dateTypeRightList;
   }
 
   @Selector()
-  static menuAccessRightList({menuAccessRightList}: AuthenticationStateModel) {
+  static menuAccessRightList({ menuAccessRightList }: AuthenticationStateModel) {
     return menuAccessRightList;
-  } 
-   
+  }
+
   @Selector()
-  static widgetAccessRightList({widgetAccessRightList}: AuthenticationStateModel) {
+  static widgetAccessRightList({ widgetAccessRightList }: AuthenticationStateModel) {
     return widgetAccessRightList;
   }
 
   @Selector()
-  static statusRightList({statusRightList}: AuthenticationStateModel) {
+  static statusRightList({ statusRightList }: AuthenticationStateModel) {
     return statusRightList;
   }
 
@@ -216,7 +216,7 @@ export class AuthenticationState {
   }
 
   @Action(SetUserRights)
-  setUserRights({patchState, dispatch}: StateContext<AuthenticationStateModel>, {userRights}: SetUserRights) {
+  setUserRights({ patchState, dispatch }: StateContext<AuthenticationStateModel>, { userRights }: SetUserRights) {
     patchState({
       supplyVisibilityRights: userRights.supplyVisibilityRights,
       commitsModuleRights: userRights.commitsModuleRights,
@@ -235,8 +235,8 @@ export class AuthenticationState {
 
   @Action(SetManageCommitsRights)
   setManageCommitsRights(
-    {patchState, getState}: StateContext<AuthenticationStateModel>,
-    {permission}: SetManageCommitsRights
+    { patchState, getState }: StateContext<AuthenticationStateModel>,
+    { permission }: SetManageCommitsRights
   ) {
     const state = getState();
     const commitsRights = state.commitsModuleRights;
@@ -280,10 +280,10 @@ export class AuthenticationState {
 
   @Action(LoginApplication)
   loginApplication(
-    {dispatch}: StateContext<AuthenticationStateModel>,
-    {password, username}: LoginApplication
+    { dispatch }: StateContext<AuthenticationStateModel>,
+    { password, username }: LoginApplication
   ) {
-    this.authService.loginApplication({password, username}).subscribe(
+    this.authService.loginApplication({ password, username }).subscribe(
       (user: AuthenticatedUser) => {
         dispatch(new LoginSuccess(user.token, username));
       },
@@ -293,8 +293,8 @@ export class AuthenticationState {
 
   @Action(LoginApplicationTest)
   loginApplicationTest(
-    {patchState}: StateContext<AuthenticationStateModel>,
-    {username}: LoginApplicationTest
+    { patchState }: StateContext<AuthenticationStateModel>,
+    { username }: LoginApplicationTest
   ) {
     patchState({
       token: 'testtest',
@@ -303,17 +303,17 @@ export class AuthenticationState {
   }
 
   @Action(LoginCanceled)
-  loginCanceled() {}
+  loginCanceled() { }
 
   @Action(LoginSuccess)
   loginSuccess(
-    {patchState}: StateContext<AuthenticationStateModel>,
-    {token, username}: LoginSuccess
+    { patchState }: StateContext<AuthenticationStateModel>,
+    { token, username }: LoginSuccess
   ) {
     // const tenants = jwt(token).Tenant as string[];
     const decodedToken = jwtDecode(token) as { Tenant: string[] };
     const tenants = decodedToken.Tenant || [];
-    
+
 
 
     patchState({
@@ -328,8 +328,8 @@ export class AuthenticationState {
   }
 
   @Action(Logout)
-  logout({getState, setState}: StateContext<AuthenticationStateModel>) {
-    const {plant, plants, activeTenant} = getState();
+  logout({ getState, setState }: StateContext<AuthenticationStateModel>) {
+    const { plant, plants, activeTenant } = getState();
 
     return this.authService.logout().pipe(
       tap(() => {
@@ -350,8 +350,8 @@ export class AuthenticationState {
   }
 
   @Action(LogoutTest)
-  logoutTest({getState, setState}: StateContext<AuthenticationStateModel>) {
-    const {plant, plants, activeTenant} = getState();
+  logoutTest({ getState, setState }: StateContext<AuthenticationStateModel>) {
+    const { plant, plants, activeTenant } = getState();
 
     setState({
       token: '',
@@ -370,8 +370,8 @@ export class AuthenticationState {
 
   @Action(LoginAdfsSuccess)
   loginAdfsSuccess(
-    {dispatch, patchState}: StateContext<AuthenticationStateModel>,
-    {username, upn, primarySid}: LoginAdfsSuccess
+    { dispatch, patchState }: StateContext<AuthenticationStateModel>,
+    { username, upn, primarySid }: LoginAdfsSuccess
   ) {
     patchState({
       isLoggedIn: true,
@@ -384,8 +384,8 @@ export class AuthenticationState {
   }
 
   @Action(LogoutAdfs)
-  LogoutAdfs({setState, getState}: StateContext<AuthenticationStateModel>) {
-    const {plant, plants, activeTenant} = getState();
+  LogoutAdfs({ setState, getState }: StateContext<AuthenticationStateModel>) {
+    const { plant, plants, activeTenant } = getState();
     setState({
       token: '',
       tenants: [],
@@ -405,8 +405,8 @@ export class AuthenticationState {
 
   @Action(LoginSuccessDomain)
   loginSuccessDomain(
-    {patchState}: StateContext<AuthenticationStateModel>,
-    {token, plant, username}: LoginSuccessDomain
+    { patchState }: StateContext<AuthenticationStateModel>,
+    { token, plant, username }: LoginSuccessDomain
   ) {
     patchState({
       token: token,
@@ -417,17 +417,17 @@ export class AuthenticationState {
   }
 
   @Action(LoginErrorDomain)
-  loginCanceledDomain() {}
+  loginCanceledDomain() { }
 
   @Action(FetchPlants)
-  fetchPlants({patchState}: StateContext<AuthenticationStateModel>) {
+  fetchPlants({ patchState }: StateContext<AuthenticationStateModel>) {
     const plants = this.authService.fetchPlants();
 
-    patchState({plants: plants});
+    patchState({ plants: plants });
   }
 
   @Action(FetchAdfsPlants)
-  async fetchAfdsPlants({getState, patchState}: StateContext<AuthenticationStateModel>) {
+  async fetchAfdsPlants({ getState, patchState }: StateContext<AuthenticationStateModel>) {
     // const groupName: string[] = this.authService.getPayloadFromIdToken().GroupsName;
     const { plant, plants } = getState();
     let tPlants: string[] = await this.getActivePlants();
@@ -473,7 +473,7 @@ export class AuthenticationState {
     return result;
   }
 
- 
+
   @Action(GetGlobalNotificationsByFilter)
   async getGlobalNotificationsByFilter(
     { dispatch }: StateContext<AuthenticationStateModel>,
