@@ -11,29 +11,30 @@ import {
   SessionExchangeFormat,
   authUrlPaths,
 } from '../models/auth.model';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  idToken: any;
   private isPrivateMode: boolean = false;
   isAuthenticated$: boolean = false;
-  idToken: any;
   private hasStorage?: boolean;
-  private writeLogs: boolean = true; //NOTE Turn on for debug login flow log
+  private writeLogs: boolean = true; 
   private readonly tabId: string = uuidv4();
-  private readonly idleTimeOutInMilliseconds: number =
-    environment.tokenConfig.idleTimeOutInMilliseconds;
+  private readonly idleTimeOutInMilliseconds: number = environment.tokenConfig.idleTimeOutInMilliseconds;
   private idleTimeOut: number = this.idleTimeOutInMilliseconds / 1000;
   private idleTimeOutChecker: any = null;
   private idleTimeOutCheckerIntervalInSeconds = 10;
   private renewTokenExpireTimeInMilliseconds?: number;
   private readonly CACHED_FLAG_VALUE = 'cache';
-  private isAuthenticated = false; // NOTE it will init on OIDC Config Load;
+  private isAuthenticated = false;
   private refreshSessionHandler?: number;
   private expiredSessionHandler?: number;
   // private refreshSessionDialogRef: MatDialogRef<RefreshSessionComponent, any>;
   private isRefreshingSession = false;
+  private ignoreUrls: string[] = [];
+
 
   private readonly router = inject(Router);
   private readonly oidcSecurityService = inject(OidcSecurityService);
@@ -261,6 +262,51 @@ export class AuthService {
     return primarysid;
   }
 
+  public async refreshTokens() {
+    const that = this;
+    try {
+      that.isRefreshingSession = true;
+
+      const { currentPath } = that.getCurrentPath();
+      that.setRedirectUrl(currentPath);
+      let Error;
+      let res;
+      try {
+        res = await firstValueFrom(that.oidcSecurityService.forceRefreshSession());
+      } catch (error) {
+        res = null;
+        Error = error;
+      }
+
+      if (Error) {
+        that.writeLogs ? that.writeLog('[01-047] Orion Auth Server - Failed to refresh token by server', Error) : null;
+      }
+
+      if (res) {
+        setTimeout(() => {
+          // that.setUserRights();
+          // that.resetRefreshSessionVars();
+          // that.setRefreshSessionHandler();
+          if (sessionStorage.length) {
+            that.sendLocalStorageEvent(EnumSharedSessionEvents.RenewToken, sessionStorage);
+          }
+        }, 500);
+        this.writeLog('[01-017] Token was successfully refreshed.');
+      } else {
+        that.logoutAdfs();
+        that.writeLogs ? that.writeLog('[01-018] Refreshing Tokens Failed', res) : null;
+      }
+    } catch (e) {
+      that.logoutAdfs();
+      that.writeLogs ? that.writeLog('forceRefreshSession-failed', console.error(e)) : null;
+    }
+  }
+
+
+  public ignoreUrlsForToken(reqUrl: string) {
+    return !this.ignoreUrls.find((url) => reqUrl.indexOf(url) != -1);
+  }
+
   loginApplication({
     username,
     password,
@@ -282,4 +328,10 @@ export class AuthService {
   fetchPlants() {
     return environment.modulesBaseUrl.plants;
   }
+
+  private cancellationToken$ = new Subject();
+  public getCancellationTokenObservable() {
+    return this.cancellationToken$.asObservable();
+  }
+  
 }
