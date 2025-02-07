@@ -1,0 +1,95 @@
+@import "variables";
+@import "mixins";
+
+:host {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-auth--container {
+  text-align: center;
+  border-radius: 11px;
+  box-shadow:
+    0 1.0625rem 2.1875rem 0 rgba(0, 0, 0, 0.1),
+    0 1rem 0.5rem -1rem rgba(0, 0, 0, 0.1);
+
+  .form-auth--container {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .auth-form--container--header {
+      .subtitle {
+        font-size: 14px;
+        padding: 0 26px 20px 26px;
+      }
+    }
+
+    .auth-form--container-sub {
+      padding: 3rem 1rem;
+    }
+
+    .auth-form-field {
+      & mat-form-field {
+        min-width: 228px;
+      }
+      .mat-icon.material-icons {
+        padding-right: 8px;
+      }
+    }
+
+    .auth-form--container-error-message {
+      margin-top: 1em;
+    }
+
+    .auth-form-field-submit {
+      display: flex;
+      justify-content: center;
+
+      &-logout-button {
+        margin-left: 1em;
+      }
+    }
+    .cursor-hand {
+      @include cursor-hand;
+    }
+  }
+
+  .application-languages--container {
+    margin-top: 3em;
+    ::ng-deep .mat-button {
+      line-height: 30px;
+      min-width: 0;
+      margin: 0 2px;
+    }
+  }
+}
+
+.authentication-error {
+  color: red;
+  font-weight: bold;
+}
+
+.active-language {
+  background-color: $light-gray-active;
+}
+
+.main-auth--container-orion-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("/img/orion-nebula-background.jpg") center center no-repeat;
+  border-radius: 0 11px 11px 0px;
+  background-size: cover;
+
+  &-stars {
+    height: 100%;
+    width: 100%;
+    background: url("/img/orion-stars.png") center center no-repeat;
+    background-size: contain;
+  }
+}

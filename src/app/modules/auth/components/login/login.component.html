@@ -1,4 +1,57 @@
-<h1>login works!</h1>
+<div class="main-auth--container">
+  <div class="form-auth--container">
+    <div class="auth-form--container">
+      <div class="auth-form--container-header">
+        <h1>ORION</h1>
+      </div>
 
-<button (click)="login()">Login</button>
-<button (click)="logout()">Logout</button>
+      <div class="auth-form--container-sub">
+        <div>
+          <h2 class="mat-title">{{ "login.title" | translate }}</h2>
+          <p>{{ "login.application.subtitle" | translate }}</p>
+        </div>
+
+        <div class="auth-form-field-submit">
+          @if (!isAuthenticated) {
+            <button (click)="login()" color="primary" mat-raised-button>
+              {{ "login.form.submitButton" | translate }}
+            </button>
+          } @else {
+            <button (click)="onDashboard()" color="primary" mat-raised-button>
+              {{ "login.form.dashboardButton" | translate }}
+            </button>
+
+            <button
+              class="auth-form-field-submit-logout-button"
+              (click)="logout()"
+              mat-button
+            >
+              {{ "login.form.logoutButton" | translate }}
+            </button>
+          }
+        </div>
+        @if (error) {
+          <div class="authentication-error">
+            {{ "login.error" | translate }}
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="application-languages--container">
+      @for (lang of langs$ | async; track lang) {
+        <button
+          mat-button
+          [ngClass]="{ 'active-language': activeLanguage(lang) }"
+          (click)="changeLanguage(lang)"
+        >
+          {{ lang }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="main-auth--container-orion-image">
+    <div class="main-auth--container-orion-image-stars"></div>
+  </div>
+</div>

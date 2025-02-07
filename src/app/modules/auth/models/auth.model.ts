@@ -204,3 +204,18 @@ export interface AuthenticationStateModel {
   statusRightList?: string[];
   currentRole?: string;
 }
+
+//#region Language Models
+export interface AppConfigLanguageItem {
+  code: string;
+  language: string;
+  description: string;
+}
+//#endregion
+
+//#region Plant Model
+export interface Plant {
+  Code: string;
+  Name: string;
+}
+//#endregion
