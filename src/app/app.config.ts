@@ -1,6 +1,6 @@
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideAuth } from 'angular-auth-oidc-client';
+import { OidcSecurityService, provideAuth } from 'angular-auth-oidc-client';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { AuthService } from './modules/auth/services/auth.service';
@@ -33,6 +33,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(translateModule),
 
     // Services
+    OidcSecurityService,
     AuthService,
 
     // Store Management

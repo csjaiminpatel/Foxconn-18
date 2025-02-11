@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { AuthService } from '../../services/auth.service';
-import { Actions, Store } from '@ngxs/store';
-import { AppConfigLanguageItem, Plant } from '../../models/auth.model';
+import { Actions, ofActionDispatched, Store } from '@ngxs/store';
+import { AppConfigLanguageItem, EnumAuthFlags, Plant } from '../../models/auth.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -11,6 +11,7 @@ import { AuthenticationState } from '../../store/authentication.state';
 import { CommonModule } from '@angular/common';
 import { LanguageState } from '../../store/language/language.state';
 import { SetLanguage } from '../../store/language/language.actions';
+import { LoginErrorDomain, LoginCanceled, LoginAdfs, LogoutAdfs, FetchPlants, LoginApplication, LoginApplicationTest, LogoutTest, Logout, LoginApplicationDomain, LogoutDomain } from '../../store/authentication.actions';
 
 
 const formItemCompose = Validators.compose([Validators.required, Validators.minLength(0)]);
@@ -24,6 +25,7 @@ const formItemCompose = Validators.compose([Validators.required, Validators.minL
 })
 
 export class LoginComponent {
+  plantActivated?: Plant;
 
   //#region injectors or services
 
@@ -48,11 +50,34 @@ export class LoginComponent {
   form: FormGroup;
   error: boolean = false;
   currentLang: string = 'en';
+  loading:boolean = false;
 
   //#endregion
 
   ngOnInit() {
     console.warn('Login loaded', this.langs$);
+    // this.plantActivated = this.store.selectSnapshot(AuthenticationState.activePlant);
+
+    // if (this.plantActivated && this.plantActivated.Code) {
+    //   this.selectedPlant = this.plantActivated.Code;
+    // }
+
+    this.currentLang$.subscribe((language: any) => (this.currentLang = language));
+    this.authService.getIsAuthorized().subscribe((isAuthorized) => {
+      this.isAuthenticated = isAuthorized
+    });
+
+    this.actions$.pipe(ofActionDispatched(LoginErrorDomain)).subscribe((res) => {
+      this.loading = false;
+      this.error = true;
+      this.form.get('visualizator')?.enable();
+    });
+
+    this.actions$.pipe(ofActionDispatched(LoginCanceled)).subscribe((res) => {
+      this.loading = false;
+      this.error = true;
+      this.form.get('orion')?.enable();
+    });
   }
 
   constructor() {
@@ -70,14 +95,66 @@ export class LoginComponent {
     });
   }
 
+  // login() {
+  //   this.oidcSecurityService.authorize();
+  // }
+
+
   login() {
-    this.oidcSecurityService.authorize();
+    localStorage.removeItem(EnumAuthFlags.IsLoggedOffLocal);
+    this.loginAdfs();
+  }
+  
+  loginAdfs = () => this.store.dispatch(new LoginAdfs());
+
+  logoutAdfs = () => this.store.dispatch(new LogoutAdfs());
+  
+  fetchPlants = () => this.store.dispatch(new FetchPlants());
+
+  loginApplication() {
+    const {username, password} = this.form.get('orion')?.value;
+    this.loading = true;
+
+    this.form.get('orion')?.disable();
+
+    this.store.dispatch(new LoginApplication(username, password));
   }
 
+  // logout() {
+  //   this.oidcSecurityService.logoff().subscribe((result) => console.log(result));
+  // }
   logout() {
-    this.oidcSecurityService.logoff().subscribe((result) => console.log(result));
+    this.logoutAdfs();
   }
-  // activeLanguage = ({code}: any) => code === this.currentLang.code;
+
+  
+  loginScm() {
+    const {username, password} = this.form.get('orion')?.value;
+
+    if (username && password) {
+      this.store.dispatch(new LoginApplicationTest(username));
+    }
+  }
+
+  logoutScm = () => this.store.dispatch(new LogoutTest());
+
+    /**
+   * Logout Mock
+   */
+    logoutApplication = () => this.store.dispatch(new Logout());
+
+    /**
+     * Login via application user account - mainly for visualizator (eFox.NET4 login)
+     */
+    loginApplicationDomain() {
+      const {domain, username, password, plant} = this.form.get('visualizator')?.value;
+  
+      this.loading = true;
+      this.form.get('visualizator')?.disable();
+  
+      this.store.dispatch(new LoginApplicationDomain(domain, username, password, plant));
+    }
+  
 
   activeLanguage(language: string) {
     return language === this.currentLang;
@@ -88,6 +165,23 @@ export class LoginComponent {
     this.store.dispatch(new SetLanguage(language));
   }
 
+
+  trackLanguageByFn = (index: number) => index;
+  /**
+   * Logout application user account - mainly for visualizator (eFox.NET4 logout)
+   */
+  logoutDomain = () => this.store.dispatch(new LogoutDomain());
+
+  /**
+   * Checks if looped language is active language
+   */
+
+  // activeLanguage = ({code}: any) => code === this.currentLang.code;
+
+  /**
+   * redirect to dashboard
+   *
+   */
   async onDashboard() {
     const authSvc = this.authService;
     //Block Guards Start

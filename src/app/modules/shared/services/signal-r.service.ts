@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, IHttpConnectionOptions, HttpTransportType, LogLevel } from '@microsoft/signalr';
 import { Store } from '@ngxs/store';
 // import { LogLevel } from 'angular-auth-oidc-client';
@@ -10,19 +10,6 @@ import { SignalrNotificationService } from './signalr-notification.service';
   providedIn: 'root'
 })
 
-class ApplicationHubEvents {
-  public static readonly NotificationReceived: string = 'ReceiveNotification';
-  //ADD Other Events
-}
-
-export interface ReceiveNotificationMessage {
-  Id: string;
-  Title: string;
-  IsRead: boolean;
-  DateCreated: Date;
-  ShortMessage: string;
-}
-
 export class SignalRService {
 
   private appHubConnection?: HubConnection;
@@ -30,12 +17,14 @@ export class SignalRService {
   private appHubConnectionStartRequest?: Promise<any>;
   private isTokenReady = new Subject<any>();
   tokenValue: any;
+  private configService = inject(ConfigService);
+  private signalrNotificationService = inject(SignalrNotificationService);
+  protected store= inject(Store)
+
+
 
   constructor(
-    private configService: ConfigService,
-    private signalrNotificationService: SignalrNotificationService,
-    protected store: Store
-  ) { }
+    ) { }
 
   getTokenReady(): Observable<any> {
     return this.isTokenReady.asObservable();
@@ -160,4 +149,16 @@ export class SignalRService {
       //ADD other settings
     };
   }
+}
+class ApplicationHubEvents {
+  public static readonly NotificationReceived: string = 'ReceiveNotification';
+  //ADD Other Events
+}
+
+export interface ReceiveNotificationMessage {
+  Id: string;
+  Title: string;
+  IsRead: boolean;
+  DateCreated: Date;
+  ShortMessage: string;
 }

@@ -18,7 +18,6 @@ export interface LanguageStateModel {
 export class LanguageState {
   @Selector()
   static getLangs({languages}: LanguageStateModel) {
-    console.log('languages', languages);
     return languages;
   }
 

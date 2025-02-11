@@ -219,3 +219,9 @@ export interface Plant {
   Name: string;
 }
 //#endregion
+
+
+export interface BreadCrumb {
+  url: string;
+  label: string;
+}

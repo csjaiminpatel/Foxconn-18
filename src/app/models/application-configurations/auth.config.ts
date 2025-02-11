@@ -19,4 +19,6 @@ export const authConfig = {
     issValidationOff: true,
     triggerAuthorizationResultEvent: true,
     historyCleanupOff: true,
+    storage: sessionStorage,
+    useRefreshToken: true,
   }

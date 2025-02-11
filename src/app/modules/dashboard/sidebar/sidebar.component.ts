@@ -28,6 +28,8 @@ import { Helper } from '../../shared/helper';
 import { AuthenticationState } from '../../auth/store/authentication.state';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SignalRService } from '../../shared/services/signal-r.service';
+// import { SignalRService } from '../../shared/services/signal-r.service';
 
 @Component({
   selector: 'orion-platform-sidebar',
@@ -41,7 +43,7 @@ export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly store = inject(Store);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
-
+  private readonly signalRService= inject(SignalRService);
   private noOfChildren = 0;
   userRights: string[] = [];
   public env2 = '';
@@ -82,6 +84,9 @@ export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+
+    console.log('SignalRService:', this.signalRService);
+    
     this.userRights =
       this.store.selectSnapshot(AuthenticationState.menuAccessRightList) || [];
     this.router.events
@@ -102,18 +107,18 @@ export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
 
-    // if (this.signalRService.tokenValue) {
-    //   this.setItemsAccess();
-    // } else {
-    //   this.signalRService
-    //     .getTokenReady()
-    //     .pipe(takeUntil(this.ngUnsubscribe))
-    //     .subscribe((isTokenReady) => {
-    //       if (isTokenReady) {
-    //         this.setItemsAccess();
-    //       }
-    //     });
-    // }
+    if (this.signalRService.tokenValue) {
+      this.setItemsAccess();
+    } else {
+      this.signalRService
+        .getTokenReady()
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((isTokenReady) => {
+          if (isTokenReady) {
+            this.setItemsAccess();
+          }
+        });
+    }
   }
 
   ngOnDestroy() {
