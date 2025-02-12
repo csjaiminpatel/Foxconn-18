@@ -1,0 +1,34 @@
+<div class="shared--dialog" [ngClass]="customClasses">
+    <mat-card-header *ngIf="!hideHeader" class="shared--dialog--header">
+      <div class="header-content">
+        <ng-content select="[header]"></ng-content>
+      </div>
+      @if (!hideClose) {
+          <button
+            mat-icon-button
+            [mat-dialog-close]="false"
+            [disabled]="disableClose"
+            autofocus="false"
+            aria-label="Close dialog"
+            class="close">
+            <mat-icon> close </mat-icon>
+          </button>
+      }
+      <mat-card-title class="title">
+        {{ title }}
+      </mat-card-title>
+      <mat-card-subtitle>
+        <ng-content select="[subtitle]"></ng-content>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content class="shared--dialog--content">
+      <ng-content select="[content]"></ng-content>
+    </mat-card-content>
+    <mat-card-actions *ngIf="!hideActions" align="end" class="shared--dialog--actions">
+      <ng-content select="[actions]"></ng-content>
+    </mat-card-actions>
+    <mat-card-footer *ngIf="!hideFooter">
+      <ng-content select="[footer]" class="shared--dialog--footer"></ng-content>
+    </mat-card-footer>
+  </div>
+  

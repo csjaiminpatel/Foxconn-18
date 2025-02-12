@@ -1,0 +1,70 @@
+.shared--dialog ::ng-deep .mat-card-actions,
+.shared--dialog .mat-card-content,
+.shared--dialog .mat-card-subtitle {
+  margin-bottom: 0;
+}
+
+.shared--dialog--header {
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0 !important;
+  margin-top: -2px;
+  margin-bottom: -2px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  .mat-card-header{
+    .mat-card-header-text {
+      margin: 0px !important;
+    }
+  }
+  
+}
+
+.shared--dialog--header .close {
+  position: relative;
+  top: -20px;
+  right: -20px;
+  margin-top: 10px;
+  margin-right: 10px;
+  overflow: visible;
+}
+
+.shared--dialog--header .close .mat-icon-button {
+  padding: 0;
+  min-width: 0;
+  width: 50px;
+  height: 50px;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  line-height: 50px;
+  border-radius: 50%;
+  border: 0;
+}
+
+.mat-card-actions {
+  margin-left: 8px;
+  margin-right: 0px; 
+  padding: 0px !important;
+}
+
+.border-bottom {
+  border-bottom: 2px solid #D3D3D3;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.mat-dialog-container {
+  padding: 14px !important;
+}
+
+::ng-deep .session--dialog{
+    .mat-card-header{
+      .mat-card-header-text {
+        margin: 0px !important;
+      }
+    }
+  }

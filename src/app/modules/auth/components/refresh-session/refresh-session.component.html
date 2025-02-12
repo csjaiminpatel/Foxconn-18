@@ -1,0 +1,86 @@
+<div class="shared--dialog">
+  <mat-card-header class="shared--dialog--header">
+    <button
+      mat-icon-button
+      (click)="onNoClick()"
+      [disabled]="isRefreshing == 'idle'"
+      autofocus="false"
+      aria-label="Logout"
+      [matTooltip]="'Logout'"
+      class="close"
+    >
+      <mat-icon> exit_to_app </mat-icon>
+    </button>
+    <mat-card-title class="title">
+      Your Session about to expire!
+    </mat-card-title>
+    <mat-card-subtitle>
+      <ng-content select="[subtitle]"></ng-content>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content class="shared--dialog--content">
+    @if (isRefreshing == "idle") {
+      <div content mat-dialog-content fxFlex fxLayout="column">
+        <p>
+          You will be logged out in <b>{{ countdown }}</b> seconds. Do you want
+          to stay signed in?
+        </p>
+      </div>
+    }
+
+    @if (isRefreshing == "refreshing") {
+      <div style="display: flex" fxLayoutAlign="center">
+        <mat-progress-spinner
+          color="primary"
+          [mode]="'indeterminate'"
+          [diameter]="35"
+        ></mat-progress-spinner>
+        <p style="padding-left: 10px">Refreshing Token....</p>
+      </div>
+    }
+
+    @if (isRefreshing == "loading") {
+      <div style="display: flex" fxLayoutAlign="center">
+        <mat-progress-spinner
+          [color]="'primary'"
+          [mode]="'indeterminate'"
+          [diameter]="35"
+        ></mat-progress-spinner>
+        <p style="padding-left: 10px">Loading, Please Wait....</p>
+      </div>
+    }
+  </mat-card-content>
+  <mat-card-actions align="start" class="shared--dialog--actions">
+    @if (isRefreshing == "idle") {
+      <div
+        actions
+        mat-dialog-actions
+        fxFlex
+        fxLayout="row"
+        fxLayoutGap="3px"
+        fxLayoutAlign="center"
+      >
+        <button
+          mat-button
+          cdkFocusInitial
+          (click)="onYesClick()"
+          class="mat-raised-button"
+          color="primary"
+        >
+          Yes, keep me signed in
+        </button>
+        <button
+          mat-button
+          cdkFocusInitial
+          (click)="onNoClick()"
+          class="mat-raised-button"
+        >
+          No, signed me out
+        </button>
+      </div>
+    }
+  </mat-card-actions>
+  <mat-card-footer>
+    <ng-content select="[footer]" class="shared--dialog--footer"></ng-content>
+  </mat-card-footer>
+</div>

@@ -1,0 +1,19 @@
+<div class="shared--dialog session--dialog">
+    <mat-card-header id="header" class="shared--dialog--header">
+        <mat-card-title>{{data.title}}</mat-card-title>
+    </mat-card-header>
+    <div class="border-bottom clearfix"></div>
+
+    <mat-card-content class="shared--dialog--content">
+    {{data.content}}
+    </mat-card-content>
+    <div class="border-bottom clearfix"></div>
+
+    <mat-card-actions align="end" class="shared--dialog--actions">
+        <button mat-button [mat-dialog-close]="true" cdkFocusInitial class="mat-raised-button"
+            color="{{ data.positiveBtnColor || 'warn' }}" (click)="ok()">
+            {{ data.button }}
+        </button>
+    </mat-card-actions>
+
+</div>
