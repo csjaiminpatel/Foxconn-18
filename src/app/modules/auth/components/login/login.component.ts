@@ -40,7 +40,7 @@ export class LoginComponent {
   //#endregion
 
   //#region selectors 
-  langs$: Observable<any[]> = this.store.select(LanguageState.getLangs);
+  langs$: Observable<string[]> = this.store.select(LanguageState.getLangs);
   currentLang$: Observable<string> = this.store.select(LanguageState.getCurrentLang);
   plants$: Observable<Plant[]> = this.store.select(AuthenticationState.plants);
   //#endregion
@@ -50,12 +50,11 @@ export class LoginComponent {
   form: FormGroup;
   error: boolean = false;
   currentLang: string = 'en';
-  loading:boolean = false;
+  loading: boolean = false;
 
   //#endregion
 
   ngOnInit() {
-    console.warn('Login loaded', this.langs$);
     // this.plantActivated = this.store.selectSnapshot(AuthenticationState.activePlant);
 
     // if (this.plantActivated && this.plantActivated.Code) {
@@ -64,7 +63,7 @@ export class LoginComponent {
 
     this.currentLang$.subscribe((language: any) => (this.currentLang = language));
     this.authService.getIsAuthorized().subscribe((isAuthorized) => {
-      this.isAuthenticated = isAuthorized
+      this.isAuthenticated = isAuthorized.isAuthenticated;
     });
 
     this.actions$.pipe(ofActionDispatched(LoginErrorDomain)).subscribe((res) => {
@@ -104,15 +103,15 @@ export class LoginComponent {
     localStorage.removeItem(EnumAuthFlags.IsLoggedOffLocal);
     this.loginAdfs();
   }
-  
+
   loginAdfs = () => this.store.dispatch(new LoginAdfs());
 
   logoutAdfs = () => this.store.dispatch(new LogoutAdfs());
-  
+
   fetchPlants = () => this.store.dispatch(new FetchPlants());
 
   loginApplication() {
-    const {username, password} = this.form.get('orion')?.value;
+    const { username, password } = this.form.get('orion')?.value;
     this.loading = true;
 
     this.form.get('orion')?.disable();
@@ -127,9 +126,9 @@ export class LoginComponent {
     this.logoutAdfs();
   }
 
-  
+
   loginScm() {
-    const {username, password} = this.form.get('orion')?.value;
+    const { username, password } = this.form.get('orion')?.value;
 
     if (username && password) {
       this.store.dispatch(new LoginApplicationTest(username));
@@ -138,23 +137,23 @@ export class LoginComponent {
 
   logoutScm = () => this.store.dispatch(new LogoutTest());
 
-    /**
-   * Logout Mock
-   */
-    logoutApplication = () => this.store.dispatch(new Logout());
+  /**
+ * Logout Mock
+ */
+  logoutApplication = () => this.store.dispatch(new Logout());
 
-    /**
-     * Login via application user account - mainly for visualizator (eFox.NET4 login)
-     */
-    loginApplicationDomain() {
-      const {domain, username, password, plant} = this.form.get('visualizator')?.value;
-  
-      this.loading = true;
-      this.form.get('visualizator')?.disable();
-  
-      this.store.dispatch(new LoginApplicationDomain(domain, username, password, plant));
-    }
-  
+  /**
+   * Login via application user account - mainly for visualizator (eFox.NET4 login)
+   */
+  loginApplicationDomain() {
+    const { domain, username, password, plant } = this.form.get('visualizator')?.value;
+
+    this.loading = true;
+    this.form.get('visualizator')?.disable();
+
+    this.store.dispatch(new LoginApplicationDomain(domain, username, password, plant));
+  }
+
 
   activeLanguage(language: string) {
     return language === this.currentLang;

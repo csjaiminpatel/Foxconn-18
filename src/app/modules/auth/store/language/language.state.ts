@@ -39,9 +39,8 @@ export class LanguageState {
       console.error('Languages array is empty or undefined!');
       return;
     }
-
     setState({
-      languages: languages.map((lang) => lang.language) ?? ['en'], // Fallback to default
+      languages: languages.map((lang) => lang.code) ?? ['en'], // Fallback to default
       currentLang: defaultLang?.language ?? 'en', // Ensure defaultLang is not undefined
       defaultLang: defaultLang?.language ?? 'en',
     });
@@ -49,10 +48,9 @@ export class LanguageState {
 
   @Action(SetLanguage)
   setLang(
-    { patchState }: StateContext<LanguageStateModel>,
+    { patchState }: StateContext<LanguageStateModel>, 
     { language }: SetLanguage
   ) {
-    console.log('Setting language to:', language);
     if (!language) {
       console.error('Trying to set an undefined language!');
       return;

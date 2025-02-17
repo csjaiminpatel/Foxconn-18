@@ -71,7 +71,8 @@ export class AuthenticationState {
     await this.configService.loadConfig();
 
     this.authService.getIsAuthorized().subscribe(async (isAuthorized) => {
-      if (isAuthorized) {
+    // let isAuthorized = this.authService.getIsAuthorized();
+      if (isAuthorized.isAuthenticated) {
         const username = await this.authService.getUserName();
         const upn = await this.authService.getUpn();
         const primarySid = await this.authService.getPrimarySid();

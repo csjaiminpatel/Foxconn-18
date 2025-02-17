@@ -28,7 +28,7 @@ export class ConfigService {
 
   getSettings(key: string) {
     if (!this.config) {
-      console.warn('Configuration not loaded yet.');
+      // console.warn('Configuration not loaded yet.');
       return undefined;  // Return default value if config isn't loaded
     }
     if (this.config.hasOwnProperty(key)) {

@@ -34,7 +34,9 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/devextreme/dist/css/dx.light.css"
+              "node_modules/devextreme/dist/css/dx.light.css",
+              "src/styles/material-symbols/material-symbols.css",
+              "src/styles/material-icons/material-icons.css"
             ],
             "scripts": [],
             "stylePreprocessorOptions": {
@@ -61,7 +63,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true
@@ -75,12 +77,13 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true
             },
             "orion-cs": {
+              "sourceMap": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -89,6 +92,7 @@
               ]
             },
             "prod-dev": {
+              "sourceMap": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -104,6 +108,7 @@
               ]
             },
             "stag": {
+              "sourceMap": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

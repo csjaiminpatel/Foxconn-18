@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   HttpInterceptor,
   HttpHandler,
@@ -7,14 +7,14 @@ import {
   HttpEvent,
 } from '@angular/common/http';
 
-import {catchError} from 'rxjs/operators';
-import {throwError, Observable} from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { throwError, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { LanguageState } from '../../modules/auth/store/language/language.state';
-import { ERROR } from '../../modules/Enums/error.enum';
-import { NotificationService } from '../../modules/auth/services/Notification/notification.service';
+import { LanguageState } from '../store/language/language.state';
+import { ERROR } from '../../Enums/error.enum';
+import { NotificationService } from '../services/Notification/notification.service';
 
 
 @Injectable()
@@ -27,14 +27,14 @@ export class ServerErrorInterceptor implements HttpInterceptor {
   private router = inject(Router);
   private store = inject(Store);
   private translate = inject(TranslateService);
-  private notificationService= inject(NotificationService)
+  private notificationService = inject(NotificationService)
 
   constructor(
-  ) {}
+  ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Clone the request to add the new header
-    const languageSnapshot = <{code: string; language: string; description: string}>(
+    const languageSnapshot = <{ code: string; language: string; description: string }>(
       this.store.selectSnapshot(LanguageState.getCurrentLang)
     );
     let clonedRequest = req;
@@ -48,7 +48,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
       catchError((error: any) => {
         //this.logError(error, clonedRequest.url);
         if (!this.isLoginPage(error) && (!this.isHomePage && !this.isNotifications(error))) {
-          const {status} = error;
+          const { status } = error;
 
           switch (status) {
             case ERROR.BAD_REQUEST:
@@ -74,7 +74,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
     );
   }
 
-  getExtractedErrorMessage(error:any, url?:string) {
+  getExtractedErrorMessage(error: any, url?: string) {
 
     if (url && url.includes('token')) {
       return;
@@ -111,12 +111,12 @@ export class ServerErrorInterceptor implements HttpInterceptor {
   /**
    * Checks if activated route is login
    */
-  private isLoginPage = ({url}: HttpErrorResponse) => url?.includes('/login');
+  private isLoginPage = ({ url }: HttpErrorResponse) => url?.includes('/login');
 
   /*home indication*/
-  private isHomePage: boolean  = this.router.url.includes('/home');
+  private isHomePage: boolean = this.router.url.includes('/home');
 
-  private isNotifications = ({url}: HttpErrorResponse) => url?.includes('/Notifications');
+  private isNotifications = ({ url }: HttpErrorResponse) => url?.includes('/Notifications');
 
   /**
    * Displays snackbar with message that user access was forbidden

@@ -2,10 +2,14 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from "./modules/dashboard/sidebar/sidebar.component";
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { Actions, ofActionDispatched } from '@ngxs/store';
+import { Actions, ofActionDispatched, Store } from '@ngxs/store';
 import { filter, distinctUntilChanged, map } from 'rxjs';
-import { BreadCrumb } from './modules/auth/models/auth.model';
+import { AppConfigLanguageItem, BreadCrumb } from './modules/auth/models/auth.model';
 import { LoginSuccess, LoginSuccessDomain, LoginApplicationTest } from './modules/auth/store/authentication.actions';
+import { AuthService } from './modules/auth/services/auth.service';
+import { environment } from '../environments/environment';
+import { SetupLanguage } from './modules/auth/store/language/language.actions';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -32,64 +36,61 @@ export class AppComponent implements OnInit {
 
   // service
   public oidcSecurityService = inject(OidcSecurityService);
+  public authService = inject(AuthService);
   private actions = inject(Actions);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
+  private readonly translate= inject(TranslateService);
+  private readonly store= inject(Store);
+
 
   ngOnInit() {
-  
-    this.oidcSecurityService.checkAuth().subscribe(authResult => {
-      console.log('Auth Result:', authResult);
-      this.showSidebar = authResult.isAuthenticated;
-      this.sidebarWidth = authResult.isAuthenticated ? this.SIDEBAR_COLLAPSE_WIDTH : 0;
-      this.mainWindowWidth = authResult.isAuthenticated ? 100 - this.SIDEBAR_COLLAPSE_WIDTH : 100;
+    this.authService.getIsAuthorized().subscribe((isAuthorized) => {
+      let isAuthorizedToken = isAuthorized;
+      this.showSidebar = isAuthorizedToken.isAuthenticated;
+      this.sidebarWidth = isAuthorizedToken ? this.SIDEBAR_COLLAPSE_WIDTH : 0;
+      this.mainWindowWidth = isAuthorizedToken ? 100 - this.SIDEBAR_COLLAPSE_WIDTH : 100;
     });
-    
-     // ✅ Track Router Events for Toolbar & Sidebar
-     this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        const { url } = event;
-        if (url !== '/dashboard') {
-          // Example of session cancellation logic
-          console.log('Session cancellation invoked');
-        }
+  
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart && this.authService.getCancellationToken()) {
+        const {url} = event;
+        if (url !== '/dashboard')
+        this.authService.invokeCancellationToken();
       }
       if (event instanceof NavigationEnd) {
-        const { url } = event;
-        this.showToolbar = !['/', '/login', '/home'].includes(url);
+        const {url} = event;
+        if (url === '/' || url === '/login' || url === '/home') {
+          this.showToolbar = false;
+        } else {
+          this.showToolbar = true;
+        }
       }
     });
 
-    // ✅ Update Breadcrumb Navigation
     this.router.events
       .pipe(
-        filter(event => event instanceof NavigationEnd),
+        filter((event) => event instanceof NavigationEnd),
         distinctUntilChanged(),
-        map(() => this.buildBreadCrumb(this.activatedRoute.root))
+        map((event) => this.buildBreadCrumb(this.activatedRoute.root))
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         // this.store.dispatch(new SetApplicationUrl(res));
       });
 
-    // ✅ Redirect on Login Success
     this.actions
       .pipe(ofActionDispatched(LoginSuccess, LoginSuccessDomain, LoginApplicationTest))
       .subscribe(() => {
         this.router.navigate(['/dashboard']);
       });
 
-    // ✅ Set Language Configuration
+    const language = environment.language;
+    const defaultLang: AppConfigLanguageItem = language.default;
+    const languages: AppConfigLanguageItem[] = language.languages;
 
-    // const language = environment.language;
-    // const defaultLang: AppConfigLanguageItem = language.default;
-    // const languages: AppConfigLanguageItem[] = language.languages;
-
-    // this.translate.setDefaultLang(defaultLang.code);
-    // this.translate.use(defaultLang.code);
-    // console.log('defaultLang-appcomponent',languages, defaultLang);
-    // this.store.dispatch(new SetupLanguage(languages, defaultLang));
-
-    // ✅ Set Favicon based on Environment
+    this.translate.setDefaultLang(defaultLang.code);
+    this.translate.use(defaultLang.code);
+    this.store.dispatch(new SetupLanguage(languages, defaultLang));
     this.changeFaviconBasedOnEnvironment();
 
     
