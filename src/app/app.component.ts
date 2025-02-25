@@ -17,7 +17,7 @@ import { ToolbarComponent } from './modules/dashboard/toolbar/toolbar.component'
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent,CommonModule,ToolbarComponent],
+  imports: [RouterOutlet, SidebarComponent, CommonModule, ToolbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -43,8 +43,8 @@ export class AppComponent implements OnInit {
   private actions = inject(Actions);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
-  private readonly translate= inject(TranslateService);
-  private readonly store= inject(Store);
+  private readonly translate = inject(TranslateService);
+  private readonly store = inject(Store);
 
 
   ngOnInit() {
@@ -54,15 +54,15 @@ export class AppComponent implements OnInit {
       this.sidebarWidth = isAuthorizedToken ? this.SIDEBAR_COLLAPSE_WIDTH : 0;
       this.mainWindowWidth = isAuthorizedToken ? 100 - this.SIDEBAR_COLLAPSE_WIDTH : 100;
     });
-  
+
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart && this.authService.getCancellationToken()) {
-        const {url} = event;
+        const { url } = event;
         if (url !== '/dashboard')
-        this.authService.invokeCancellationToken();
+          this.authService.invokeCancellationToken();
       }
       if (event instanceof NavigationEnd) {
-        const {url} = event;
+        const { url } = event;
         if (url === '/' || url === '/login' || url === '/home') {
           this.showToolbar = false;
         } else {
@@ -96,7 +96,7 @@ export class AppComponent implements OnInit {
     this.store.dispatch(new SetupLanguage(languages, defaultLang));
     this.changeFaviconBasedOnEnvironment();
 
-    
+
   }
 
   // Change favicon dynamically
