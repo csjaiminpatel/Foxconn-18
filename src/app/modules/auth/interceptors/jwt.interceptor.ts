@@ -10,89 +10,59 @@ import { Store } from '@ngxs/store';
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
   private authService = inject(AuthService);
-  private configService = inject(ConfigService);
-  private store = inject(Store);
 
   constructor(
   ) {
-    console.log('JwtInterceptor works!!');
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return Observable.create((observer: any) => {
-      const item = this.configService;
-      observer.next(item);
-      observer.complete();
-    }).pipe(
-      mergeMap((res: ConfigService) => {
-        let modifiedRequest;
+    console.log('JwtInterceptor: Checking AuthService instance:', this.authService);
 
-        //modify request if there's an id_token_hint parameter, then remove it
-        if (req.url.includes('id_token_hint')) {
-          const url = req.url.split('?');
-          const urlParams = url[1].split('&');
-          const newUrl = urlParams.filter((param) => !param.includes('id_token_hint')).join('&');
-          modifiedRequest = req.clone({
-            url: `${url[0]}?${newUrl}`,
-          });
-        } else {
-          modifiedRequest = req;
-        }
-        if (this.authService.ignoreUrlsForToken(req.url)) {
-          modifiedRequest = this.setAuthorizationAdfsHeaders(req);
-          return next.handle(modifiedRequest).pipe(takeUntil(this.authService.getCancellationTokenObservable())); // Regular API Calls
-        } else {
-          return next.handle(req); // OIDC related API calls
-        }
-      })
-    );
-  }
-
-  /**
-   * Sets token to header for every request
-   * @param request
-   */
-  private setTokenHeaders(request: HttpRequest<any>) {
-    const token = this.store.selectSnapshot(AuthenticationState.token);
-
-    if (token) {
-      return request.clone({
-        headers: request.headers.append('token', token),
-      });
-    }
-    return request;
-  }
-
-  /**
-   * Sets Authorization header for every request
-   * @param request
-   */
-  private setAuthorizationHeaders(request: HttpRequest<any>) {
-    const token = this.store.selectSnapshot(AuthenticationState.token);
-
-    if (token) {
-      return request.clone({
-        headers: request.headers.append('Authorization', `Bearer ${token}`),
-      });
+    if (!this.authService) {
+      console.error('JwtInterceptor: AuthService is undefined!');
+      return next.handle(req);
     }
 
-    return request;
-  }
 
-  /**
-   * Sets Authorization header for every request
-   * @param request
-   */
-  private setAuthorizationAdfsHeaders(request: HttpRequest<any>) {
+    console.log('✅ JwtInterceptor: Intercepting request', req);
 
-    this.authService.resetIdleTimeout();
+    const ignoreUrlsForToken: string[] = this.authService.ignoreUrlsToSetToken?.() || [];
+    const ignoreUrls = [...ignoreUrlsForToken, '/config/config.', 'i18n/', 'openid-configuration', 'openid-connect'];
+
+    // 1️⃣ **Skip authentication for ignored URLs**
+    console.log('❌ ignoreUrls: ', this.authService.isAuth());
+    let ignoreUrl = ignoreUrls.some(url => req.url.includes(url));
+    if (ignoreUrl) {
+      console.warn('⚠️ JwtInterceptor: Ignoring token attachment for URL', req.url);
+      return next.handle(req);
+    }
+
+    // 2️⃣ **Ensure user is authenticated**
+    const isAuthenticated = this.authService.isAuth();
+    if (!isAuthenticated) {
+      console.warn('JwtInterceptor: User is not authenticated, skipping token attachment.');
+      return next.handle(req);
+    } else {
+      console.log('JwtInterceptor: User is authenticated');
+    }
+
+    // 3️⃣ **Retrieve token**
     const token = this.authService.getIdToken();
-    if (token) {
-      return request.clone({
-        headers: request.headers.append('Authorization', `Bearer ${token}`),
-      });
+    if (!token) {
+      console.warn('JwtInterceptor: No token found, skipping token attachment.');
+      return next.handle(req);
+    } else {
+      console.log('JwtInterceptor: Token found', token);
     }
 
-    return request;
+    // 4️⃣ **Modify request to include Authorization header**
+    const modifiedReq = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` }
+    });
+
+    console.log('JwtInterceptor: Token added to request', modifiedReq);
+
+    return next.handle(modifiedReq);
   }
+
 }

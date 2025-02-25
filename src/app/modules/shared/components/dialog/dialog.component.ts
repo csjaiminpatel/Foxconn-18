@@ -19,12 +19,12 @@ import { MatIconModule } from '@angular/material/icon';
 export class DialogComponent {
 
   @Input() title?: string;
-  @Input() disableClose = false;
-  @Input() hideClose = false;
-  @Input() hideHeader = false;
-  @Input() hideFooter = false;
-  @Input() hideActions = false;
+  @Input() disableClose?: boolean = false;
+  @Input() hideClose?: boolean = false;
+  @Input() hideHeader?: boolean = false;
+  @Input() hideFooter?: boolean = false;
+  @Input() hideActions?: boolean = false;
   @Input() customClasses?: string;
 
-  
+
 }

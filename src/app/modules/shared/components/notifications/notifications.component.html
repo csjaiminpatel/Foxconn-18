@@ -1,0 +1,77 @@
+<!-- <orion-platform-page-header routerLinks="/material-management/supply-visibility-dashboard"
+                            routerTitles="{{ 'navigation.dashboard' | translate }}" title="{{ 'navigation.notifications' | translate }}">
+</orion-platform-page-header> -->
+<orion-platform-dialog
+  [title]="'navigation.notifications' | translate"
+  [customClasses]="customClasses"
+>
+  <div header class="mark-all">
+    <button (click)="onMarkAllAsRead()" mat-button>
+      <mat-icon>message</mat-icon> Mark all as read
+    </button>
+  </div>
+
+  <div content>
+    <div class="notifications-container">
+      <div fxLayout="row">
+        <div
+          class="notifications-list-with-border"
+          fxLayout="column"
+          fxFlex="350px"
+        >
+          @for (notification of notifications; track $index) {
+            <div
+              [hidden]="loadingPosition == 'MIDDLE'"
+              (click)="setNotificationDetails(notification?.id)"
+              class="notification-info-item"
+              [ngClass]="{
+                selected: notificationId == notification.id,
+                unread: !notification.isRead,
+              }"
+            >
+              <h2 class="title">{{ notification.title }}</h2>
+              <p class="date">{{ notification.createdBy }}</p>
+              <p class="date">
+                {{ notification.dateCreated | date: "d.M.yyyy HH:mm" }}
+              </p>
+            </div>
+          }
+        </div>
+
+        <div
+          *ngIf="loadingPosition != 'NONE'"
+          class="notifications--spinner-wrapper"
+        >
+          <orion-platform-progress-spinner
+            [ngClass]="{
+              'notifications--spinner': loadingPosition == 'RIGHT',
+              'notifications--spinner--center': loadingPosition == 'MIDDLE',
+            }"
+            class="notifications--spinner"
+          >
+          </orion-platform-progress-spinner>
+        </div>
+
+        <div [hidden]="loadingPosition != 'NONE'" class="w-100">
+          <div class="notifications-detail">
+            <div
+              class="header"
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+            >
+              <h1 class="title" fxFlex>{{ notificationDetail?.title }}</h1>
+              <span fxFlex class="date">{{
+                notificationDetail?.dateCreated | date: "MMM d, y HH:mm"
+              }}</span>
+            </div>
+            <p
+              id="parentLinkEvents"
+              [innerHTML]="notificationDetail?.message | sanitizedHtml"
+              class="message"
+            ></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</orion-platform-dialog>

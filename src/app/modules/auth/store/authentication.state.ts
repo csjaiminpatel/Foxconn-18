@@ -7,7 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { ConfigService } from '../../../services/config.service';
 import { SupplyVisibilityRights, AuthenticatedUser, AuthenticationStateModel } from '../models/auth.model';
 import { AuthService } from '../services/auth.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
 import { LoginAdfsSuccess, SetUserRights, SetUserRightsSuccess, SetManageCommitsRights, LoginApplication, LoginSuccess, LoginCanceled, LoginApplicationTest, Logout, LogoutTest, FetchAdfsPlants, LogoutAdfs, LoginSuccessDomain, LoginErrorDomain, FetchPlants, GetGlobalNotificationsByFilter, GetGlobalNotificationsByFilterSuccess, GetGlobalNotificationsByFilterError, SetUserRole, LoginAdfs, LoginApplicationDomain, LogoutDomain, SetActivePlant } from './authentication.actions';
 
@@ -71,7 +71,7 @@ export class AuthenticationState {
     await this.configService.loadConfig();
 
     this.authService.getIsAuthorized().subscribe(async (isAuthorized) => {
-    // let isAuthorized = this.authService.getIsAuthorized();
+      // let isAuthorized = this.authService.getIsAuthorized();
       if (isAuthorized.isAuthenticated) {
         const username = await this.authService.getUserName();
         const upn = await this.authService.getUpn();
@@ -126,85 +126,85 @@ export class AuthenticationState {
   }
 
   @Selector()
-  static isLoggedIn({isLoggedIn}: AuthenticationStateModel) {
+  static isLoggedIn({ isLoggedIn }: AuthenticationStateModel) {
     return isLoggedIn;
   }
 
   @Selector()
-  static tenants({tenants}: AuthenticationStateModel) {
+  static tenants({ tenants }: AuthenticationStateModel) {
     return tenants;
   }
 
   @Selector()
-  static activeTenant({activeTenant}: AuthenticationStateModel) {
+  static activeTenant({ activeTenant }: AuthenticationStateModel) {
     return activeTenant;
   }
 
   @Selector()
-  static username({username}: AuthenticationStateModel) {
+  static username({ username }: AuthenticationStateModel) {
     return username;
   }
   @Selector()
-  static upn({upn}: AuthenticationStateModel) {
+  static upn({ upn }: AuthenticationStateModel) {
     return upn;
   }
   @Selector()
-  static primarySid({primarySid}: AuthenticationStateModel) {
+  static primarySid({ primarySid }: AuthenticationStateModel) {
     return primarySid;
   }
 
   @Selector()
-  static commitModuleRights({commitsModuleRights}: AuthenticationStateModel) {
+  static commitModuleRights({ commitsModuleRights }: AuthenticationStateModel) {
     return commitsModuleRights;
   }
 
   @Selector()
-  static configurationRights({configurationRights}: AuthenticationStateModel) {
+  static configurationRights({ configurationRights }: AuthenticationStateModel) {
     return configurationRights;
   }
 
   @Selector()
-  static dashboardRights({dashboardRights}: AuthenticationStateModel) {
+  static dashboardRights({ dashboardRights }: AuthenticationStateModel) {
     return dashboardRights;
   }
 
   @Selector()
-  static vendorListRights({vendorListRights}: AuthenticationStateModel) {
+  static vendorListRights({ vendorListRights }: AuthenticationStateModel) {
     return vendorListRights;
   }
 
   @Selector()
-  static supplyVisibilityRights({supplyVisibilityRights}: AuthenticationStateModel) {
+  static supplyVisibilityRights({ supplyVisibilityRights }: AuthenticationStateModel) {
     return supplyVisibilityRights;
   }
 
   @Selector()
-  static finantialModuleRights({finantialModuleRights}: AuthenticationStateModel) {
+  static finantialModuleRights({ finantialModuleRights }: AuthenticationStateModel) {
     return finantialModuleRights;
   }
 
   @Selector()
-  static dateTypeRights({dateTypeRights}: AuthenticationStateModel) {
+  static dateTypeRights({ dateTypeRights }: AuthenticationStateModel) {
     return dateTypeRights;
   }
-  
+
   @Selector()
-  static dateTypeRightList({dateTypeRightList}: AuthenticationStateModel) {
+  static dateTypeRightList({ dateTypeRightList }: AuthenticationStateModel) {
     return dateTypeRightList;
   }
 
   @Selector()
-  static menuAccessRightList({menuAccessRightList}: AuthenticationStateModel) {
+  static menuAccessRightList({ menuAccessRightList }: AuthenticationStateModel) {
     return menuAccessRightList;
-  } 
-   
+  }
+
   @Selector()
-  static widgetAccessRightList({widgetAccessRightList}: AuthenticationStateModel) {
+  static widgetAccessRightList({ widgetAccessRightList }: AuthenticationStateModel) {
     return widgetAccessRightList;
   }
 
   @Selector()
-  static statusRightList({statusRightList}: AuthenticationStateModel) {
+  static statusRightList({ statusRightList }: AuthenticationStateModel) {
     return statusRightList;
   }
 
@@ -407,11 +407,11 @@ export class AuthenticationState {
 
   @Action(LoginApplicationDomain)
   loginApplicationDomain(
-    {dispatch}: StateContext<AuthenticationStateModel>,
-    {domain, password, username, plant}: LoginApplicationDomain
+    { dispatch }: StateContext<AuthenticationStateModel>,
+    { domain, password, username, plant }: LoginApplicationDomain
   ) {
-    return this.authService.loginApplicationDomain({domain, password, username, plant}).pipe(
-      map(({token}: AuthenticatedUser) => {
+    return this.authService.loginApplicationDomain({ domain, password, username, plant }).pipe(
+      map(({ token }: AuthenticatedUser) => {
         if (token) {
           return dispatch(new LoginSuccessDomain(token, plant, username));
         }
@@ -438,8 +438,8 @@ export class AuthenticationState {
   loginCanceledDomain() { }
 
   @Action(LogoutDomain)
-  logoutDomain({getState, setState}: StateContext<AuthenticationStateModel>) {
-    const {plant, plants, activeTenant} = getState();
+  logoutDomain({ getState, setState }: StateContext<AuthenticationStateModel>) {
+    const { plant, plants, activeTenant } = getState();
 
     return this.authService.logoutDomain().pipe(
       tap(() => {
@@ -458,7 +458,7 @@ export class AuthenticationState {
       })
     );
   }
-  
+
   @Action(FetchPlants)
   fetchPlants({ patchState }: StateContext<AuthenticationStateModel>) {
     const plants = this.authService.fetchPlants();
@@ -499,7 +499,7 @@ export class AuthenticationState {
 
   private async getActivePlants() {
     const apiUrl = this.configService.getSettings('userSettingsService');
-    const result = await firstValueFrom(
+    const result = await lastValueFrom(
       this.http.get<any>(`${apiUrl}${environment.activePlants.getactiveplants}`)
     );
     return result;
@@ -515,7 +515,7 @@ export class AuthenticationState {
 
   @Action(SetActivePlant)
   setActivePlant(
-    {patchState, dispatch}: StateContext<AuthenticationStateModel>,
+    { patchState, dispatch }: StateContext<AuthenticationStateModel>,
     { plant }: SetActivePlant
   ) {
     patchState({

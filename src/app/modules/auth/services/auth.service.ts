@@ -30,7 +30,7 @@ export class AuthService {
   //#region Private Variables
   private isPrivateMode: boolean = false;
   private hasStorage?: boolean;
-  private writeLogs: boolean = true;
+  private writeLogs: boolean = false;
   private readonly tabId: string = uuidv4();
   private readonly idleTimeOutInMilliseconds: number = environment.tokenConfig.idleTimeOutInMilliseconds;
   private readonly tokenExpireOffsetInSeconds: number = environment.tokenConfig.tokenExpireOffsetInSeconds;
@@ -83,20 +83,18 @@ export class AuthService {
     this.oidcSecurityService.checkAuth().subscribe({
       next: (auth) => {
         if (auth.isAuthenticated) {
-          console.log("🔥🔥")
+          console.log("🔥")
           this.isAuthenticated = true;
 
-          this.initialConfigLoaded(auth);
+          // this.initialConfigLoaded();
 
         } else {
           console.log("❌ OIDC Auth Status:", auth.isAuthenticated);
           this.isAuthenticated = false;
-
           this.writeLogs ? this.writeLog("[01-130] init LogOffLocal - True") : null
           const { currentPath } = this.getCurrentPath();
           currentPath != '/' && currentPath != '/home' ? this.setRedirectUrl(currentPath) : null;
           this.redirectOnAuthentication(false);
-
         }
       },
       error: (err) => {
@@ -104,6 +102,10 @@ export class AuthService {
         console.error("❌ OIDC Auth Error:", err);
       },
       complete: () => {
+        this.initialConfigLoaded();
+        this.oidcSecurityService.isAuthenticated$.subscribe((isAuthenticated) => {
+          this.isAuthenticated$ = isAuthenticated.isAuthenticated;
+        });
         console.log("🔄 OIDC Auth Check Complete");
       }
     });
@@ -145,6 +147,10 @@ export class AuthService {
 
   public invokeCancellationToken() {
     this.cancellationToken$.next(undefined);
+  }
+
+  isAuth(): boolean {
+    return this.isAuthenticated;
   }
 
   public getCancellationTokenObservable() {
@@ -252,12 +258,21 @@ export class AuthService {
   _getIsAuthorized(): boolean {
     return this.isAuthenticated;
   }
-  getIdToken() {
-    return this.oidcSecurityService.getIdToken();
+  getIdToken(): string {
+    let idToken: string = '';
+    this.oidcSecurityService.getIdToken().subscribe((token) => {
+      idToken = token;
+    });
+    return idToken;
   }
 
-  getToken() {
-    return this.oidcSecurityService.getAccessToken();
+
+  getToken(): string {
+    let idToken: string = '';
+    this.oidcSecurityService.getAccessToken().subscribe((token) => {
+      idToken = token;
+    });
+    return idToken;
   }
 
   getPayloadFromIdToken() {
@@ -411,11 +426,11 @@ export class AuthService {
     sessionStorage.setItem(EnumAuthFlags.OidcInitiated, this.CACHED_FLAG_VALUE);
     that.sendLocalStorageEvent(EnumSharedSessionEvents.Request);
 
-    if (data && data.wellknown) {
+    if (data && data.authWellknownEndpoints) {
       that.ignoreUrls = [
-        data.wellknown['jwksUri'],
-        data.wellknown['authorizationEndpoint'],
-        data.wellknown['tokenEndpoint'],
+        data.authWellknownEndpoints['jwksUri'],
+        data.authWellknownEndpoints['authorizationEndpoint'],
+        data.authWellknownEndpoints['tokenEndpoint'],
         //, 'notificationHub'
       ];
     } else {
@@ -442,23 +457,22 @@ export class AuthService {
     that.writeLogs ? that.writeLog('onConfigLoaded', data) : null;
   }
 
-  
 
-  private initialConfigLoaded(data: any) {
-    console.log('initialConfigLoaded', data);
+
+  private initialConfigLoaded() {
     this.sharedSessionStatus = 'Waiting';
     sessionStorage.setItem(EnumAuthFlags.OidcInitiated, this.CACHED_FLAG_VALUE);
     this.sendLocalStorageEvent(EnumSharedSessionEvents.Request);
 
     this.oidcSecurityService.preloadAuthWellKnownDocument().subscribe(endpoints => {
       if (endpoints) {
-        if(endpoints.jwksUri) {
+        if (endpoints.jwksUri) {
           this.ignoreUrls.push(endpoints.jwksUri);
         }
-        if(endpoints.authorizationEndpoint) {
+        if (endpoints.authorizationEndpoint) {
           this.ignoreUrls.push(endpoints.authorizationEndpoint);
         }
-        if(endpoints.tokenEndpoint) {
+        if (endpoints.tokenEndpoint) {
           this.ignoreUrls.push(endpoints.tokenEndpoint);
         }
 
@@ -468,10 +482,15 @@ export class AuthService {
       console.log('Ignore URLs:', this.ignoreUrls);
     });
 
-    
+
 
     this.IfAuthenticated();
-    this.writeLogs ? this.writeLog('init onConfigLoaded', data) : null;
+    this.writeLogs ? this.writeLog('init onConfigLoaded') : null;
+  }
+
+  ignoreUrlsToSetToken(): string[] {
+    return this.ignoreUrls;
+
   }
 
   IfAuthenticated() {
@@ -636,9 +655,9 @@ export class AuthService {
 
   private async setSignalR(): Promise<void> {
     if (this.signalRService.isAppHubConnected) {
-      this.signalRService.reconnectSignalRService(await firstValueFrom(this.getIdToken()));
+      this.signalRService.reconnectSignalRService(this.getIdToken());
     } else {
-      this.signalRService.initSignalRService(await firstValueFrom(this.getIdToken()));
+      this.signalRService.initSignalRService(this.getIdToken());
     }
     this.signalRService.setTokenReady(true);
   }

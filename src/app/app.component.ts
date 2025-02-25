@@ -10,11 +10,14 @@ import { AuthService } from './modules/auth/services/auth.service';
 import { environment } from '../environments/environment';
 import { SetupLanguage } from './modules/auth/store/language/language.actions';
 import { TranslateService } from '@ngx-translate/core';
+import { Common } from 'devextreme-angular';
+import { CommonModule } from '@angular/common';
+import { ToolbarComponent } from './modules/dashboard/toolbar/toolbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent],
+  imports: [RouterOutlet, SidebarComponent,CommonModule,ToolbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

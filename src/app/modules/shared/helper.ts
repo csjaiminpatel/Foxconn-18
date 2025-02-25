@@ -1,5 +1,11 @@
 import { Router } from "@angular/router";
 import { UserRights, SupplyVisibilityRights, CommitsModuleRights, DashboardsRights, VendorListRights, ConfigurationRights, FinancialModuleRights, DateTypeRights } from "../auth/models/auth.model";
+import moment from 'moment';
+import { BatchEditCommits, Commit, DateRangeParameters } from "../dashboard/models/supply-visibility.model";
+import { NotificationService } from "../auth/services/Notification/notification.service";
+import { ElementRef, Renderer2 } from "@angular/core";
+import { Store } from "@ngxs/store";
+import { HandleLinkEvents } from "../dashboard/stores/supply-visibility/supply-visibility.actions";
 
 export class Helper {
   //#region UserRightsModels
@@ -8,6 +14,211 @@ export class Helper {
     window.open(serializedUrl, '_blank');
   }
   //#endregion
+  //#region UserRightsModels
+  static readonly dateFields = [
+    'actualETADate',
+    'deliveryDate',
+    'eddDate',
+    'etaDate',
+    'etdDate',
+    'etaPortDate',
+    'expirationDate',
+    'inboundDeliveryDate',
+    'receiveDate',
+    'recomitRequestDate',
+    'requestDate',
+    'scheduleLineDate',
+    'slotDate',
+    'sapDeliveryDate',
+    'triggerDate',
+    'instructionEtaDate',
+    'purchasingDocumentDate',
+    'lastUpdateDate',
+    'otmReceivedDate',
+    'codeDate',
+    'arrivalDate',
+    'plannedOrderStatus'
+  ];
+
+  public static formatCommitDate(commit: any) {
+    const dateTimePickerFields: string[] = ['slotDate', 'arrivalDate']; //NOTE For fields having dateTimePicker
+    const dateFields = this.dateFields.filter((field) => {
+      return !dateTimePickerFields.includes(field);
+    });
+
+    for (let index = 0; index < dateFields.length; index++) {
+      const element = dateFields[index];
+      if (commit[element]) {
+        commit[element] = this.formatDate(commit[element]);
+      }
+    }
+    return commit;
+  }
+
+  public static formatBatchCommitDate(filter: BatchEditCommits) {
+    const dateTimePickerDates: string[] = ['slotDate', 'arrivalDate'];
+
+    const keys = this.dateFields
+      .filter((date) => !dateTimePickerDates.includes(date))
+      .map((v) => v.toLowerCase());
+    filter.fields.forEach((element) => {
+      if (keys.indexOf(element.key.toLowerCase()) >= 0) {
+        element.value = element.value ? this.formatDate(element.value) : null;
+      }
+    });
+    return filter;
+  }
+  public static formatDate(value: any) {
+    if (value && value != 'Invalid date')
+      try {
+        return moment(value).format('YYYY-MM-DD');
+      } catch (e) {
+        return value;
+      }
+  }
+
+
+  public static getNumberRegex(isEmpty?: boolean): RegExp {
+    return new RegExp(`[0-9]${isEmpty ? '' : '+'}`, 'g');
+  }
+
+
+  public static setClickEventsOnInnerTemplate(
+    store: Store,
+    document: any,
+    elRef: ElementRef,
+    renderer: Renderer2
+  ) {
+    if (document.getElementById('parentLinkEvents')) {
+      const rendererListeners: any[] = [];
+      const allContent = elRef.nativeElement.querySelector('#linkEvents');
+      const parentContainer = elRef.nativeElement.querySelector('#parentLinkEvents');
+      renderer.appendChild(parentContainer, allContent);
+      renderer.removeStyle(allContent, 'display');
+      const clickButtons = elRef.nativeElement.querySelectorAll('.clickHandleAnchor');
+      for (let i = 0; i < clickButtons.length; i++) {
+        let disableClick = false;
+        const rendererListener = renderer.listen(clickButtons[i], 'click', ($event) => {
+          if (disableClick) {
+            return;
+          }
+          disableClick = true;
+
+          const eventData: string = $event.target.dataset ? $event.target.dataset.value : null;
+          store.dispatch(new HandleLinkEvents(eventData));
+          setTimeout(() => {
+            disableClick = false;
+          }, 3000);
+        });
+        rendererListeners.push(rendererListener);
+      }
+      return rendererListeners;
+    }
+    return [];
+  }
+  /**
+   * For destroying/unlisten any elements in renderer
+   * @returns void
+   */
+  public static destroyRendererListener(rendererListeners: any[]): void {
+    for (let i = 0; i < rendererListeners.length; i++) {
+      rendererListeners[i]();
+    }
+  }
+
+  public static addLinkEventsOnHtmlString(message: string): string {
+    //Pattern #commit:{00000000}
+    const eventRegex: RegExp = this.getLinkEventRegex();
+    const eventValueRegex: RegExp = this.getNumberRegex();
+    const unformattedEvent = message.match(eventRegex) || [];
+    for (let i = 0; i < unformattedEvent.length; i++) {
+      const eventValue = unformattedEvent[i].match(eventValueRegex) || [];
+      if (eventValue.length > 0) {
+        //const hrefUrl =`${this.PATH_COMMITS}?Event=${encodeURIComponent(unformattedCommitId[i])}`;
+        if (eventValue[0]) {
+          const anchor = this.generateAnchorTagString(
+            eventValue[0],
+            unformattedEvent[i].replace('#', 'hdl-'),
+            i.toString()
+          );
+          message = message.replace(unformattedEvent[i], anchor);
+        }
+      }
+    }
+
+    message = this.addErrorToMesage(message);
+
+    return `<span id='linkEvents' style='display:none;'>${message}</span>`;
+  }
+
+  public static addErrorToMesage(message: string): string {
+
+    const replaceWithError = ((messagePart: string) => {
+      const regex = new RegExp(`\\*error`, 'g');
+      messagePart = messagePart.replace(regex, '');
+      return `<span class="error-notification" style="color:red;">${messagePart}</span>`;
+    });
+
+    const messageParts = message.split("<br>");
+
+    messageParts.forEach((part, index) => {
+      if (this.notificationHasError(part)) {
+        messageParts[index] = replaceWithError(part);
+      }
+    });
+
+    message = messageParts.join("<br>");
+
+    return message;
+
+
+  }
+
+
+  public static notificationHasError(message: string): boolean {
+    return message !== message.replace("*error", "");
+  }
+  //#region Generate Dynamic Html Elements
+
+  public static generateAnchorTagString(
+    text: string,
+    value: string,
+    id: string,
+    hrefLink?: string
+  ): string {
+    //RND For Normal Tag With Style
+    return ` <a class="clickHandleAnchor" id="${id}" href="${hrefLink ? hrefLink : 'javascript:void(0)'
+      }" target="_self" data-value='${value}'>${text}</a> `; // do not remove space
+  }
+
+  //#endregion Generate Dynamic Html Elements
+
+  //#region Keys
+  // public static readonly REVIEW_FLAG_KEY: string = 'Review';
+  public static readonly REVIEW_BUYER_FLAG: string = 'ReviewByBuyer';
+  public static readonly REVIEW_SUPPLIER_FLAG: string = 'ReviewBySupplier';
+  public static readonly REVIEW_CUSTOMER_FLAG: string = 'ReviewByCustomer';
+  public static readonly SV_MODULE: string = 'sv-module';
+  public static readonly COMMIT_MODULE: string = 'commits-module';
+  public static readonly VENDORS_MODULE: string = 'vendors-module';
+  public static readonly MYPORTFOLIO_MODULE: string = 'myPortFolio-module';
+  public static readonly MMVIEWS_MODULE: string = 'MMViews-module';
+  public static readonly CONTACTS_MODULE: string = 'contacts-module';
+  public static readonly PNGROUP_MODULE: string = 'pn-groups-module';
+  public static readonly QUOTATIONS_MODULE: string = 'quotations-module';
+  public static readonly CARRIERS_MODULE: string = 'carriers-module';
+  public static readonly GOODRECEIPTS_MODULE: string = 'goodReceipts-module';
+  public static readonly INVOICING_MODULE: string = 'invoicing-module';
+  public static readonly FINANCIAL_MODULE: string = 'financial-module';
+  public static readonly ACTIVITY_MODULE: string = 'activity-module';
+  public static readonly PARTNUMBERS_MODULE: string = 'partnumbers-module';
+  public static readonly QAP_MODULE: string = 'qap-module';
+  public static readonly PORTFOLIO_MODULE: string = 'portfolio-module';
+  public static readonly GLOBALNOTIFICATIONS_MODULE: string = 'globalNotifications-module';
+  public static readonly SHIPMENTS_MODULE: string = 'shipments-module';
+  public static readonly VENDORCODE_RIGHTS_MODULE: string = 'vendorcodes-rights-module';
+
+  //#endregion Keys
 
   //#region UserRightsModels
   public static getUserRightByRole(role: string): UserRights | undefined {
@@ -1440,9 +1651,101 @@ export class Helper {
     return path;
   }
 
+  public static getWidgetAccess(widgetList: string[], data: any) {
+    if (widgetList && data) {
+      const filteredWidgetData = data.filter((item: any) => widgetList.includes(item.type));
+      return filteredWidgetData
+    }
+    else {
+      return [];
+    }
+  }
+
+
+  //#region set order
+  public static setOrderByAlpha(key: string, columns: any) {
+    columns = [...columns];
+    return columns.sort(function (a: { [key: string]: string }, b: { [key: string]: string }) {
+      const textA = a[key].toLowerCase();
+      const textB = b[key].toLowerCase();
+      return textA < textB ? -1 : textA > textB ? 1 : 0;
+    });
+  }
+  /**
+ *
+ * @param objectToCopy
+ * @returns gives object deepCopy
+ */
+  public static createCopy(objectToCopy: any): any {
+    return JSON.parse(JSON.stringify(objectToCopy));
+  }
+
+
+  //#endregion
+
+  //#region  Error 
   public static printError(error: any, title?: string): any {
     console.warn('**********Attention**************');
     title ? console.warn(`***********${title}***********`) : null;
     error ? console.error(error) : null;
   }
+
+  public static getCommitHistoryDateRange(): DateRangeParameters {
+    const dateFrom = moment().subtract(14, 'days');
+    const dateTo = moment().add(6, 'months');
+
+    const dateRange: DateRangeParameters = {
+      dateFrom: dateFrom,
+      dateTo: dateTo,
+    };
+    return dateRange;
+  }
+
+
+  public static showError(notificationService: NotificationService, error: any, msg: string) {
+    let message = error.message ? error.message : msg;
+    if (error.detail) {
+      message = error.detail;
+    }
+    if (error.error && error.error.detail) {
+      message = error.error.detail;
+    }
+    if (message) {
+      notificationService.showError(message);
+    } else {
+      notificationService.showError(msg);
+    }
+  }
+
+  //#endregion
+
+  //#region  Reg Exp
+  public static getLinkEventRegex(isHandleLink?: boolean): RegExp {
+    return new RegExp(isHandleLink ? 'hdl-[a-z]+:[0-9]+' : '#[a-z]+:[0-9]+', 'g');
+  }
+  //#endregion
+
+
+
+
+  private static readonly virtualVCRegex = new RegExp('VIRTUALVC', 'g');
+
+  public static virtualVCReplace(pnVC: string) {
+    let pnVCItems = pnVC.split(';');
+    pnVCItems = pnVCItems.map((pnVCItem) => {
+      const pnVCSplit = pnVCItem.split('|');
+      return pnVCSplit.length < 2
+        ? pnVCItem
+        : pnVCItem
+          .replace(pnVCSplit[1], pnVCSplit[1].toUpperCase())
+          .replace(this.virtualVCRegex, 'VirtualVC');
+    });
+    return pnVCItems.join(';');
+  }
+}
+export enum EnumDataStatus {
+  NONE = 0,
+  AVAILABLE = 1,
+  FETCHING = 2,
+  ERROR = 3,
 }

@@ -2,7 +2,7 @@ import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } fr
 import { provideRouter } from '@angular/router';
 import { OidcSecurityService, provideAuth, PublicEventsService } from 'angular-auth-oidc-client';
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthService } from './modules/auth/services/auth.service';
 import { provideStore } from '@ngxs/store';
 import { AuthenticationState } from './modules/auth/store/authentication.state';
@@ -19,8 +19,12 @@ export const appConfig: ApplicationConfig = {
     AuthService,
 
     // HTTP Interceptors
-    // jwtInterceptors,
-    provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    },
+    provideHttpClient(),
 
     // Zone optimization
     provideZoneChangeDetection({ eventCoalescing: true }),

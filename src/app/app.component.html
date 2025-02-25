@@ -3,6 +3,18 @@
       <orion-platform-sidebar [hidden]="!showSidebar"></orion-platform-sidebar>
   </aside>
   <main>
-    <router-outlet></router-outlet>
+    <!-- @if (showToolbar) { -->
+
+      <orion-platform-toolbar class="orion-toolbar--top">
+      </orion-platform-toolbar>
+    <!-- } -->
+    <div
+      [ngClass]="{
+        'orion-content-header-space': showToolbar,
+        'orion-content-full-height': !showToolbar
+      }"
+      class="orion-content--container">
+      <router-outlet></router-outlet>
+    </div>
   </main>
 </div>

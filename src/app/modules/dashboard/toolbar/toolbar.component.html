@@ -1,0 +1,182 @@
+<mat-toolbar color="primary" class="toolbar--container mat-elevation-z6">
+  <!-- <button mat-icon-button><mat-icon>menu</mat-icon></button> -->
+
+  <div class="flex-spacer">
+    <!-- <span class="brand--container" routerLink="/dashboard" (mousedown)="middleClickHandle('/dashboard',$event)">
+      <img src="/assets/img/core/orion-brand.svg" class="brand" />
+    </span> -->
+  </div>
+  <span class="app-title">
+    <img src="/assets/img/core/orion-logo.svg" class="brand" />
+  </span>
+
+  <div class="flex-spacer"></div>
+
+  <nav class="toolbar-action--container" mat-tab-nav-bar>
+    <!--
+      <button
+        mat-button
+        [matMenuTriggerFor]="themeMenu"
+        class="toolbar-action-item"
+      >
+        <mat-icon>format_color_fill</mat-icon>
+      </button>
+      <mat-menu #themeMenu="matMenu">
+        <button mat-menu-item><span>Purple</span></button>
+        <button mat-menu-item><span>Purple - dark</span></button>
+        <button mat-menu-item><span>Blue</span></button>
+        <button mat-menu-item><span>Yellow - dark</span></button>
+      </mat-menu>
+    -->
+
+    <button
+      mat-button
+      [matMenuTriggerFor]="plantSelector"
+      class="toolbar-action-item"
+    >
+      <mat-icon class="iconLogin">business</mat-icon>
+      {{ activePlant?.Code + " | " + activePlant?.Name }}
+    </button>
+    <mat-menu #plantSelector="matMenu">
+      <mat-radio-group
+        (change)="setActivePlant($event)"
+        class="toolbar-radio-group"
+      >
+        <div mat-menu-item *ngFor="let plant of plants">
+          <mat-radio-button
+            [checked]="activePlant?.Code === plant?.Code"
+            [value]="plant"
+          >
+            {{ plant?.Code + " | " + plant?.Name }}
+          </mat-radio-button>
+          <ng-template #visualizator>
+            <mat-radio-button
+              [checked]="activePlant === plant?.Code"
+              [value]="plant"
+            >
+              {{ plant?.Code + " | " + plant?.Name }}
+            </mat-radio-button>
+          </ng-template>
+        </div>
+      </mat-radio-group>
+    </mat-menu>
+
+    <button
+      mat-button
+      [matMenuTriggerFor]="languageMenu"
+      class="toolbar-action-item"
+    >
+      <mat-icon>language</mat-icon> {{ currentLang.description }}
+    </button>
+    <mat-menu #languageMenu="matMenu">
+      <mat-radio-group
+        (change)="setLanguage($event)"
+        class="toolbar-radio-group"
+      >
+        <div mat-menu-item *ngFor="let language of langs$ | async">
+          <mat-radio-button
+            [checked]="currentLang?.code === language?.code"
+            [value]="language"
+            >{{ language.description }}
+          </mat-radio-button>
+        </div>
+      </mat-radio-group>
+    </mat-menu>
+
+    <button
+      *ngIf="userName$ | async"
+      mat-button
+      [matMenuTriggerFor]="notificationsMenu"
+      class="toolbar-action-item"
+    >
+      <mat-icon
+        *ngIf="notificationsUnreadCount > 0"
+        matBadge="{{ notificationsUnreadCount }}"
+        matBadgeColor="warn"
+      >
+        notifications</mat-icon
+      >
+      <mat-icon *ngIf="notificationsUnreadCount == 0">notifications</mat-icon>
+    </button>
+
+    <mat-menu
+      [ngSwitch]="notificationsStatus"
+      #notificationsMenu="matMenu"
+      class="custom"
+    >
+      <div *ngSwitchCase="0">
+        <button mat-menu-item>
+          <span class="notification read">
+            <span class="title">{{
+              "toolbar.emptyNotifications" | translate
+            }}</span>
+          </span>
+        </button>
+      </div>
+
+      <div *ngSwitchCase="1">
+        <button
+          mat-menu-item
+          (click)="goToNotifications(notification.id)"
+          *ngFor="let notification of notifications.slice(0, 5)"
+        >
+          <span
+            class="notification{{
+              notification.isRead === true ? ' read' : ''
+            }}"
+          >
+            <span class="title">{{ notification.title }}</span>
+          </span>
+        </button>
+      </div>
+
+      <div *ngSwitchCase="2" class="spinner-center">
+        <mat-progress-spinner
+          [color]="color"
+          [mode]="mode"
+          [value]="value"
+          [diameter]="diameter"
+        >
+        </mat-progress-spinner>
+      </div>
+
+      <div *ngSwitchCase="3">
+        <button mat-menu-item>
+          <span class="notification read">
+            <span class="title">{{
+              "toolbar.notificationsError" | translate
+            }}</span>
+          </span>
+        </button>
+      </div>
+    </mat-menu>
+    <a
+      *ngIf="documentationLink !== ''"
+      class="menu-item"
+      href="{{ documentationLink }}"
+      target="_blank"
+      title="{{ 'toolbar.help' | translate }}"
+    >
+      <mat-icon>help</mat-icon>
+    </a>
+    <button
+      mat-button
+      [matMenuTriggerFor]="userMenu"
+      class="toolbar-action-item"
+    >
+      <mat-icon>person</mat-icon>
+      {{ userName$ | async }}
+    </button>
+
+    <mat-menu #userMenu="matMenu">
+      <button disabled mat-menu-item>
+        <mat-icon>settings</mat-icon>
+        <span>{{ "toolbar.settings" | translate }}</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>{{ "toolbar.logout" | translate }}</span>
+      </button>
+    </mat-menu>
+  </nav>
+</mat-toolbar>

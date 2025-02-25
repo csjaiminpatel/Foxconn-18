@@ -90,6 +90,7 @@
     "@angular/localize": "^18.2.13",
     "@types/jasmine": "~5.1.0",
     "@types/jasminewd2": "^2.0.13",
+    "@types/object-hash": "^3.0.6",
     "angular-eslint": "19.0.2",
     "codelyzer": "^6.0.2",
     "eslint": "^9.16.0",

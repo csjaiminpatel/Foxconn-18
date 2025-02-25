@@ -1,0 +1,15 @@
+<orion-platform-dialog
+  [title]="data.title"
+  [hideClose]="data.hideClose"
+  [disableClose]="data.disableClose"
+  [hideHeader]="data.hideHeader"
+  [hideFooter]="data.hideFooter"
+  [hideActions]="data.hideActions"
+>
+  <div content class="spinner-center">
+    <div>
+      {{ data.content }}
+    </div>
+    <orion-platform-progress-spinner></orion-platform-progress-spinner>
+  </div>
+</orion-platform-dialog>
