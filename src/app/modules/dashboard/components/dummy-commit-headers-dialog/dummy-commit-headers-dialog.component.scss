@@ -1,0 +1,21 @@
+.dummy-commit-headers--form--content {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    overflow: hidden;
+    &.mat-dialog-content {
+      padding: 0;
+    }
+    .mat-form-field {
+      min-width: 150px;
+      padding: 0;
+      margin: 0;
+      font-size: 15px;
+      width: 100%;
+      width: -moz-available;
+      width: -webkit-fill-available;
+      width: stretch;
+    }
+  }
+  

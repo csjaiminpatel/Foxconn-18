@@ -1,0 +1,907 @@
+<mat-sidenav-container (backdropClick)="close()" [hasBackdrop]="true" class="sidenav--container" autosize>
+  <mat-sidenav #sidenav_configure fixedInViewport="true" [fixedTopGap]="67" mode="over" position="end"
+    class="sidenav--content">
+    <h3 class="mmview-form--title ng-star-inserted">
+      {{ 'supplyVisibilityConfigure.editWidgetsSettings' | translate }}
+    </h3>
+    @if (configForm) {
+    <form [formGroup]="configForm" (ngSubmit)="submitForm()" fxLayout="column" *ngIf="isDataAvailable"
+      #formDirective="ngForm" class="mmview-form supply-visibility">
+      <mat-button-toggle-group [ngClass]="{'left-font-menu': !isSharedWidgetType}" #group="matButtonToggleGroup"
+        formControlName="fontSize">
+        <mat-button-toggle value="small" aria-label="small"
+          matTooltip="{{ 'supplyVisibilityConfigure.small' | translate }}" class="small">
+          <!-- <mat-icon>font_download</mat-icon> -->
+          <img src="/img/icn-font.svg" />
+        </mat-button-toggle>
+        <mat-button-toggle value="medium" aria-label="medium"
+          matTooltip="{{ 'supplyVisibilityConfigure.medium' | translate }}" class="medium">
+          <!-- <mat-icon>font_download</mat-icon> -->
+          <img src="/img/icn-font.svg" />
+        </mat-button-toggle>
+        <mat-button-toggle value="large" aria-label="large"
+          matTooltip="{{ 'supplyVisibilityConfigure.large' | translate }}" class="large">
+          <!-- <mat-icon>font_download</mat-icon> -->
+          <img src="/img/icn-font.svg" />
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <!-- Widget Share Menu Settings -->
+      <ng-container *ngIf="isSharedWidgetType">
+        <button type="button" class="share-btn" [matMenuTriggerFor]="shareMenu" mat-button>
+          <mat-icon class="icon-display">share</mat-icon>
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        <mat-menu #shareMenu="matMenu" [overlapTrigger]="true" [hasBackdrop]="true" class="workflow-card--mat-menu">
+          <button class="share-menu-btn" mat-menu-item [disabled]="uiModel?.sharedId" (click)="shareWidget()">
+            <span>{{ 'supplyVisibilityConfigure.shareWidget' | translate }}</span>
+            <mat-icon *ngIf="uiModel?.sharedId">check_circle</mat-icon>
+          </button>
+
+          <button class="share-menu-btn" mat-menu-item [disabled]="!uiModel?.sharedId" (click)="unshareWidget()">
+            <span>{{ 'supplyVisibilityConfigure.disableShare' | translate }}</span>
+            <mat-icon *ngIf="!uiModel?.sharedId">check_circle</mat-icon>
+          </button>
+        </mat-menu>
+      </ng-container>
+
+      <mat-form-field class="input-widget--content--full-width">
+        <input formControlName="title" matInput placeholder="{{ 'supplyVisibilityConfigure.title' | translate }}" />
+      </mat-form-field>
+      <mat-form-field *ngIf="uiModel?.type == 'mypnlist' || uiModel?.type == 'simplePNList'"
+        class="input-widget--content--full-width">
+        <input formControlName="subTitle" matInput
+          placeholder="{{ 'supplyVisibilityConfigure.subTitle' | translate }}" />
+      </mat-form-field>
+
+      <!-- Task Operation Start -->
+
+      <ng-container *ngIf="
+          uiModel?.type == 'circularChart' ||
+          uiModel?.type == 'simplePNList' ||
+          uiModel?.type == 'smartPNList' ||
+          uiModel?.type == 'mypnlist' ||
+          uiModel?.type == 'searchV2' ||
+          uiModel?.type == 'orders'
+        ">
+        <!-- color -->
+        <div *ngIf="uiModel?.type != 'mypnlist'">
+          <p class="subtxt">
+            {{ 'supplyVisibilityConfigure.color' | translate }}
+          </p>
+          <div class="sqbox bobox">
+            <ng-container *ngFor="let radio of radioList">
+              <label><input type="radio" [value]="radio" formControlName="primaryColor" /><span
+                  [ngClass]="radio"></span></label>
+            </ng-container>
+          </div>
+        </div>
+
+        <div *ngIf="uiModel?.type == 'mypnlist'">
+          <div class="color-picker-container">
+            <mat-form-field>
+              <mat-label class="subtxt">
+                {{ 'supplyVisibilityConfigure.widgetTheme' | translate }}
+              </mat-label>
+              <mat-select formControlName="widgetTheme">
+                <mat-option *ngFor="let color of widgetThemeColors" [value]="color.name">
+                  <div class="color-square" [style.background]="color.name"></div>
+                  {{ color.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="selected-color-box" [ngClass]="widgetTheme.value"></div>
+          </div>
+        </div>
+
+        <ng-container *ngIf="uiModel?.type == 'circularChart'">
+          <!-- tab group -->
+          <mat-tab-group>
+            <!-- first tab -->
+            <mat-tab formGroupName="firstValue" label="{{ 'supplyVisibilityConfigure.firstValue' | translate }}">
+              <!-- checkbox -->
+              <mat-checkbox formControlName="allowMultiple" class="mt-1 d-block">
+                {{ 'supplyVisibilityConfigure.allowMultiple' | translate }}</mat-checkbox>
+
+              <!-- view dropDown -->
+              <div class="filterRow row">
+                <div class="col-50">
+                  <mat-form-field class="input-widget--content--full-width mt-1 mr-1">
+                    <mat-label>{{ 'supplyVisibilityConfigure.view' | translate }}</mat-label>
+                    <mat-select formControlName="view">
+                      <mat-option *ngFor="let viewItem of mmViews$ | async" [value]="viewItem.id">
+                        {{ viewItem.configurationName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-50">
+                  <mat-form-field *ngIf="showWeeks" class="input-widget--content--full-width mt-1 ml-1">
+                    <mat-label>{{ 'paramsInput.weeks' | translate }}</mat-label>
+                    <mat-select formControlName="weeks" required>
+                      <mat-option *ngFor="let weeksItem of weeksRange" [value]="weeksItem">
+                        {{ weeksItem }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field *ngIf="!showWeeks" class="input-widget--content--full-width mt-1 ml-1">
+                    <mat-label>{{ 'paramsInput.days' | translate }}</mat-label>
+                    <mat-select formControlName="days" required>
+                      <mat-option *ngFor="let daysItem of daysRange" [value]="daysItem">
+                        {{ daysItem }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <button type="button" mat-icon-button (click)="toggleDaysAndWeeksView()"
+                    [matTooltip]="showWeeks ? 'View Days' : 'View Weeks'">
+                    <mat-icon> {{ (showWeeks) ? 'view_day' : 'view_week' }} </mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <mat-form-field class="input-widget--content--full-width">
+                <mat-label>{{
+                  'supplyVisibilityConfigure.partNumbersFilterOptions' | translate
+                  }}</mat-label>
+                <mat-select formControlName="partNumbersFilterOptions">
+                  <mat-option *ngFor="let item of partNumbersFilterOptionsList" [value]="item.key">
+                    {{ 'supplyVisibilityConfigure.' + item.name | translate }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <br />
+
+              <mat-form-field *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.FixedList"
+                class="input-widget--content--full-width">
+                <mat-label>{{ 'supplyVisibilityConfigure.partNumbers' | translate }}</mat-label>
+                <textarea formControlName="partNumbers" matInput placeholder="{{
+                    'supplyVisibilityConfigure.partNumbers' | translate
+                  }}"></textarea>
+              </mat-form-field>
+              <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                <mat-checkbox class="ml-5" formControlName="onlyMyPNs">
+                  {{ 'supplyVisibilityConfigure.onlyMyPNs' | translate }}</mat-checkbox>
+                <br />
+                <mat-form-field class="input-widget--content--full-width mt-1">
+                  <mat-label>{{ 'supplyVisibilityConfigure.formula' | translate }}</mat-label>
+                  <textarea formControlName="formula" matInput placeholder="formula"></textarea>
+                </mat-form-field>
+              </ng-container>
+              <!-- FilterOptions Starts #1 -->
+
+              <div class="filter-div mb-1">
+                <h3 fxFlex>
+                  {{ 'supplyVisibilityConfigure.Filter' | translate }}
+                </h3>
+                <button type="button" class="add-btn" (click)="onFilterAdd(fvFilters)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+
+              <div class="condi-box" formArrayName="filters">
+                <div class="ac-group input-widget--content--full-width"
+                  *ngFor="let record of fvFilters.controls; let i = index" [formGroupName]="i">
+                  <div class="ac-head mb-1">
+                    <mat-form-field class="input-widget--content--full-width mt-1">
+                      <mat-label>{{ 'supplyVisibilityConfigure.select' | translate }}</mat-label>
+                      <mat-select formControlName="field$" (selectionChange)="defaultValues(record)">
+                        <mat-option *ngFor="let filter of additionalFilterList" [value]="filter">
+                          {{ 'supplyVisibilityConfigure.' + filter.key | translate }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <span class="acn-btn" (click)="nextOperator(record)">{{
+                      record.value.operator
+                      }}</span>
+
+                    <ng-container [ngSwitch]="record.value.field$?.type">
+                      <mat-form-field fxFlex *ngSwitchCase="EnumControls.NumericBox">
+                        <input matInput type="number" placeholder="{{ 'supplyVisibilityConfigure.value' | translate }}"
+                          formControlName="value" />
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" *ngSwitchCase="EnumControls.TextArea">
+                        <textarea matInput formControlName="value" placeholder="{{
+                            'supplyVisibilityConfigure.value' | translate
+                          }}"></textarea>
+                        <mat-error *ngIf="record?.get('value')?.hasError(INVALID_VENDOR_CODE)">
+                          {{ 'supplyVisibilityConfigure.excludeFilterVendorCodeError' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="record?.get('value')?.hasError(INVALID_MATERIAL_GROUP)">
+                          {{
+                          'supplyVisibilityConfigure.excludeFilterMaterialGroupsError' | translate
+                          }}
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-checkbox class="example-margin" formControlName="value"
+                        *ngSwitchCase="EnumControls.CheckBox">
+                      </mat-checkbox>
+
+                      <!--in future if one more combo comes then we need to find which list should be used to fill combo, right now it always feels review status list only-->
+                      <mat-form-field class="input-widget--content--full-width mt-1"
+                        *ngSwitchCase="EnumControls.ComboBox">
+                        <mat-label>{{ 'supplyVisibilityConfigure.value' | translate }}</mat-label>
+                        <mat-select formControlName="value">
+                          <mat-option *ngFor="let review of reviewedStatusList" [value]="review.key">
+                            {{ 'supplyVisibilityConfigure.' + review.name | translate }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </ng-container>
+
+                    <div class="acn-btn mr-0">
+                      <button type="button" (click)="onFilterRemove(fvFilters, i)">
+                        <mat-icon>delete_outline</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- FilterOptions End #1-->
+            </mat-tab>
+
+            <!-- second value -->
+            <mat-tab formGroupName="secondValue" label="{{ 'supplyVisibilityConfigure.secondValue' | translate }}">
+              <!-- checkbox -->
+              <mat-checkbox formControlName="allowMultiple" class="mt-1 d-block">
+                {{ 'supplyVisibilityConfigure.allowMultiple' | translate }}</mat-checkbox>
+              <!-- view dropDown -->
+              <div class="filterRow row">
+                <div class="col-50">
+                  <mat-form-field class="input-widget--content--full-width mt-1">
+                    <mat-label>{{ 'supplyVisibilityConfigure.view' | translate }}</mat-label>
+                    <mat-select formControlName="view">
+                      <mat-option *ngFor="let viewItem of mmViews$ | async" [value]="viewItem.id">
+                        {{ viewItem.configurationName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-50">
+                  <mat-form-field *ngIf="weeksShown" class="input-widget--content--full-width mt-1 ml-1">
+                    <mat-label>{{ 'paramsInput.weeks' | translate }}</mat-label>
+                    <mat-select formControlName="weeks" required>
+                      <mat-option *ngFor="let weeksItem of weeksRange" [value]="weeksItem">
+                        {{ weeksItem }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field *ngIf="!weeksShown" class="input-widget--content--full-width mt-1 ml-1">
+                    <mat-label>{{ 'paramsInput.days' | translate }}</mat-label>
+                    <mat-select formControlName="days" required>
+                      <mat-option *ngFor="let daysItem of daysRange" [value]="daysItem">
+                        {{ daysItem }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <button type="button" mat-icon-button (click)="toggleDaysAndWeeksView2()"
+                    [matTooltip]="weeksShown ? 'View Days' : 'View Weeks'">
+                    <mat-icon> {{ (weeksShown) ? 'view_day' : 'view_week' }} </mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <mat-form-field class="input-widget--content--full-width mt-1">
+                <mat-label>{{
+                  'supplyVisibilityConfigure.partNumbersFilterOptions' | translate
+                  }}</mat-label>
+                <mat-select formControlName="partNumbersFilterOptions">
+                  <mat-option *ngFor="let item of partNumbersFilterOptionsList" [value]="item.key">
+                    {{ 'supplyVisibilityConfigure.' + item.name | translate }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <br />
+
+              <mat-form-field *ngIf="svPartNumbersFilterOptions.value === EnumPartNoFilters.FixedList"
+                class="input-widget--content--full-width">
+                <mat-label>{{ 'supplyVisibilityConfigure.partNumbers' | translate }}</mat-label>
+                <textarea formControlName="partNumbers" matInput placeholder="{{
+                    'supplyVisibilityConfigure.partNumbers' | translate
+                  }}"></textarea>
+              </mat-form-field>
+              <ng-container *ngIf="svPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                <mat-checkbox class="ml-5" formControlName="onlyMyPNs">
+                  {{ 'supplyVisibilityConfigure.onlyMyPNs' | translate }}</mat-checkbox>
+                <br />
+                <mat-form-field class="input-widget--content--full-width mt-1">
+                  <mat-label>{{ 'supplyVisibilityConfigure.formula' | translate }}</mat-label>
+                  <textarea formControlName="formula" matInput placeholder="formula"></textarea>
+                </mat-form-field>
+              </ng-container>
+              <!-- FilterOptions Starts #2-->
+
+              <div class="filter-div mb-1">
+                <h3 fxFlex>
+                  {{ 'supplyVisibilityConfigure.Filter' | translate }}
+                </h3>
+                <button type="button" class="add-btn" (click)="onFilterAdd(svFilters)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              <div class="condi-box" formArrayName="filters">
+                <div class="ac-group input-widget--content--full-width"
+                  *ngFor="let record of svFilters.controls; let i = index" [formGroupName]="i">
+                  <div class="ac-head mb-1">
+                    <mat-form-field class="input-widget--content--full-width mt-1">
+                      <mat-label>{{ 'supplyVisibilityConfigure.select' | translate }}</mat-label>
+                      <mat-select formControlName="field$" (selectionChange)="defaultValues(record)">
+                        <mat-option *ngFor="let filter of additionalFilterList" [value]="filter">
+                          {{ 'supplyVisibilityConfigure.' + filter.key | translate }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <span class="acn-btn" (click)="nextOperator(record)">{{
+                      record.value.operator
+                      }}</span>
+
+                    <ng-container [ngSwitch]="record.value.field$?.type">
+                      <mat-form-field fxFlex *ngSwitchCase="EnumControls.NumericBox">
+                        <input matInput type="number" placeholder="{{ 'supplyVisibilityConfigure.value' | translate }}"
+                          formControlName="value" />
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" *ngSwitchCase="EnumControls.TextArea">
+                        <textarea matInput formControlName="value" placeholder="{{
+                            'supplyVisibilityConfigure.value' | translate
+                          }}"></textarea>
+                        <mat-error *ngIf="record?.get('value')?.hasError(INVALID_VENDOR_CODE)">
+                          {{ 'supplyVisibilityConfigure.excludeFilterVendorCodeError' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="record?.get('value')?.hasError(INVALID_MATERIAL_GROUP)">
+                          {{
+                          'supplyVisibilityConfigure.excludeFilterMaterialGroupsError' | translate
+                          }}
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-checkbox class="example-margin" formControlName="value"
+                        *ngSwitchCase="EnumControls.CheckBox">
+                      </mat-checkbox>
+
+                      <!--in future if one more combo comes then we need to find which list should be used to fill combo, right now it always feels review status list only-->
+                      <mat-form-field class="input-widget--content--full-width mt-1"
+                        *ngSwitchCase="EnumControls.ComboBox">
+                        <mat-label>{{ 'supplyVisibilityConfigure.value' | translate }}</mat-label>
+                        <mat-select formControlName="value">
+                          <mat-option *ngFor="let review of reviewedStatusList" [value]="review.key">
+                            {{ 'supplyVisibilityConfigure.' + review.name | translate }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </ng-container>
+
+                    <div class="acn-btn mr-0">
+                      <button type="button" (click)="onFilterRemove(svFilters, i)">
+                        <mat-icon>delete_outline</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- FilterOptions End #2-->
+            </mat-tab>
+          </mat-tab-group>
+        </ng-container>
+        <ng-container
+          *ngIf="uiModel?.type == 'simplePNList' || uiModel?.type == 'smartPNList' || uiModel?.type == 'mypnlist'">
+          <div formGroupName="firstValue">
+            <!-- checkbox -->
+            <mat-checkbox formControlName="allowMultiple" class="mt-1 d-block">
+              {{ 'supplyVisibilityConfigure.allowMultiple' | translate }}</mat-checkbox>
+            <!-- view dropDown -->
+            <div class="filterRow row">
+              <div class="col-50">
+                <mat-form-field class="input-widget--content--full-width mt-1">
+                  <mat-label>{{ 'supplyVisibilityConfigure.view' | translate }}</mat-label>
+                  <mat-select formControlName="view">
+                    <mat-option *ngFor="let viewItem of mmViews$ | async" [value]="viewItem.id">
+                      {{ viewItem.configurationName }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-50">
+                <mat-form-field *ngIf="showWeeks" class="input-widget--content--full-width mt-1 ml-1">
+                  <mat-label>{{ 'paramsInput.weeks' | translate }}</mat-label>
+                  <mat-select formControlName="weeks" required>
+                    <mat-option *ngFor="let weeksItem of weeksRange" [value]="weeksItem">
+                      {{ weeksItem }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field *ngIf="!showWeeks" class="input-widget--content--full-width mt-1 ml-1">
+                  <mat-label>{{ 'paramsInput.days' | translate }}</mat-label>
+                  <mat-select formControlName="days" required>
+                    <mat-option *ngFor="let daysItem of daysRange" [value]="daysItem">
+                      {{ daysItem }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div>
+                <button type="button" mat-icon-button (click)="toggleDaysAndWeeksView()"
+                  [matTooltip]="showWeeks ? 'View Days' : 'View Weeks'">
+                  <mat-icon> {{ (showWeeks) ? 'view_day' : 'view_week' }} </mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <mat-form-field class="input-widget--content--full-width">
+              <mat-label>{{
+                'supplyVisibilityConfigure.partNumbersFilterOptions' | translate
+                }}</mat-label>
+              <mat-select formControlName="partNumbersFilterOptions">
+                <mat-option *ngFor="let item of partNumbersFilterOptionsList" [value]="item.key">
+                  {{ 'supplyVisibilityConfigure.' + item.name | translate }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <br />
+
+            <mat-form-field *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.FixedList"
+              class="input-widget--content--full-width">
+              <mat-label>{{ 'supplyVisibilityConfigure.partNumbers' | translate }}</mat-label>
+              <textarea formControlName="partNumbers" matInput
+                placeholder="{{ 'supplyVisibilityConfigure.partNumbers' | translate }}"></textarea>
+            </mat-form-field>
+            <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+              <mat-checkbox class="ml-5" formControlName="onlyMyPNs">
+                {{ 'supplyVisibilityConfigure.onlyMyPNs' | translate }}</mat-checkbox>
+              <br />
+              <mat-form-field class="input-widget--content--full-width mt-1">
+                <mat-label>{{ 'supplyVisibilityConfigure.formula' | translate }}</mat-label>
+                <textarea formControlName="formula" matInput placeholder="formula"></textarea>
+              </mat-form-field>
+            </ng-container>
+
+            <ng-container *ngIf="uiModel?.type == 'mypnlist'">
+
+              <!-- chart visibility -->
+              <ng-container>
+                <fieldset class="position-relative h-44 chart-widget">
+                  <legend class="rule-legend">Chart</legend>
+                  <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                    <mat-checkbox class="ml-5" formControlName="useChart">
+                      {{ 'supplyVisibilityConfigure.useChart' | translate }}</mat-checkbox>
+                    <br />
+                  </ng-container>
+                  <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                    <mat-checkbox class="ml-5" formControlName="isChartVisible">
+                      {{ 'supplyVisibilityConfigure.isChartVisible' | translate }}</mat-checkbox>
+                    <br />
+                  </ng-container>
+
+                  <hr class="horizontal light" />
+
+                  <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                    <mat-checkbox class="ml-5" formControlName="showTotalBar">
+                      {{ 'supplyVisibilityConfigure.showTotalBar' | translate }}</mat-checkbox>
+                    <br />
+                  </ng-container>
+                  <ng-container
+                    *ngIf="userConfigRights?.reviewVisibility && fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                    <mat-checkbox class="ml-5" formControlName="showFlaggedBar">
+                      {{ 'supplyVisibilityConfigure.showFlaggedBar' | translate }}</mat-checkbox>
+                    <br />
+                  </ng-container>
+                  <ng-container
+                    *ngIf="userConfigRights?.reviewVisibility && fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                    <mat-checkbox class="ml-5" formControlName="showUnFlaggedBar">
+                      {{ 'supplyVisibilityConfigure.showUnFlaggedBar' | translate }}</mat-checkbox>
+                    <br />
+                  </ng-container>
+
+                </fieldset>
+
+                <fieldset class="position-relative h-44 mt-2 chart-widget">
+                  <legend class="rule-legend">Filtering</legend>
+                  <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                    <mat-checkbox class="ml-5" formControlName="useFiltering">
+                      {{ 'supplyVisibilityConfigure.useFiltering' | translate }}</mat-checkbox>
+                    <br />
+                  </ng-container>
+                  <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                    <mat-checkbox class="ml-5" formControlName="isFilteringVisible">
+                      {{ 'supplyVisibilityConfigure.isFilteringVisible' | translate }}</mat-checkbox>
+                    <br />
+                  </ng-container>
+                </fieldset>
+              </ng-container>
+
+              <!-- Review Visibility -->
+              <div *ngIf="userConfigRights?.reviewVisibility;else myReviewStatus" fxLayout="column"
+                fxLayoutAlign="start start" class="filter-div mb-1">
+                <h3 class="my-3" fxFlex>
+                  {{ 'supplyVisibilityConfigure.ReviewVisibility' | translate }}
+                </h3>
+                <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                  <mat-checkbox class="ml-5" formControlName="customerReviewStatus">
+                    {{ 'supplyVisibilityConfigure.Customer' | translate }}</mat-checkbox>
+                </ng-container>
+                <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                  <mat-checkbox class="ml-5" formControlName="supplierReviewStatus">
+                    {{ 'supplyVisibilityConfigure.Supplier' | translate }}</mat-checkbox>
+                </ng-container>
+                <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                  <mat-checkbox class="ml-5" formControlName="buyerReviewStatus">
+                    {{ 'supplyVisibilityConfigure.Buyer' | translate }}</mat-checkbox>
+                </ng-container>
+              </div>
+
+              <ng-template #myReviewStatus>
+                <div fxLayout="column" fxLayoutAlign="start start" class="filter-div mb-1">
+                  <h3 class="my-3" fxFlex>
+                    My Review Status
+                  </h3>
+                  <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                    <mat-checkbox class="ml-5" formControlName="showReviewStatus">
+                      {{ 'supplyVisibilityConfigure.showReviewStatus' | translate }}</mat-checkbox>
+                    <br />
+                  </ng-container>
+                </div>
+              </ng-template>
+
+              <div fxLayout="column" fxLayoutAlign="start start" class="filter-div mb-1">
+                <h3 class="my-3" fxFlex>
+                  {{ 'supplyVisibilityConfigure.VendorSettings' | translate }}
+                </h3>
+                <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                  <mat-checkbox class="ml-5" formControlName="showVendorName">
+                    {{ 'supplyVisibilityConfigure.showVendorName' | translate }}</mat-checkbox>
+                </ng-container>
+                <ng-container *ngIf="fvPartNumbersFilterOptions.value === EnumPartNoFilters.Criteria">
+                  <mat-checkbox class="ml-5" formControlName="showVendorCode">
+                    {{ 'supplyVisibilityConfigure.showVendorCode' | translate }}</mat-checkbox>
+                </ng-container>
+              </div>
+
+            </ng-container>
+
+            <!-- FilterOptions Starts #3 -->
+
+            <div class="filter-div mb-1">
+              <h3 fxFlex>
+                {{ 'supplyVisibilityConfigure.Filter' | translate }}
+              </h3>
+              <button type="button" class="add-btn" (click)="onFilterAdd(fvFilters)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <div class="condi-box" formArrayName="filters">
+              <div class="ac-group input-widget--content--full-width"
+                *ngFor="let record of fvFilters.controls; let i = index" [formGroupName]="i">
+                <div class="ac-head mb-1">
+                  <mat-form-field class="input-widget--content--full-width mt-1">
+                    <mat-label>{{ 'supplyVisibilityConfigure.select' | translate }}</mat-label>
+                    <mat-select formControlName="field$" (selectionChange)="defaultValues(record)">
+                      <mat-option *ngFor="let filter of additionalFilterList" [value]="filter">
+                        {{ 'supplyVisibilityConfigure.' + filter.key | translate }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <span class="acn-btn" (click)="nextOperator(record)">{{
+                    record.value.operator
+                    }}</span>
+
+                  <ng-container [ngSwitch]="record.value.field$?.type">
+                    <mat-form-field fxFlex *ngSwitchCase="EnumControls.NumericBox">
+                      <input matInput type="number" placeholder="{{ 'supplyVisibilityConfigure.value' | translate }}"
+                        formControlName="value" />
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width" *ngSwitchCase="EnumControls.TextArea">
+                      <textarea matInput formControlName="value" placeholder="{{
+                          'supplyVisibilityConfigure.value' | translate
+                        }}"></textarea>
+                      <mat-error *ngIf="record?.get('value')?.hasError(INVALID_VENDOR_CODE)">
+                        {{ 'supplyVisibilityConfigure.excludeFilterVendorCodeError' | translate }}
+                      </mat-error>
+                      <mat-error *ngIf="record?.get('value')?.hasError(INVALID_MATERIAL_GROUP)">
+                        {{
+                        'supplyVisibilityConfigure.excludeFilterMaterialGroupsError' | translate
+                        }}
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-checkbox class="example-margin" formControlName="value" *ngSwitchCase="EnumControls.CheckBox">
+                    </mat-checkbox>
+
+                    <!--in future if one more combo comes then we need to find which list should be used to fill combo, right now it always feels review status list only-->
+                    <mat-form-field class="input-widget--content--full-width mt-1"
+                      *ngSwitchCase="EnumControls.ComboBox">
+                      <mat-label>{{ 'supplyVisibilityConfigure.value' | translate }}</mat-label>
+                      <mat-select formControlName="value">
+                        <mat-option *ngFor="let review of reviewedStatusList" [value]="review.key">
+                          {{ 'supplyVisibilityConfigure.' + review.name | translate }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </ng-container>
+
+                  <div class="acn-btn mr-0">
+                    <button type="button" (click)="onFilterRemove(fvFilters, i)">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- FilterOptions End #3-->
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="uiModel?.type == 'commitList'">
+        <div>
+          <p class="subtxt">
+            {{ 'supplyVisibilityConfigure.color' | translate }}
+          </p>
+          <div class="sqbox bobox">
+            <ng-container *ngFor="let radio of radioList">
+              <label><input type="radio" [value]="radio" formControlName="primaryColor" /><span
+                  [ngClass]="radio"></span></label>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="filterRow row">
+          <div class="col-50">
+            <mat-form-field>
+              <mat-label>{{ 'commits.status' | translate }}</mat-label>
+              <mat-select formControlName="status" name="status" multiple>
+                <app-select-check-all *ngIf="statusFormControl && commitStatusList" [model]="statusFormControl" [values]="commitStatusList">
+                </app-select-check-all>
+                <mat-option *ngFor="let viewItem of commitStatusList" [value]="viewItem.id">
+                  {{ viewItem.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-50 d-flex align-items-center">
+            <mat-checkbox formControlName="onlyMyCommits">
+              {{ 'supplyVisibilityConfigure.onlyMyCommits' | translate }}
+            </mat-checkbox>
+          </div>
+          <!-- <div class="col-50 d-flex align-items-center">
+            <mat-checkbox formControlName="loadIdentity">
+              {{ 'supplyVisibilityConfigure.loadIdentity' | translate }}</mat-checkbox>
+            <br>
+          </div> -->
+        </div>
+
+        <!-- <div formGroupName="firstValue"> -->
+
+        <mat-form-field class="input-widget--content--full-width mt-1">
+          <mat-label>{{ 'supplyVisibilityConfigure.formula' | translate }}</mat-label>
+          <textarea formControlName="formula" matInput placeholder="formula"></textarea>
+        </mat-form-field>
+
+        <!-- FilterOptions Starts #4 -->
+        <div formGroupName="firstValue">
+
+          <div class="filter-div mb-1">
+            <h3 fxFlex>
+              {{ 'supplyVisibilityConfigure.Filter' | translate }}
+            </h3>
+            <button type="button" class="add-btn" (click)="onFilterAdd(fvFilters)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <div class="condi-box" formArrayName="filters">
+            <div class="ac-group input-widget--content--full-width"
+              *ngFor="let record of fvFilters.controls; let i = index" [formGroupName]="i">
+              <div class="ac-head mb-1">
+                <mat-form-field class="input-widget--content--full-width mt-1">
+                  <mat-label>{{ 'supplyVisibilityConfigure.select' | translate }}</mat-label>
+                  <mat-select formControlName="field$" (selectionChange)="defaultValues(record)">
+                    <mat-option *ngFor="let filter of additionalFilterList" [value]="filter">
+                      {{ 'commits.' + filter.key | translate }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <span class="acn-btn" (click)="nextOperator(record)">{{
+                  record.value.operator
+                  }}</span>
+
+                <ng-container [ngSwitch]="record.value.field$?.type">
+                  <mat-form-field fxFlex *ngSwitchCase="EnumControls.NumericBox">
+                    <input matInput type="number" placeholder="{{ 'supplyVisibilityConfigure.value' | translate }}"
+                      formControlName="value" />
+                  </mat-form-field>
+
+                  <mat-form-field class="example-full-width" *ngSwitchCase="EnumControls.TextArea">
+                    <textarea matInput formControlName="value" placeholder="{{
+                      'supplyVisibilityConfigure.value' | translate
+                    }}"></textarea>
+                    <mat-error *ngIf="record?.get('value')?.hasError(INVALID_VENDOR_CODE)">
+                      {{ 'supplyVisibilityConfigure.excludeFilterVendorCodeError' | translate }}
+                    </mat-error>
+                    <mat-error *ngIf="record?.get('value')?.hasError(INVALID_MATERIAL_GROUP)">
+                      {{
+                      'supplyVisibilityConfigure.excludeFilterMaterialGroupsError' | translate
+                      }}
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-checkbox class="example-margin" formControlName="value" *ngSwitchCase="EnumControls.CheckBox">
+                  </mat-checkbox>
+
+                  <!--in future if one more combo comes then we need to find which list should be used to fill combo, right now it always feels review status list only-->
+                  <mat-form-field class="input-widget--content--full-width mt-1" *ngSwitchCase="EnumControls.ComboBox">
+                    <mat-label>{{ 'supplyVisibilityConfigure.value' | translate }}</mat-label>
+                    <input #value type="text" aria-label="Number" matInput formControlName="value"
+                      [matAutocomplete]="auto" (click)="onForwarderFieldClick(i)">
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                      <mat-option *ngFor="let name of filteredOptions | async" [value]="name">
+                        {{ name }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </ng-container>
+
+                <div class="acn-btn mr-0">
+                  <button type="button" (click)="onFilterRemove(fvFilters, i)">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- FilterOptions End #4-->
+
+        <!-- </div> -->
+      </ng-container>
+
+      <ng-container *ngIf="uiModel?.type == 'invoiceList'">
+
+        <div>
+          <p class="subtxt"> {{ 'supplyVisibilityConfigure.color' | translate }}</p>
+          <div class="sqbox bobox">
+            <ng-container *ngFor="let radio of radioList">
+              <label><input type="radio" [value]="radio" formControlName="primaryColor" />
+                <span [ngClass]="radio"></span>
+              </label>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="filterRow row">
+          <div class="col-50">
+            <mat-form-field>
+              <mat-label>{{ 'commits.status' | translate }}</mat-label>
+              <mat-select formControlName="status" name="status" multiple>
+                <app-select-check-all *ngIf="statusFormControl" [model]="statusFormControl" [values]="invoiceStatusList"
+                  [baseModule]="'invoicing-module'">
+                </app-select-check-all>
+                <mat-option *ngFor="let status of invoiceStatusList" [value]="status">
+                  {{ status }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-form-field class="input-widget--content--full-width mt-1">
+          <mat-label>{{ 'supplyVisibilityConfigure.formula' | translate }}</mat-label>
+          <textarea formControlName="formula" matInput placeholder="formula"></textarea>
+        </mat-form-field>
+
+        <div formGroupName="firstValue">
+
+          <div class="filter-div mb-1">
+            <h3 fxFlex>{{ 'supplyVisibilityConfigure.Filter' | translate }}</h3>
+            <button type="button" class="add-btn" (click)="onFilterAdd(fvFilters)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <div class="condi-box" formArrayName="filters">
+            <div class="ac-group input-widget--content--full-width"
+              *ngFor="let record of fvFilters.controls; let i = index" [formGroupName]="i">
+              <div class="ac-head mb-1">
+                <mat-form-field class="input-widget--content--full-width mt-1">
+                  <mat-label>{{ 'supplyVisibilityConfigure.select' | translate }}</mat-label>
+                  <mat-select formControlName="field$" (selectionChange)="defaultValues(record)">
+                    <mat-option *ngFor="let filter of additionalFilterList" [value]="filter">
+                      {{ 'commits.' + filter.key | translate }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <span class="acn-btn" (click)="nextOperator(record)">{{ record.value.operator}}</span>
+
+                <ng-container [ngSwitch]="record.value.field$?.type">
+                  <mat-form-field class="example-full-width" *ngSwitchCase="EnumControls.TextArea">
+                    <textarea matInput formControlName="value"
+                      placeholder="{{ 'supplyVisibilityConfigure.value' | translate}}"></textarea>
+                    <mat-error *ngIf="record?.get('value')?.hasError(INVALID_VENDOR_CODE)">
+                      {{ 'supplyVisibilityConfigure.excludeFilterVendorCodeError' | translate }}
+                    </mat-error>
+                    <mat-error *ngIf="record?.get('value')?.hasError(INVALID_MATERIAL_GROUP)">
+                      {{'supplyVisibilityConfigure.excludeFilterMaterialGroupsError' | translate}}
+                    </mat-error>
+                  </mat-form-field>
+                </ng-container>
+
+                <div class="acn-btn mr-0">
+                  <button type="button" (click)="onFilterRemove(fvFilters, i)">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="uiModel?.type == 'waterfall'">
+
+
+        <mat-form-field class="input-widget--content--full-width">
+          <mat-label>{{ 'waterfallWidget.defaultPeriods' | translate }}</mat-label>
+          <input type="number" formControlName="periods" matInput placeholder="{{
+                'waterfallWidget.periods' | translate
+              }}" />
+        </mat-form-field>
+      </ng-container>
+
+
+      <ng-container *ngIf="uiModel?.type == 'statusMonitor'">
+        <mat-checkbox formControlName="allowPrecalculations" class="mt-1 d-block">
+          {{ 'supplyVisibilityConfigure.precalculations' | translate }}</mat-checkbox>
+        <mat-checkbox formControlName="allowSystemHealth" class="mt-1 d-block">
+          {{ 'supplyVisibilityConfigure.systemHealth' | translate }}</mat-checkbox>
+
+        <mat-label class="my-2 d-block">Select Color</mat-label>
+        <div class="sqbox bobox">
+          <ng-container *ngFor="let radio of colorList">
+            <label><input type="radio" [value]="radio" formControlName="chartColor" /><span
+                [ngClass]="radio"></span></label>
+          </ng-container>
+        </div>
+
+        <mat-radio-group formControlName="selectMode">
+          <mat-radio-button value="precalculations">Precalculations</mat-radio-button>
+          <mat-radio-button value="forecast" class="ms-2">Forecast</mat-radio-button>
+        </mat-radio-group>
+
+      </ng-container>
+
+      <ng-container *ngIf="uiModel?.type == 'fileUpload'">
+        <ng-container *ngIf="fileUploadEndpoints | async as endpoints; else noUploadEndpoints">
+          <ng-container *ngIf="endpoints.length != 0">
+            <mat-select formControlName="endpoint">
+              <mat-option *ngFor="let endpoint of endpoints" [value]="endpoint.locationName">
+                {{endpoint.locationName}} ({{endpoint.protocol}})
+              </mat-option>
+            </mat-select>
+          </ng-container>
+        </ng-container>
+        <ng-template #noUploadEndpoints>
+          <p>
+            There are no upload endpoints for this plant
+          </p>
+        </ng-template>
+      </ng-container>
+
+      <!-- Task Operation End -->
+
+      <div class="rule-form--actions">
+        <button id="submit" type="submit" mat-raised-button color="primary" [disabled]="!configForm.valid || submitted">
+          {{ 'form.save' | translate }}
+        </button>
+        <button id="close" type="button" class="button" (click)="close()" multiple ngDefaultControl mat-button>
+          {{ 'form.cancel' | translate }}
+        </button>
+      </div>
+    </form>
+  }
+  </mat-sidenav>
+
+  <mat-sidenav-content class="sidenav--page--content">
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,17 @@
+<orion-platform-dialog
+  [title]="data.title"
+  [hideClose]="data.hideClose"
+  [disableClose]="data.disableClose">
+  <div content>{{ data.content }} <br><br> {{data.subContent}}</div>
+  <div actions>
+    <button
+      mat-button
+      [mat-dialog-close]="true"
+      cdkFocusInitial
+      class="mat-raised-button"
+      color="{{ data.positiveBtnColor || 'warn' }}">
+      {{ data.button }}
+    </button>
+    <button mat-button (click)="onNoClick()">{{ data.cancelButton }}</button>
+  </div>
+</orion-platform-dialog>

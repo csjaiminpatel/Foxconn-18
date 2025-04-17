@@ -1,0 +1,64 @@
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/widget';
+form{
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+:host ::ng-deep .mat-form-field-infix {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.widget{
+  .widget-content{
+    padding-inline: 1rem;
+    padding-block: 1rem .5rem;
+    display: block;
+    mat-form-field{
+      width: 100%;
+    }
+    .filter-input{
+      height: 50px;
+      overflow: hidden;
+    }
+    .filters-area{
+      height: calc(100% - 50px);
+      overflow-y: auto;
+      padding-block: .5rem 1rem;
+      .filter-item{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .filter-toggle{
+          max-width: 80%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: .9rem;
+        }
+        button[disabled=true] {
+          opacity: 0;
+          pointer-events: none;
+        }
+        mat-icon{
+          color: $gray;
+        }
+        button:hover{
+          mat-icon{
+            color: $fire-red;
+          }
+        }
+      }
+    }
+  }
+  footer{
+    .footer-right{
+      button {
+        margin-right: 1rem;
+      }
+    }
+  }
+}

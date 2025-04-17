@@ -89,6 +89,11 @@ export interface PanelCache {
   key: string;
   value: string;
 }
+export interface dashboardInfoDto {
+  id?: string;
+  dashboardAlreadySaved: boolean;
+  dashboardCache?: DashboardCache;
+}
 
 export interface DashboardCache {
   dashboardId: string;
@@ -196,6 +201,7 @@ export class DashboardPanelModel implements GridsterItem {
   minItemArea?: number;
   maxItemArea?: number;
 
+  id?: string;
   title?: string;
   subTitle?: string;
   type?: string;
@@ -214,10 +220,10 @@ export class DashboardPanelModel implements GridsterItem {
   modificationRights?: boolean;
   chartColor?: string;
   selectMode?: string;
-  refresh$?: () => {};
+  refresh$?: () => any;
   public static assignIdIfMissing(panel: DashboardPanelModel) {
-    if (!panel['id']) {
-      panel['id'] = `${panel.type}-${uuidv4()}`;
+    if (!panel.id) {
+      panel.id = `${panel.type}-${uuidv4()}`;
     }
   }
   public static createPanelFromType(type: DashboardType) {
@@ -242,7 +248,7 @@ export class DashboardPanelModel implements GridsterItem {
     panel.selectMode = type.selectMode;
 
     if (type.id) {
-      panel['id'] = type.id;
+      panel.id = type.id;
     } else {
       type.modificationRights ? DashboardPanelModel.assignIdIfMissing(panel) : null;
     }

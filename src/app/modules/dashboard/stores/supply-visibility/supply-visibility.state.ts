@@ -69,6 +69,7 @@ import { SupplyVisibilityNotesService } from '../../services/Supply-Visibility-N
 import { DateService } from '../../../../services/Date/date.service';
 import { BuyersPartnumbersListService } from '../../services/Buyers-PartnumbersList/buyers-partnumbers-list.service';
 import { LinkEventsDialogComponent } from '../../components/link-events-dialog/link-events-dialog.component';
+import { inject, Injectable } from '@angular/core';
 
 export interface SVActiveFetch {
   notificationDetailId?: string,
@@ -135,19 +136,13 @@ export interface SupplyVisibilityStateModel {
 export interface SupplyVisibilityCacheStateModel {
   commits: Commit[];
 }
+
 @State<SupplyVisibilityCacheStateModel>({
   name: 'supplyvisibilitycache',
   defaults: {
     commits: []
   }
 })
-export class SupplyVisibilityCacheState {
-  constructor(
-    // private supplyVisibilityService: SupplyVisibilityService,
-
-  ) {
-  }
-}
 
 @State<SupplyVisibilityStateModel>({
   name: 'supplyvisibility',
@@ -232,18 +227,19 @@ export class SupplyVisibilityState {
   virtualPnChildList: { [key: string]: any } = {};
   static isForecastDataChanged: boolean = false;
 
+  private commitsService = inject(CommitsService);
+  private supplyVisibilityService = inject(SupplyVisibilityService);
+  private supplyVisibilityCommentService = inject(SupplyVisibilityCommentService);
+  private supplyVisibilityPredefinedCommentService = inject(SupplyVisibilityPredefinedCommentService);
+  private supplyVisibilityNotesService = inject(SupplyVisibilityNotesService);
+  private supplyVisibilityBuyersPartNumbersService = inject(BuyersPartnumbersListService);
+  private dateService = inject(DateService);
+  private dialog = inject(MatDialog);
+  private store = inject(Store);
+  private translate = inject(TranslateService);
+  private notification = inject(NotificationService);
+  
   constructor(
-    private commitsService: CommitsService,
-    private supplyVisibilityService: SupplyVisibilityService,
-    private supplyVisibilityCommentService: SupplyVisibilityCommentService,
-    private supplyVisibilityPredefinedCommentService: SupplyVisibilityPredefinedCommentService,
-    private supplyVisibilityNotesService: SupplyVisibilityNotesService,
-    private supplyVisibilityBuyersPartNumbersService: BuyersPartnumbersListService,
-    private dateService: DateService,
-    private dialog: MatDialog,
-    private store: Store,
-    private translate: TranslateService,
-    private notification: NotificationService,
   ) {
     this.initNotifications()
   }
@@ -335,7 +331,7 @@ export class SupplyVisibilityState {
    * @memberof SupplyVisibilityState
    */
   @Selector()
-  static getBasicParameters(state: SupplyVisibilityStateModel) {
+  static getBasicParameters(state: SupplyVisibilityStateModel): BasicParameters {
     return state.basicParameters;
   }
 
@@ -375,7 +371,7 @@ export class SupplyVisibilityState {
    * @memberof SupplyVisibilityState
    */
   @Selector()
-  static getDaterangeParameters(state: SupplyVisibilityStateModel) {
+  static getDaterangeParameters(state: SupplyVisibilityStateModel): DateRangeParameters {
     return state.daterangeParameters;
   }
 
@@ -387,7 +383,7 @@ export class SupplyVisibilityState {
    * @memberof SupplyVisibilityState
    */
   @Selector()
-  static getPurchaseOrders(state: SupplyVisibilityStateModel) {
+  static getPurchaseOrders(state: SupplyVisibilityStateModel): PurchaseOrders[] {
     return state.purchaseOrders;
   }
 
@@ -424,7 +420,7 @@ export class SupplyVisibilityState {
    * @memberof SupplyVisibilityState
    */
   @Selector()
-  static getForecast(state: SupplyVisibilityStateModel) {
+  static getForecast(state: SupplyVisibilityStateModel): Forecast {
     return state.forecast;
   }
 
@@ -436,8 +432,8 @@ export class SupplyVisibilityState {
    * @memberof SupplyVisibilityState
    */
   @Selector()
-  static getCommitsCarriers(state: SupplyVisibilityStateModel) {
-    return state.cachedCommitsCarriers;
+  static getCommitsCarriers(state: SupplyVisibilityStateModel): Carriers[] {
+    return state.cachedCommitsCarriers || [];
   }
 
   /**
@@ -448,8 +444,8 @@ export class SupplyVisibilityState {
    * @memberof SupplyVisibilityState
    */
   @Selector()
-  static getVendorsName(state: SupplyVisibilityStateModel) {
-    return state.cachedVendorName;
+  static getVendorsName(state: SupplyVisibilityStateModel): VendorName[] {
+    return state.cachedVendorName || [];
   }
 
   /**
@@ -460,8 +456,8 @@ export class SupplyVisibilityState {
   * @memberof SupplyVisibilityState
   */
   @Selector()
-  static getCommitsCountries(state: SupplyVisibilityStateModel) {
-    return state.cachedCommitsCountries;
+  static getCommitsCountries(state: SupplyVisibilityStateModel): Countries[] {
+    return state.cachedCommitsCountries || [];
   }
 
   /**
@@ -472,8 +468,8 @@ export class SupplyVisibilityState {
  * @memberof SupplyVisibilityState
  */
   @Selector()
-  static getCommitsTransportType(state: SupplyVisibilityStateModel) {
-    return state.cachedCommitsTransportType;
+  static getCommitsTransportType(state: SupplyVisibilityStateModel): TransportType[] {
+    return state.cachedCommitsTransportType || [];
   }
 
   /**
@@ -484,8 +480,8 @@ export class SupplyVisibilityState {
  * @memberof SupplyVisibilityState
  */
   @Selector()
-  static getCommitsReasons(state: SupplyVisibilityStateModel) {
-    return state.cachedCommitsReasons;
+  static getCommitsReasons(state: SupplyVisibilityStateModel): Reason[] {
+    return state.cachedCommitsReasons || [];
   }
 
   /**
@@ -508,7 +504,7 @@ export class SupplyVisibilityState {
    * @memberof SupplyVisibilityState
    */
   @Selector()
-  static getVendorCodes(state: SupplyVisibilityStateModel) {
+  static getVendorCodes(state: SupplyVisibilityStateModel): VendorCode[] {
     return state.vendorCodes;
   }
 
@@ -520,7 +516,7 @@ export class SupplyVisibilityState {
    * @memberof SupplyVisibilityState
    */
   @Selector()
-  static getDummyCommitsHeaders(state: SupplyVisibilityStateModel) {
+  static getDummyCommitsHeaders(state: SupplyVisibilityStateModel): DummyCommitHeader[] {
     return state.dummyCommitsHeaders;
   }
 
@@ -532,8 +528,8 @@ export class SupplyVisibilityState {
    * @memberof SupplyVisibilityState
    */
   @Selector()
-  static getSelectedDummyCommitsHeader(state: SupplyVisibilityStateModel) {
-    return state.selectedDummyCommitHeader;
+  static getSelectedDummyCommitsHeader(state: SupplyVisibilityStateModel): DummyCommitHeader {
+    return state.selectedDummyCommitHeader ?? {} as DummyCommitHeader;
   }
 
   /**
@@ -3021,7 +3017,7 @@ export class SupplyVisibilityState {
         );
     }
     else {
-     return dispatch(new CacheCommitsCarriersSuccess());
+      return dispatch(new CacheCommitsCarriersSuccess());
     }
   }
 
@@ -3579,15 +3575,15 @@ export class SupplyVisibilityState {
     return this.forecastsData[parameters.partNumber];
   }
 
-  isVirtualVC(state: SupplyVisibilityStateModel) {
+  isVirtualVC(state: SupplyVisibilityStateModel): boolean {
     return (state.basicParameters.vendorCode == 'VirtualVC')
   }
 
-  isValidPn(state: any, partNumber: string, vendorCode: string) {
+  isValidPn(state: any, partNumber: string, vendorCode: string): boolean {
     if (state && state.basicParameters) {
       return (state.basicParameters.partNumber == partNumber || state.basicParameters.vendorCode == vendorCode)
     }
-    return;
+    return false;
   }
 
 

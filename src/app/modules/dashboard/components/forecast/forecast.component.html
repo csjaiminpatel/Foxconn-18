@@ -1,0 +1,115 @@
+<!-- Spinner -->
+<div *ngIf="loading && !explicitForecast" class="panel-content-spinner-wrapper">
+    <orion-platform-progress-spinner class="panel-content-spinner"> </orion-platform-progress-spinner>
+  </div>
+  <!-- / Spinner -->
+  <div class="invalid-quota-banner" *ngIf="!validQuota">
+    <p>{{ 'supply-visibility.invalidQuota' | translate }}</p>
+  </div>
+  <div *ngIf="!infoMessage && !loading" class="forecast--container" fxLayout="column">
+    <table class="static-values-table" [ngClass]="fontSizeClass">
+      <tr>
+        <td *ngFor="let item of staticValues" class="forecast--static-value-table">
+          <div *ngIf="item.label === 'Part Number'; else other_content">
+            <span class="label">{{ item.label }}</span> <br />
+            <a (click)="goToForecast()" style="cursor: pointer">
+              <span class="value">{{ item.value }}</span></a>
+          </div>
+  
+          <ng-template #other_content><span class="label">{{ item.label }}</span> <br />
+            <span class="value">{{ item.value }}</span>
+          </ng-template>
+  
+          <!-- <span class="label">{{ item.label }}</span> <br> -->
+          <!-- <span class="value">{{ item.value }}</span> -->
+        </td>
+      </tr>
+    </table>
+    <table class="forecast-table table" [ngClass]="fontSizeClass" style="word-wrap: unset;white-space: nowrap;">
+      <thead>
+        <tr>
+          <th [ngClass]="fontSizeClass">{{ forecastDate[0] }}</th>
+          <th [ngClass]="fontSizeClass" *ngFor="let column of filteredColumns">
+            <!-- {{ column.headerText | replace : 'Week ' : 'WK&nbsp;' }} -->
+            {{column.headerText}}
+          </th>
+        </tr>
+        <tr>
+          <th [ngClass]="fontSizeClass">{{ forecastDate[1] }}</th>
+          <th [ngClass]="fontSizeClass" *ngFor="let column of filteredColumns">
+            {{ column.date | replace : ' ' : '&nbsp;' }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of dataSource">
+          <th title="{{ row.label }}">{{ row.label }}</th>
+          <ng-template ngFor let-field [ngForOf]="filteredColumns">
+            <td title="{{
+                row['c_' + field.field] != 'UNDEFINED' &&
+                row['c_' + field.field] != 'You are not allowed to see this.'
+                  ? row['c_' + field.field]
+                  : ''
+              }}" [ngClass]="getClasses(row['f_' + field.field])">
+              {{ row[field.field] }}
+            </td>
+          </ng-template>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th [ngClass]="fontSizeClass" class="">
+            <!--{{(variant == 'WEEKLY')? 'Weeks': 'Days'}}
+             <button  [disabled]="!expandContentLoaded"   mat-raised-button (click)="triggerExpandView()">
+              <ng-container *ngIf="!expandViewState">
+                <span>{{expandContentLoaded?'Expand':'Loading..'}}</span>
+                <mat-icon>expand_more</mat-icon>
+              </ng-container>
+              <ng-container *ngIf="expandViewState">
+                <span>{{'Collapse'}}</span>
+                <mat-icon>expand_less</mat-icon>
+              </ng-container>
+            </button>   -->
+          </th>
+          <td [colSpan]="(filteredColumns ? filteredColumns.length : columns.length) - 1">
+            <orion-platform-range-navigator *ngIf="showRangeNav && expandViewState !== false"
+              [rangeDataSource]="rangeDataSource | svDataFormatter : 'range-navigator'" [value]="value" [hidden]="true"
+              (selectedRange)="changeWeekRange($event)"></orion-platform-range-navigator>
+          </td>
+          <td>
+            <div *ngIf="!isFetchingData" fxLayout fxLayoutGap="18px">
+              <ng-container *ngIf="hasExpandView">
+                <!-- <button [disabled]="!expandContentLoaded" *ngIf="!expandViewState" mat-raised-button (click)="triggerVirtualVCTab(true)" >
+              </button> -->
+              </ng-container>
+            </div>
+            <ng-container *ngIf="isFetchingData">
+              <orion-platform-progress-spinner> </orion-platform-progress-spinner>
+            </ng-container>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  
+  <p *ngIf="!loading" class="right">
+    <button mat-raised-button [matMenuTriggerFor]="svDownloadMenu">
+      <mat-icon>download</mat-icon>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #svDownloadMenu="matMenu">
+      <button mat-menu-item (click)="downloadExcelWithCommentsNotes()">
+        <mat-icon>download</mat-icon>
+        <span>Download</span>
+      </button>
+      <!--<button mat-menu-item (click)="downloadExcel()">
+        <mat-icon>download</mat-icon>
+        <span>Download</span>
+      </button>
+      <button mat-menu-item (click)="downloadExcelWithCommentsNotes()">
+        <mat-icon>download</mat-icon>
+        <span>Download with comments</span>
+      </button>-->
+    </mat-menu>
+  </p>
+  

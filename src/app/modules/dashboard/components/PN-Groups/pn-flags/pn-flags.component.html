@@ -1,0 +1,72 @@
+<orion-platform-dialog [title]="title" [customClasses]="customClasses">
+    <div header *ngIf="pnData?.pnData?.flags && pnData?.pnData?.flags?.length > 0 && userRights?.flagEdit === true">
+      <button
+        mat-icon-button
+        [autofocus]="false"
+        matTooltip="Create New Flag"
+        (click)="onAddClick()"
+        [disabled]="showForm">
+        <mat-icon style="font-size: 25px;">post_add</mat-icon>
+      </button>
+    </div>
+  
+    <div content class="shared--dialog--content">
+      <!-- Flags -->
+      <div *ngIf="!isLoading && showForm && flagForm">
+        <form [formGroup]="flagForm" class="form-control bg-whitesmoke p-3">
+          <ng-container *ngFor="let control of defaultFields">
+            <ng-container [ngSwitch]="control?.controlType">
+              <mat-form-field appearance="fill" *ngSwitchCase="'simple'">
+                <mat-label>{{ control?.headerText }} </mat-label>
+                <input
+                  matInput
+                  placeholder="{{ control?.headerText }}"
+                  type="{{ control?.type }}"
+                  formControlName="{{ control?.field }}"
+                  [required]="control?.isRequired" />
+                <mat-error *ngIf="flagForm && flagForm.controls[control?.field] && flagForm.controls[control?.field].errors?.['serverError']">
+                  {{ flagForm.controls[control?.field].errors?.['serverError'] }}
+                </mat-error>
+              </mat-form-field>
+            </ng-container>
+          </ng-container>
+        </form>
+        <div class="d-flex align-items-center justify-content-start bg-whitesmoke p-3 pt-0">
+          <button
+            id="submit"
+            class="me-4"
+            [disabled]="!flagForm.valid"
+            (click)="createPnVcFlags()"
+            color="primary"
+            mat-raised-button>
+            Create
+          </button>
+          <ng-container *ngIf="pnData?.pnData?.flags && pnData?.pnData?.flags?.length > 0">
+            <button id="close" (click)="onCloseForm()" color="white" mat-raised-button>Close</button>
+          </ng-container>
+        </div>
+      </div>
+      <div class="pt-2" content mat-dialog-content>
+        <div class="cdf--spinner-wrapper" style="height: 150px" *ngIf="isLoading">
+          <orion-platform-progress-spinner class="cdf--spinner"> </orion-platform-progress-spinner>
+        </div>
+        <div *ngIf="!isLoading && pnData?.pnData?.flags?.length > 0" class="pn-group-container">
+          <div *ngFor="let flag of pnData?.pnData?.flags" title="{{ flag }}" class="group-button">
+            <p class="text-truncate">
+              {{ flag }}
+            </p>
+            <div class="d-flex">
+              <button
+                *ngIf="userRights?.flagEdit"
+                (click)="deletePnVcFlags(flag)"
+                class="delete-button icn-f-18"
+                title="{{ 'vpns.deleteFlag' | translate }}">
+                &times;
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </orion-platform-dialog>
+  

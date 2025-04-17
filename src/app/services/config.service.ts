@@ -17,6 +17,7 @@ export class ConfigService {
       this.config = await firstValueFrom(
         this.http.get(`/config/config.${environment.name}.json`)
       );
+      console.log('Configuration loaded', this.config);
     } catch (error) {
       console.error('Could not load configuration', error);
     }

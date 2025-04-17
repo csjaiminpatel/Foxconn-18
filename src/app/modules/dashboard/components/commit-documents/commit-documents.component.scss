@@ -1,0 +1,18 @@
+.doc-grid{
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    grid-gap: 1rem;
+    .move-to-grid{
+        padding-bottom: 1rem;
+    }
+}
+
+.doc-action{
+    display: flex;
+    gap: 3px;
+    justify-content:left;
+}
+
+.grid-height{
+    max-height: 425px;
+}

@@ -1,0 +1,712 @@
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane" class="shared--dialog">
+  <mat-card-header class="shared--dialog--header dialog-header" cdkDragHandle>
+    @if (actionType == "edit") {
+    <div>
+      @if (!isDocumentsEnabled) {
+      <ng-container>
+        @if (commitModuleRights?.documentsView) {
+        <button mat-flat-button [disabled]="loading" (click)="showDocuments()" class="mr-1"
+          title="{{ 'commitDialogForm.showDocuments' | translate }}">
+          {{ "commitDialogForm.showDocuments" | translate }}
+
+          <span class="material-symbols-outlined">description</span>
+        </button>
+        }
+      </ng-container>
+      }
+      @if (isDocumentsEnabled) {
+      <ng-container>
+        @if (commitModuleRights?.documentsView) {
+        <button mat-flat-button [disabled]="loading" (click)="hideDocuments()" class="mr-1"
+          title="{{ 'commitDialogForm.hideDocuments' | translate }}">
+          {{ "commitDialogForm.hideDocuments" | translate }}
+
+          <span class="material-symbols-outlined">description</span>
+        </button>
+        }
+      </ng-container>
+      }
+      @if (!isCommitHistoryEnabled) {
+      <ng-container>
+        <button mat-flat-button [disabled]="loading" (click)="showCommitHistory()" class="history-btn"
+          title="{{ 'commitDialogForm.showCommitHistory' | translate }}">
+          {{ "commitDialogForm.showCommitHistory" | translate }}
+
+          <mat-icon>history</mat-icon>
+        </button>
+      </ng-container>
+      }
+
+      @if (isCommitHistoryEnabled) {
+      <ng-container>
+        <button mat-flat-button [disabled]="loading" (click)="hideCommitHistory()" class="history-btn"
+          title="{{ 'commitDialogForm.hideCommitHistory' | translate }}">
+          {{ "commitDialogForm.hideCommitHistory" | translate }}
+
+          <mat-icon>update</mat-icon>
+        </button>
+      </ng-container>
+      }
+    </div>
+    }
+    @if (actionType == "new") {
+    <ng-container>
+      <button mat-icon-button [mat-dialog-close]="false" [disabled]="loading" autofocus="false"
+        aria-label="Close dialog" class="close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </ng-container>
+    }
+
+    <mat-card-title class="title">
+      {{ title }}
+    </mat-card-title>
+
+    <mat-card-subtitle>
+      <ng-content select="[subtitle]"></ng-content>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  @if (
+  (remainingPOQty || remainingPOQty === 0) &&
+  !isDocumentsEnabled &&
+  !isCommitHistoryEnabled
+  ) {
+  <div>
+    <h6 class="pl-10">
+      <mat-label>{{ "commitDialogForm.openPOQty" | translate }}</mat-label>
+
+      <mat-label [class]="remainingPOQty < 0 ? 'red' : ''">{{
+        remainingPOQty
+        }}</mat-label>
+    </h6>
+  </div>
+  }
+  <mat-card-content class="shared--dialog--content">
+    <!-- Commit Dialog -->
+    @if (
+    (loading || !columns) && !isCommitHistoryEnabled && !isDocumentsEnabled
+    ) {
+    <div class="cdf--spinner-wrapper">
+      <orion-platform-progress-spinner class="cdf--spinner"></orion-platform-progress-spinner>
+    </div>
+    }
+
+    @if (!isCommitHistoryEnabled && !isDocumentsEnabled && !loading) {
+    <div content mat-dialog-content fxFlex fxLayout="column">
+      @if (columns && isFormLoaded) {
+      <ng-container>
+        <form [formGroup]="commitForm" #formDirective="ngForm" class="supply-visibility--commit--form require-display"
+          fxLayoutGap="15px" fxLayout="row wrap" fxLayoutAlign="start none" fxLayout.xs-sm="column">
+          <!-- Customizable Controls Start -->
+
+          <ng-container *ngFor="let control of columns">
+            @if (control.visible && (control.exclusive == actionType || !control.exclusive)) {
+            <ng-container [ngSwitch]="control.controlType">
+              <!-- common control designs -->
+              <mat-form-field appearance="fill" *ngSwitchCase="'simple'" [ngClass]="{
+                    'required-field': isControlRequiredAndUntouched(
+                      control.field
+                    ),
+                  }">
+                <mat-label>{{
+                  "commitDialogForm." + control.field | translate
+                  }}</mat-label>
+
+                <input matInput placeholder="{{
+                      'commitDialogForm.' + control.field | translate
+                    }}" type="{{ control.type }}" formControlName="{{ control.field }}"
+                  [required]="control.isRequired" />
+                @if (getServerError(control.field)) {
+                <mat-error>
+                  {{ getServerError(control.field) }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'number'" [ngClass]="{
+                    'required-field': isControlRequiredAndUntouched(
+                      control.field
+                    ),
+                  }">
+                <mat-label>{{
+                  "commitDialogForm." + control.field | translate
+                  }}</mat-label>
+
+                <input matInput placeholder="{{
+                      'commitDialogForm.' + control.field | translate
+                    }}" type="{{ control.type }}" formControlName="{{ control.field }}"
+                  [required]="control.isRequired" />
+                @if (getServerError(control.field)) {
+                <mat-error>
+                  {{ getServerError(control.field) }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'date'" [ngClass]="{
+                    'required-field': isControlRequiredAndUntouched(
+                      control.field
+                    ),
+                  }">
+                <mat-label>{{
+                  "commitDialogForm." + control.field | translate
+                  }}</mat-label>
+
+                <input matInput placeholder="{{
+                      'commitDialogForm.' + control.field | translate
+                    }}" (focus)="picker.open()" [matDatepicker]="picker" formControlName="{{ control.field }}"
+                  type="{{ control.type }}" [required]="control.isRequired" />
+
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+
+                <mat-datepicker #picker></mat-datepicker>
+                @if (getServerError(control.field)) {
+                <mat-error>
+                  {{ getServerError(control.field) }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <div id="date-box" class="date-box" appearance="fill" *ngSwitchCase="'dateTime'">
+                @if (commitForm.controls[control.field].value) {
+                <mat-label id="field-caption-top" class="field-caption-top">{{ "commitDialogForm." + control.field |
+                  translate }}
+                </mat-label>
+                }
+
+                <mat-label id="field-caption-top-h" class="field-caption-top-h">{{ "commitDialogForm." + control.field |
+                  translate }}
+                </mat-label>
+
+                <dx-date-box dateSerializationFormat="yyyy-MM-ddTHH:mm:ss" placeholder="{{
+                      'commitDialogForm.' + control.field | translate
+                    }}" formControlName="{{ control.field }}" displayFormat="yyyy-MM-dd HH:mm:ss"
+                  [useMaskBehavior]="true" [showAnalogClock]="false" type="datetime"></dx-date-box>
+                @if (getServerError(control.field)) {
+                <mat-error>
+                  {{ getServerError(control.field) }}
+                </mat-error>
+                }
+              </div>
+
+              <mat-checkbox formControlName="{{ control.field }}" *ngSwitchCase="'checkbox'"
+                [required]="control?.isRequired">
+                {{ "commitDialogForm." + control.field | translate }}
+              </mat-checkbox>
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'simple-np'" [ngClass]="{
+                    'required-field': isControlRequiredAndUntouched(
+                      control.field
+                    ),
+                  }">
+                <mat-label>{{
+                  "commitDialogForm." + control.field | translate
+                  }}</mat-label>
+
+                <input formControlName="{{ control.field }}" matInput [required]="control?.isRequired" />
+                @if (getServerError(control.field)) {
+                <mat-error>
+                  {{ getServerError(control.field) }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <ng-container *ngSwitchCase="'dropdown'">
+                <mat-form-field appearance="fill" [ngClass]="{
+                      'required-field': isControlRequiredAndUntouched(
+                        control.field
+                      ),
+                    }">
+                  <mat-label>{{
+                    "commitDialogForm." + control.field | translate
+                    }}</mat-label>
+
+                  <mat-select formControlName="{{ control.field }}" [required]="control?.isRequired">
+                    <mat-option *ngFor="
+                          let item of commonDropdownList[control.field];
+                          let i = index
+                        " [value]="item.value">
+                      {{ item.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                @if (getServerError(control.field)) {
+                <mat-error>
+                  {{ getServerError(control.field) }}
+                </mat-error>
+                }
+              </ng-container>
+
+              <!-- /common control designs -->
+
+              <!-- dedicated control designs -->
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'d-partNumber'" [ngClass]="{
+                    'required-field': isControlRequiredAndUntouched(
+                      control.field
+                    ),
+                  }">
+                <mat-label>{{
+                  "commitDialogForm.partNumber" | translate
+                  }}</mat-label>
+
+                <input matInput placeholder="{{ 'commits.partNumber' | translate }}" type="text"
+                  formControlName="partNumber" [required]="control.isRequired" />
+                @if (
+                commitForm.controls["partNumber"].errors?.["serverError"]
+                ) {
+                <mat-error>
+                  {{
+                  commitForm.controls["partNumber"].errors?.[
+                  "serverError"
+                  ]
+                  }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'d-chooseVendor'" [ngClass]="{
+                    'required-field': isControlRequiredAndUntouched(
+                      control.field
+                    ),
+                  }">
+                <mat-label>{{
+                  "commitDialogForm.chooseVendor" | translate
+                  }}</mat-label>
+                <input type="text" matInput formControlName="chooseVendor" [matAutocomplete]="auto"
+                  [required]="control.isRequired" />
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  <mat-option *ngFor="let vendorCode of vendorCodes" [value]="vendorCode?.vendorCode">
+                    {{
+                    vendorCode?.vendorCode + " | " + vendorCode?.vendorName
+                    }}
+                  </mat-option>
+                </mat-autocomplete>
+                @if (
+                commitForm.controls["chooseVendor"].errors?.["serverError"]
+                ) {
+                <mat-error>
+                  {{
+                  commitForm.controls["chooseVendor"].errors?.[
+                  "serverError"
+                  ]
+                  }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'d-poNumber'" class="required-field">
+                <mat-label>
+                  {{ "commitDialogForm.poNumber" | translate }}
+                </mat-label>
+
+                <mat-select formControlName="purchaseOrderNumber" [required]="control.isRequired">
+                  <mat-option *ngFor="let purchaseOrder of purchaseOrders" [value]="purchaseOrder.purchaseOrderNumber">
+                    {{ purchaseOrder.purchaseOrderNumber }}
+                  </mat-option>
+
+                  <mat-option value="n/a" selected="n/a">n/a</mat-option>
+                </mat-select>
+                @if (isOptionloader) {
+                <div class="select-placeholder-container">
+                  <mat-spinner class="spinner" diameter="15"></mat-spinner>
+                </div>
+                }
+
+                @if (actionType == "edit" && commit?.status != "N") {
+                <mat-icon class="grey_icon" matSuffix
+                  matTooltip="{{ 'style.poChangeWarning' | translate }}">error_outline
+                </mat-icon>
+                }
+
+                @if (
+                commitForm.controls["purchaseOrderNumber"].errors?.[
+                "serverError"
+                ]
+                ) {
+                <mat-error>
+                  {{
+                  commitForm.controls["purchaseOrderNumber"].errors?.[
+                  "serverError"
+                  ]
+                  }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'d-poLine'" [ngClass]="{
+                    'required-field':
+                      !commit?.inboundDeliveryNumber?.startsWith('*') &&
+                      actionType == 'new' &&
+                      purchaseOrderNumber.value != 'n/a'
+                        ? isControlRequiredAndUntouched(control.field)
+                        : false,
+                  }">
+                <mat-label>
+                  {{ "commitDialogForm.poLine" | translate }}
+                </mat-label>
+
+                <mat-select formControlName="purchaseOrderLine" (selectionChange)="onPolineChange()" [required]="
+                      !commit?.inboundDeliveryNumber?.startsWith('*') &&
+                      actionType == 'new' &&
+                      purchaseOrderNumber.value != 'n/a'
+                        ? control.isRequired
+                        : false
+                    ">
+                  <mat-option *ngFor="let selectedPOItem of selectedPOItems" [value]="selectedPOItem">
+                    {{ selectedPOItem }}
+                  </mat-option>
+                </mat-select>
+                @if (isOptionloader) {
+                <div class="select-placeholder-container">
+                  <mat-spinner class="spinner" diameter="15"></mat-spinner>
+                </div>
+                }
+                @if (actionType == "edit" && commit?.status != "N") {
+                <mat-icon class="grey_icon" matSuffix
+                  matTooltip="{{ 'style.poLineChangeWarning' | translate }}">error_outline
+                </mat-icon>
+                }
+                @if (
+                commitForm.controls["purchaseOrderLine"].errors?.[
+                "serverError"
+                ]
+                ) {
+                <mat-error>
+                  {{
+                  commitForm.controls["purchaseOrderLine"].errors?.[
+                  "serverError"
+                  ]
+                  }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'d-reason'" [ngClass]="{
+                    'required-field': isControlRequiredAndUntouched(
+                      control.field
+                    ),
+                  }">
+                <mat-label>{{
+                  "commitDialogForm.reason" | translate
+                  }}</mat-label>
+
+                <mat-select formControlName="reason" [required]="control?.isRequired">
+                  <mat-option [value]="">n/a</mat-option>
+
+                  <mat-option *ngFor="let reason of reasons$ | async; let i = index" [value]="reason.id">
+                    {{ reason.name }}
+                  </mat-option>
+                </mat-select>
+                @if (commitForm.controls["reason"].errors?.["serverError"]) {
+                <mat-error>
+                  {{
+                  commitForm.controls["reason"].errors?.["serverError"]
+                  }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <ng-container *ngSwitchCase="'d-mpn'">
+                <div class="dx-fieldset">
+                  <div class="dx-field">
+                    <div class="dx-field-value" [ngClass]="{
+                          error:
+                            commitForm.controls['mpn'].errors?.['serverError'],
+                          required: isControlRequiredAndUntouched(
+                            control.field
+                          ),
+                        }">
+                      @if (manufacturerDataSource) {
+                      <dx-drop-down-box formControlName="mpn" [ngClass]="{
+                              'commit-form-error':
+                                commitForm.controls['mpn'].errors?.[
+                                  'serverError'
+                                ],
+                            }" [(value)]="selectedManufacturerIndex" [(opened)]="isMpnDxOpen" valueExpr="primaryKey"
+                        [displayExpr]="displayMpn" label="{{ mpnLabel }}" [labelMode]="'floating'"
+                        [stylingMode]="'underlined'" [dataSource]="manufacturerDataSource"
+                        (onOptionChanged)="onMpnChange($event)" [dropDownOptions]="{ width: 'auto' }">
+                        <div *dxTemplate="let data of 'content'">
+                          <dx-data-grid [dataSource]="manufacturerDataSource" [(selectedRowKeys)]="
+                                  selectedManufacturerIndexArray
+                                " [hoverStateEnabled]="true" height="300">
+                            <dxo-selection mode="single"></dxo-selection>
+
+                            <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+                            <dxo-scrolling mode="virtual"></dxo-scrolling>
+
+                            <dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+
+                            <dxi-column dataField="partNumber" caption="PN" width="auto"></dxi-column>
+
+                            <dxi-column dataField="vendorCode" caption="Vendor Code" width="auto"></dxi-column>
+
+                            <dxi-column dataField="mfgpn" caption="MFG_PN" width="auto"></dxi-column>
+
+                            <dxi-column dataField="mfgName" caption="MFG_Name" width="auto"></dxi-column>
+
+                            <dxi-column dataField="productRevision" caption="ProductRev" width="auto"></dxi-column>
+
+                            <dxi-column dataField="cpnStatusCode" caption="CPN_StatusCode" width="auto"></dxi-column>
+                          </dx-data-grid>
+                        </div>
+                      </dx-drop-down-box>
+                      }
+                      <!-- <mat-label id="mpnLabel" class="date-label">MPN</mat-label> -->
+                    </div>
+                    @if (commitForm.controls["mpn"].errors?.["serverError"]) {
+                    <div class="dx-field-value-wrapper">
+                      <div class="value-active">
+                        <div class="active">
+                          {{
+                          commitForm.controls["mpn"].errors?.[
+                          "serverError"
+                          ]
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                    }
+                  </div>
+                </div>
+              </ng-container>
+
+              <input type="hidden" formControlName="status" />
+
+              <input type="hidden" formControlName="order" />
+
+              <input type="hidden" formControlName="parentID" />
+
+              <!-- <ng-container *ngSwitchCase="'d-inboundDeliveryNumber'">
+  
+                  <mat-form-field appearance="fill" *ngIf="actionType === 'edit'">
+  
+                    <mat-label>{{ 'commitDialogForm.inboundDeliveryNumber' | translate }} </mat-label>
+  
+                    <input matInput placeholder="{{ 'commitDialogForm.inboundDeliveryNumber' | translate }}" type="number"
+  
+                      formControlName="inboundDeliveryNumber" />
+  
+                    <mat-error *ngIf="commitForm.controls['inboundDeliveryNumber'].errors?.serverError">
+  
+                      {{ commitForm.controls['inboundDeliveryNumber'].errors?.serverError }}
+  
+                    </mat-error>
+  
+                  </mat-form-field>
+  
+  
+  
+                </ng-container> -->
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'d-typeOfTransportation'" [ngClass]="{
+                    'required-field': isControlRequiredAndUntouched(
+                      control.field
+                    ),
+                  }">
+                <mat-label>{{
+                  "commitDialogForm." + control.field | translate
+                  }}</mat-label>
+
+                <mat-select formControlName="{{ control.field }}" [required]="control?.isRequired">
+                  <mat-option [value]="">n/a</mat-option>
+
+                  <mat-option *ngFor="
+                        let transportType of transportTypes$ | async;
+                        let i = index
+                      " [value]="transportType?.name">
+                    {{ transportType.name }}
+                  </mat-option>
+                </mat-select>
+                @if (getServerError(control.field)) {
+                <mat-error>
+                  {{ getServerError(control.field) }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'d-forwarder'" [ngClass]="{
+                    'required-field': isControlRequiredAndUntouched(
+                      control.field
+                    ),
+                  }">
+                <mat-label>{{
+                  "commitDialogForm." + control.field | translate
+                  }}</mat-label>
+
+                <mat-select formControlName="{{ control.field }}" [required]="control?.isRequired"
+                  [compareWith]="compareFn">
+                  <mat-option [value]="">n/a</mat-option>
+
+                  <mat-option *ngFor="
+                        let carrier of filteredOptions | async;
+                        let i = index
+                      " [value]="carrier">
+                    {{ carrier }}
+                  </mat-option>
+                </mat-select>
+                @if (getServerError(control.field)) {
+                <mat-error>
+                  {{ getServerError(control.field) }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" *ngSwitchCase="'d-countryOfOrigin'" [ngClass]="{
+                    'required-field': isControlRequiredAndUntouched(
+                      control.field
+                    ),
+                  }">
+                <mat-label>{{
+                  "commitDialogForm." + control.field | translate
+                  }}</mat-label>
+
+                <mat-select (openedChange)="openedChange($event)" formControlName="{{ control.field }}"
+                  [required]="control?.isRequired">
+                  <mat-form-field class="select-search">
+                    <input #search [formControl]="searchDropdown" placeholder="Search" aria-label="Search" matInput
+                      (keyup)="onKey($event.target)" />
+                    @if (search.value) {
+                    <button [disableRipple]="true" matSuffix mat-icon-button aria-label="Clear"
+                      (click)="clearSearch($event)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                    }
+                  </mat-form-field>
+
+                  <mat-option *ngFor="let item of countriesNames; let i = index" [value]="item?.code">
+                    {{ item.name }}
+                  </mat-option>
+                  @if (countriesNames?.length == 0) {
+                  <mat-optgroup>
+                    <div>No results found!</div>
+                  </mat-optgroup>
+                  }
+
+                  <!-- <mat-option [value]="">n/a</mat-option>
+  
+                    <mat-option
+  
+                      *ngFor="let country of countries$ | async; let i = index"
+  
+                      [value]="country?.code">
+  
+                      {{ country.name }}
+  
+                    </mat-option> -->
+                </mat-select>
+                @if (getServerError(control.field)) {
+                <mat-error>
+                  {{ getServerError(control.field) }}
+                </mat-error>
+                }
+              </mat-form-field>
+
+              <!-- dedicated control designs -->
+            </ng-container>
+            }
+          </ng-container>
+
+          <!-- Customizable End -->
+        </form>
+      </ng-container> }
+    </div>
+    }
+    <!-- Commit History Panel -->
+
+    <!-- Handle Style Properly -->
+    @if (isDocumentsEnabled) {
+    <orion-platform-commit-documents class="wd-100" [explicitData]="commitConfig" (onDataLoad)="onDataLoaded($event)">
+    </orion-platform-commit-documents>
+    }
+
+    @if (isCommitHistoryEnabled) {
+    <orion-platform-commit-history class="wd-100" [explicitData]="commitConfig" (onDataLoad)="onDataLoaded($event)">
+    </orion-platform-commit-history>
+    }
+  </mat-card-content>
+
+  <mat-card-actions align="end" class="supply-visibility--commit--form-actions">
+    <p class="commit-modifier">
+      @if (
+      commit?.responsibleEmail &&
+      !isDocumentsEnabled &&
+      !isCommitHistoryEnabled
+      ) {
+      <span><strong>Modified by:</strong> {{ commit?.responsibleEmail }}</span>
+      }
+    </p>
+    @if (!isCommitHistoryEnabled && !isDocumentsEnabled) {
+    <div>
+      @if (!isBatchEdit) {
+      <ng-container>
+        @if (singleSubmitLabel) {
+        <button id="submit" (click)="onSubmit()" color="primary" [disabled]="
+                  this.userRights?.disableCommitManagement ||
+                  this.disableCommitManagement ||
+                  !commitForm.valid ||
+                  loading
+                " mat-raised-button cdkFocusInitial>
+          {{ singleSubmitLabel | translate }}
+        </button>
+        }
+        @if (isCreateDraftShown && !isCommitModule) {
+        <ng-container>
+          <button id="save-as-draft" (click)="sendDraftForm()" [disabled]="!commitForm.valid || loading" color="primary"
+            mat-raised-button>
+            {{ this.draftButtonTitle }}
+          </button>
+        </ng-container>
+        }
+
+        <button id="close" (click)="dialogClose()" mat-button [mat-dialog-close]="false">
+          {{ "form.close" | translate }}
+        </button>
+        @if (commitModuleRights?.selectFields) {
+        <button mat-icon-button [disabled]="!columns" title="{{ 'supply-visibility.selectFields' | translate }}">
+          <mat-icon (click)="openColumnSelectField()">ballot</mat-icon>
+        </button>
+        }
+      </ng-container>
+      }
+      @if (isBatchEdit) {
+      <ng-container>
+        @if (commitModuleRights?.selectFields) {
+        <button mat-icon-button [disabled]="!columns" title="{{ 'supply-visibility.selectFields' | translate }}">
+          <mat-icon (click)="openColumnSelectField()">ballot</mat-icon>
+        </button>
+        }
+
+        <button id="close" (click)="dialogClose()" mat-button [mat-dialog-close]="false">
+          {{ "form.close" | translate }}
+        </button>
+        @if (isBatchEdit && batchEditIndex > 0) {
+        <button id="back" (click)="onBack()" color="primary" [disabled]="loading" mat-raised-button cdkFocusInitial>
+          {{ "form.back" | translate }}
+        </button>
+        }
+        @if (isBatchEdit && batchEditIndex + 1 != commits.length) {
+        <button id="skip" (click)="onSkip()" color="primary" [disabled]="loading" mat-raised-button cdkFocusInitial>
+          {{ "form.skip" | translate }}
+        </button>
+        }
+        @if (batchSubmitLabel) {
+        <button id="submit" (click)="onSubmit()" color="primary" [disabled]="
+                  disableCommitManagement || !commitForm.valid || loading
+                " mat-raised-button cdkFocusInitial>
+          {{ batchSubmitLabel | translate }}
+        </button>
+        }
+      </ng-container>
+      }
+    </div>
+    }
+  </mat-card-actions>
+
+  <mat-card-footer>
+    <ng-content select="[footer]" class="shared--dialog--footer"></ng-content>
+  </mat-card-footer>
+</div>

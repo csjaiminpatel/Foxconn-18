@@ -1,0 +1,23 @@
+.no-data{
+    margin: 1rem auto;
+    padding: .5rem;
+    border-radius: .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid transparent;
+    font-weight: 200;
+    color: #999;
+    mat-icon{
+      font-size: 2rem;
+      height: 2rem;
+      width: 2rem;
+      transition: all .3s ease-in-out;
+      color: #999;
+    }
+    &:hover mat-icon{
+      transform: rotate(360deg);
+    }
+  }
+  

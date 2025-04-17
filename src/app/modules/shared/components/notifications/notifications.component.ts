@@ -34,7 +34,7 @@ export class NotificationsComponent {
   loadingPosition: 'MIDDLE' | 'RIGHT' | 'NONE' = 'NONE';
   isInitiated = false;
   customClasses = 'custom-notification-class';
-  rendererListeners: any[] = [];
+  rendererListeners?: any[] = [];
 
   notifications$: Observable<SVNotification[]> = this.store.select(SupplyVisibilityState.getNotificationsList);
   constructor(

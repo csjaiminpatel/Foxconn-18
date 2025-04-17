@@ -1,0 +1,64 @@
+.signalr-notification-message {
+    word-wrap: break-word;
+    color: #000;
+    padding-right: 16px;
+  }
+  
+  .signalr-notification-icon {
+    position: relative;
+    right: 10px;
+    top: 13px;
+    float: right;
+    height: 48px;
+    width: 48px;
+    background-color: rgb(103, 58, 183);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .signalr-notification-icon > .notification-icon {
+    transform: scale(1.5);
+  }
+  
+  .signalr-notification-bottom-right {
+    right: 24px;
+    bottom: 24px;
+  }
+  
+  #signalr-notification-container {
+    pointer-events: none;
+    position: fixed;
+    z-index: 99999;
+  }
+  
+  #signalr-notification-container * {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  #signalr-notification-container > div {
+    position: relative;
+    overflow: hidden;
+    margin: 0 0 6px;
+    padding: 15px 15px 15px 15px;
+    width: 400px;
+    height: 100px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+    border-radius: 12px 12px 12px 12px;
+    -moz-box-shadow: 0 0 12px #999999;
+    -webkit-box-shadow: 0 0 12px #999999;
+    box-shadow: 0 0 12px #999999;
+    color: #ffffff;
+    background: #f6f6f6 no-repeat 15px center;
+    opacity: 1;
+  }
+  
+  .signalr-notification {
+    background-color: #ffffff;
+    pointer-events: auto;
+  }
+  

@@ -1,0 +1,164 @@
+<div class="widget">
+    <header class="drag-handler">
+      <div class="headers">
+        <h2 title="{{ dashboardPanelModel.title ? dashboardPanelModel.title: 'cards.simplePNList.title | translate'}}">
+          {{
+            dashboardPanelModel.title
+              ? dashboardPanelModel.title
+              : "'cards.simplePNList.title' | translate"
+          }}
+        </h2>
+        <h3 *ngIf="dashboardPanelModel.subTitle">
+          {{ dashboardPanelModel.subTitle }}
+        </h3>
+      </div>
+      <div class="icons">
+        <ng-container *ngIf="viewStatus == enumMMViews.NOT_FOUND">
+          <mat-icon  class="px-2" matTooltip="Selected View does not exist for this plant" matTooltipClass="error-tooltip" color="warn">error_outline</mat-icon>
+        </ng-container>
+        <ng-container *ngIf="isMasterFilter">
+          <mat-icon  class="px-2" matTooltip="{{ 'global.mainFilterActive' | translate }}" matTooltipClass="error-tooltip" color="warn">tune</mat-icon>
+        </ng-container>
+      </div>
+    </header>
+    <div class="widget-content">
+      <div *ngIf="loading" fxLayoutAlign="center" style="height: calc(100% - 19%);">
+        <orion-platform-progress-spinner class=""> </orion-platform-progress-spinner>
+      </div>
+  
+      <cdk-virtual-scroll-viewport
+        itemSize="50"
+        *ngIf="!loading"
+        class=""
+        >
+        <label
+          *cdkVirtualFor="
+          let partNumber of buyersPartNumbersFilteredByVPNsList?.result;
+          let i = index;
+          trackBy: trackByFn
+        "
+          class="partnumber-content checklist"
+          [ngClass]="{
+          'fill-check-2day': partNumber?.flags?.includes(REVIEW_BUYER_FLAG) || partNumber?.flags?.includes(REVIEW_SUPPLIER_FLAG) || partNumber?.flags?.includes(REVIEW_CUSTOMER_FLAG)
+        }">
+          <input
+            type="checkbox"
+            *ngIf="dashboardPanelModel?.firstValue?.allowMultiple"
+            [(ngModel)]="partNumber.$selected"
+            (change)="addElementInArray(partNumber)" />
+          <input
+            type="checkbox"
+            *ngIf="!dashboardPanelModel?.firstValue?.allowMultiple"
+            [(ngModel)]="partNumber.$selected"
+            (change)="showSupplyVisibility(partNumber, i)" />
+  
+          <span [ngStyle]="{background: dashboardPanelModel.primaryColor || 'gray'}">
+          <span>
+            <mat-icon class="mat-icon notranslate material-icons" role="img" aria-hidden="true">check</mat-icon>
+          </span>
+        </span>
+          <p>{{ partNumber.partNo || partNumber.partNumber }}</p>
+          <i class="sm-txt">{{ partNumber.vendorCode }}</i>
+        </label>
+  
+        <orion-platform-no-data *ngIf="!loading && buyersPartNumbersFilteredByVPNsList?.count === 0">
+          {{ 'global.noRecordsFound' | translate }}
+        </orion-platform-no-data>
+  
+        <orion-platform-data-error *ngIf="!loading && buyersPartNumbersFilteredByVPNsList?.$error">
+          {{ 'global.dataFetchError' | translate }}
+        </orion-platform-data-error>
+  
+  
+      </cdk-virtual-scroll-viewport>
+    </div>
+    <footer>
+      <div class="footer-left">
+        <button class="no-left-padding" [disabled]="!visibility.onDashboard" [matMenuTriggerFor]="menu" mat-button>
+          <span class="material-symbols-outlined">settings</span>
+        </button>
+      </div>
+      <div class="counts">{{ buyersPartNumbersFilteredByVPNsList.result?.length || 0 }}&nbsp;PN</div>
+      <div class="footer-right">
+        <ng-container *ngIf="dashboardPanelModel?.firstValue?.allowMultiple">
+          <button [matMenuTriggerFor]="downloadMenu"
+                  [disabled]="excelDownloading || (dashboardPanelModel.modificationRights && viewStatus == enumMMViews.NO_DATA)"
+                  [class.spinner]="excelDownloading" type="button"  color="accent"
+                  class="input-widget--actions--btn px-05 mx-2"
+                  matTooltip="{{ 'searchPnListWidget.downloadMultiPnExcel' | translate }}" mat-raised-button>
+            <mat-icon>cloud_download</mat-icon>
+          </button>
+          <button [matMenuTriggerFor]="actionMenu"
+                  [disabled]="dashboardPanelModel.modificationRights && viewStatus == enumMMViews.NO_DATA" type="button"
+                  color="primary" class="input-widget--actions--btn px-05 mx-2"
+                  matTooltip="{{ 'myPnList.reviewActions' | translate }}" mat-raised-button>
+            <mat-icon>splitscreen</mat-icon>
+          </button>
+        </ng-container>
+      </div>
+    </footer>
+  </div>
+  <mat-menu #actionMenu="matMenu" [overlapTrigger]="true" class="workflow-card--mat-menu">
+    <button [disabled]="dashboardPanelModel.modificationRights && viewStatus == enumMMViews.NO_DATA"
+            (click)="onReviewClick(true)" mat-menu-item>
+      <span>{{ 'cards.simplePNList.review' | translate }}</span>
+    </button>
+    <button [disabled]="dashboardPanelModel.modificationRights && viewStatus == enumMMViews.NO_DATA"
+            (click)="onReviewClick(false)" mat-menu-item>
+      <span>{{ 'cards.multiPNList.review' | translate }}</span>
+    </button>
+    <button [disabled]="dashboardPanelModel.modificationRights && viewStatus == enumMMViews.NO_DATA"
+            (click)="onManualListReviewClick()" mat-menu-item>
+      <span>{{ 'cards.simplePNList.createManualVirtualListReview' | translate }}</span>
+    </button>
+  </mat-menu>
+  
+  
+  <mat-menu #downloadMenu="matMenu" [overlapTrigger]="true" class="workflow-card--mat-menu">
+    <button
+      [disabled]="excelDownloading || (dashboardPanelModel.modificationRights && viewStatus == enumMMViews.NO_DATA)"
+      [class.spinner]="excelDownloading"
+      mat-menu-item
+            type="button" (click)="initPnExcelExportPrecalculations(true)">
+      <span title="{{ 'searchPnListWidget.downloadMultiPnExcel' | translate }}">{{ 'searchPnListWidget.downloadMultiPnExcel' | translate }}</span>
+    </button>
+  </mat-menu>
+  
+  
+  <mat-menu #menu="matMenu" [overlapTrigger]="true" class="workflow-card--mat-menu">
+    <button *ngIf="visibility['onMenuCheckAll']" mat-menu-item (click)="checkAll()">
+      <ng-container *ngIf="!allChecked">
+        <mat-icon>check_circle_outline</mat-icon>
+        <span>{{ 'global.checkAll' | translate }}</span>
+      </ng-container>
+      <ng-container *ngIf="allChecked">
+        <mat-icon>remove_circle_outline</mat-icon>
+        <span>{{ 'global.unCheckAll' | translate }}</span>
+      </ng-container>
+    </button>
+    <!-- onMenuConfig -->
+    <ng-container *ngIf="visibility['onMenuConfig']">
+      <button mat-menu-item (click)="configureWidget()">
+        <mat-icon>settings</mat-icon>
+        <span>{{ 'global.configure' | translate }}</span>
+      </button>
+    </ng-container>
+  
+    <ng-container *ngIf="visibility['onMenuSort'] ">
+      <button mat-menu-item [matMenuTriggerFor]="sortMenu.mainMenu!">
+        <mat-icon>sort_by_alpha</mat-icon>
+        <span>{{ 'sortMenu.sort' | translate }}</span>
+      </button>
+    </ng-container>
+  
+    <!-- onMenuDelete -->
+    <ng-container *ngIf="visibility.onMenuDelete">
+      <button mat-menu-item (click)="deleteWidget()">
+        <mat-icon>delete</mat-icon>
+        <span>{{ 'global.delete' | translate }}</span>
+      </button>
+    </ng-container>
+  </mat-menu>
+  
+  <orion-platform-sort-menu [currentSelection]="selectedSort"> </orion-platform-sort-menu>
+  

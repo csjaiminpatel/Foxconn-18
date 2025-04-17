@@ -1,0 +1,77 @@
+<orion-platform-dialog [title]="title">
+  <div content class="dummy-commit-headers--form--content" fxFlex>
+    <!-- Date filter for commits table -->
+
+    <form
+      [formGroup]="editDummyCommitHeaderForm"
+      #formDirective="ngForm"
+      fxFlex
+      fxLayout="row wrap"
+      fxLayout.xs="column"
+      fxLayoutGap="20px"
+      fxLayoutAlign="space-around center"
+    >
+      <mat-form-field fxFlex>
+        <input
+          matInput
+          placeholder="{{ 'dummyCommitHeadersDialog.name' | translate }}"
+          formControlName="name"
+          type="text"
+          cdkFocusInitial
+        />
+      </mat-form-field>
+      @if (selectedProfile == 0) {
+        <div class="m-10">
+          <mat-checkbox formControlName="forPrecalculate">
+            For Pre-Calculate
+          </mat-checkbox>
+        </div>
+      }
+      <!--
+        <mat-form-field appearance="fill">
+          <mat-select formControlName="enumSimulationSet">
+            <mat-option value=1>{{ 'dummyCommitHeadersDialog.personal' | translate }}</mat-option>
+            <mat-option value=0>{{ 'dummyCommitHeadersDialog.shared' | translate }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        -->
+      <mat-form-field appearance="fill">
+        <mat-select
+          formControlName="enumSimulationSet"
+          [(value)]="selectedProfile"
+        >
+          <ng-container>
+            @for (type of enumSimulationSet; track type) {
+              <mat-option [value]="type.value">
+                {{ type.name }}
+              </mat-option>
+            }
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+    </form>
+    <!-- / Date filter for commits table -->
+  </div>
+
+  <div actions class="date-range--form--actions">
+    <button
+      id="submit"
+      type="submit"
+      (click)="sendForm()"
+      mat-raised-button
+      color="primary"
+      [mat-dialog-close]="true"
+      cdkFocusInitial
+    >
+      {{ "form.submit" | translate }}
+    </button>
+    <button
+      id="close"
+      (click)="onCancel()"
+      mat-button
+      [mat-dialog-close]="false"
+    >
+      {{ "form.cancel" | translate }}
+    </button>
+  </div>
+</orion-platform-dialog>

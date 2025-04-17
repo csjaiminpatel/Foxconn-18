@@ -14,13 +14,13 @@ export interface SharedWidget {
   Data?: string;
 }
 export interface DashboardSetting {
-  Id?: string;
-  Name?: string;
-  SecurityLevel?: string;
-  RightForModifying?: string;
-  Data?: string;
-  IsPersonal?: boolean;
-  IsDefaultForRole?: boolean;
-  DefaultForRole?: string;
+  id?: string;
+  name?: string;
+  securityLevel?: string;
+  rightForModifying?: string;
+  data?: string;
+  isPersonal?: boolean;
+  isDefaultForRole?: boolean;
+  defaultForRole?: string;
   [propName: string]: any;
 }

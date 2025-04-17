@@ -1,0 +1,45 @@
+<!-- <ejs-rangenavigator
+  fxFlex
+  [id]="windowID+'RANGE_NAVI'"
+  [dataSource]="rangeDataSource"
+  animationDuration="500"
+  (labelRender)="labelRender($event)"
+  [value]="value"
+  [intervalType]="intervalType"
+  [labelFormat]="labelFormat"
+  [allowSnapping]="allowSnapping"
+  [navigatorStyleSettings]="navigatorStyleSettings"
+  [interval]="interval"
+  [xName]="xName"
+  [yName]="yName"
+  [tooltip]="tooltip"
+  (changed)="changed($event)"
+>
+</ejs-rangenavigator> -->
+<div class="dx-cust-range-selector">
+  <dx-range-selector
+    [dataSource]="rangeDataSource"
+    [value]="value"
+    (onDrawn)="onDrawn($event)"
+    (onValueChanged)="changed($event)"
+    [redrawOnResize] = "redrawOnResizeValue"
+    snapToTicks="true"
+  >
+    <!-- <dxo-margin [top]="20"></dxo-margin> -->
+    <!-- <dxo-size [width]="1300">
+    </dxo-size> -->
+    <!-- <dxo-behavior [snapToTicks]="true"></dxo-behavior> -->
+    <dxo-margin [left]="100" [right]="100"></dxo-margin>
+    <dxo-behavior [animationEnabled]="true"></dxo-behavior>
+
+    <dxo-scale [allowDecimals]="false" [tickInterval]="1">
+      <dxo-minor-tick [visible]="true"></dxo-minor-tick>
+      <dxo-label
+        [customizeText]="customizeText"
+        [overlappingBehavior]="overlappingBehavior"
+      >
+      </dxo-label>
+    </dxo-scale>
+    <dxo-slider-marker [visible]="false"></dxo-slider-marker>
+  </dx-range-selector>
+</div>

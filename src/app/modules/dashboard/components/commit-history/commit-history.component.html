@@ -1,0 +1,370 @@
+<div class="cdf--spinner-wrapper" *ngIf="loading">
+    <orion-platform-progress-spinner class="cdf--spinner"> </orion-platform-progress-spinner>
+</div>
+
+<div *ngIf="!loading">
+    <!--START History Template -->
+    <ng-template #commitHistory>
+        <div class="view-btn d-flex align-items-center justify-content-end p-2">
+        <button class="btn cursor-pointer mx-2" (click)="onChangeHistoryView(view.TABLE_VIEW)"
+                [ngClass]="{'active': currentHistoryView == view.TABLE_VIEW}">
+            <span class="material-icons">table_view</span>
+        </button>
+            <button class="btn cursor-pointer" (click)="onChangeHistoryView(view.VIEW_LIST)"
+            [ngClass]="{'active': currentHistoryView == view.VIEW_LIST}">
+            <span class="material-icons">view_list</span>
+            </button>
+        </div>
+        <div class="wd-100 display-block" content mat-dialog-content *ngIf="currentHistoryView == view.VIEW_LIST">
+            <!-- <div class="cdf--spinner-wrapper" *ngIf="loading">
+                <orion-platform-progress-spinner class="cdf--spinner"> </orion-platform-progress-spinner>
+            </div> -->
+
+            <div *ngFor="let commitHistory of commitHistories; index as i" class="historybox">
+                <span class="dot"></span>
+                <div *ngIf="
+                commitHistory.type == commitHistoryType.MERGED &&
+                commitOperationType?.INITIAL_COMMIT != commitHistory.mergedCommitHistory.type
+                ">
+                    <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                        commitHistory.mergedCommitHistory.dateModified | date : 'yyyy-MM-dd HH:mm:ss'
+                        }}</strong>
+                    <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                        commitHistory.mergedCommitHistory.dateModified | date : 'd.M.yyyy HH:mm:ss'
+                        }}</strong>
+                </div>
+                <ng-container *ngIf="
+                commitHistory.type == commitHistoryType.MERGED &&
+                commitOperationType?.INITIAL_COMMIT == commitHistory.mergedCommitHistory.type
+                ">
+                    <div>
+                        Initial commit created:
+                        <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                            commitHistory.mergedCommitHistory.dateCreated | date : 'yyyy-MM-dd HH:mm:ss'
+                            }}</strong>
+                        <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                            commitHistory.mergedCommitHistory.dateCreated | date : 'd.M.yyyy HH:mm:ss'
+                            }}</strong>
+                    </div>
+                    <div>
+                        Initial commit created by:
+                        <strong class="normalize">{{ commitHistory.mergedCommitHistory.createdBy }}</strong>
+                    </div>
+                    <ng-container *ngIf="
+                    commitHistory.mergedCommitHistory.mergedCommitsTo &&
+                    commitHistory.mergedCommitHistory.mergedCommitsTo[0]
+                ">
+                        <div *ngIf="commitHistory.mergedCommitHistory.mergedCommitsTo[0].plannedNumber">
+                            Commit ID:
+                            <strong class="normalize">{{
+                                commitHistory.mergedCommitHistory.mergedCommitsTo[0].inboundDeliveryNumber
+                                }}</strong>, Qty:
+                            <strong class="normalize">{{
+                                commitHistory.mergedCommitHistory.mergedCommitsTo[0].quantity
+                                }}</strong>, ETA:
+                            <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                                commitHistory.mergedCommitHistory.mergedCommitsTo[0].etaDate | date : 'yyyy-MM-dd'
+                                }}</strong>
+                            <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                                commitHistory.mergedCommitHistory.mergedCommitsTo[0].etaDate | date : 'd.M.yyyy'
+                                }}</strong>
+                        </div>
+                        <div>
+                            PLO:
+                            <strong class="normalize">{{
+                                commitHistory.mergedCommitHistory.mergedCommitsTo[0].plannedNumber
+                                }}</strong>, Qty:
+                            <strong class="normalize">{{
+                                commitHistory.mergedCommitHistory.mergedCommitsTo[0].originalQuantity
+                                }}</strong>, TriggerDate:
+                            <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                                commitHistory.mergedCommitHistory.mergedCommitsTo[0].triggerDate
+                                | date : 'yyyy-MM-dd'
+                                }}</strong>
+                            <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                                commitHistory.mergedCommitHistory.mergedCommitsTo[0].triggerDate | date : 'd.M.yyyy'
+                                }}</strong>, RequestDate:
+                            <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                                commitHistory.mergedCommitHistory.mergedCommitsTo[0].requestedDate
+                                | date : 'yyyy-MM-dd'
+                                }}</strong>
+                            <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                                commitHistory.mergedCommitHistory.mergedCommitsTo[0].requestedDate
+                                | date : 'd.M.yyyy'
+                                }}</strong>
+                        </div>
+                    </ng-container>
+                </ng-container>
+
+                <ng-container *ngIf="
+                commitHistory.type == commitHistoryType.MERGED &&
+                commitOperationType?.SPLIT_COMMIT == commitHistory.mergedCommitHistory.type
+                ">
+                    <div>
+                        <ng-container *ngIf="!commitHistory.mergedCommitHistory.modifiedBy">{{
+                            'commitDialogForm.splitCreateMsg' | translate }}
+                        </ng-container>
+                        <ng-container *ngIf="commitHistory.mergedCommitHistory.modifiedBy">{{
+                            'commitDialogForm.splitCreateMsgBy' | translate }}
+                            <strong class="normalize">{{ commitHistory.mergedCommitHistory.modifiedBy }}</strong>
+                        </ng-container>
+                    </div>
+                    <div>
+                        {{ 'commitDialogForm.originalQty' | translate }}
+                        <strong class="normalize">{{
+                            commitHistory?.mergedCommitHistory.mergedCommitsFrom[0]?.quantity
+                            }}</strong>
+                    </div>
+                    <div>
+                        {{ 'commitDialogForm.newCommitMsg' | translate }}
+                    </div>
+                    <div *ngFor="let commit of commitHistory.mergedCommitHistory.mergedCommitsTo; let i = index">
+                        {{ 'commitDialogForm.commitId' | translate }}
+                        <strong class="normalize">{{ commit?.inboundDeliveryNumber }}</strong>, {{
+                        'commitDialogForm.quantity' | translate }}{{ ': '
+                        }}<strong class="normalize">{{ commit.quantity }}</strong>, {{ 'commitDialogForm.eta' | translate
+                        }}{{ ': ' }}
+                        <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                            commit.etaDate | date : 'yyyy-MM-dd'
+                            }}</strong>
+                        <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                            commit.etaDate | date : 'd.M.yyyy'
+                            }}</strong>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="
+                commitHistory.type == commitHistoryType.MERGED &&
+                commitOperationType?.MERGE_COMMIT == commitHistory.mergedCommitHistory.type
+                ">
+                    <div>
+                        <ng-container *ngIf="!commitHistory.mergedCommitHistory.modifiedBy">{{
+                            'commitDialogForm.mergeCreateMsg' | translate }}
+                        </ng-container>
+                        <ng-container *ngIf="commitHistory.mergedCommitHistory.modifiedBy">{{
+                            'commitDialogForm.mergeCreateMsgBy' | translate }}
+                            <strong class="normalize">{{ commitHistory.mergedCommitHistory.modifiedBy }}</strong>
+                        </ng-container>
+                    </div>
+                    <div class="commit-history-item" *ngFor="
+                    let commit of commitHistory.mergedCommitHistory.mergedCommitsFrom;
+                    let i = index
+                ">
+                        {{ 'commitDialogForm.commitId' | translate }}
+                        <strong class="normalize">{{ commit?.inboundDeliveryNumber }}</strong>, {{
+                        'commitDialogForm.quantity' | translate }}{{ ': '
+                        }}<strong class="normalize">{{ commit.quantity }}</strong>, {{ 'commitDialogForm.eta' | translate
+                        }}{{ ': ' }}
+                        <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                            commit.etaDate | date : 'yyyy-MM-dd'
+                            }}</strong>
+                        <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                            commit.etaDate | date : 'd.M.yyyy'
+                            }}</strong>
+                    </div>
+                    <div>
+                        {{ 'commitDialogForm.mergeIntoMsg' | translate }}
+                    </div>
+                    <div>
+                        {{ 'commitDialogForm.commitId' | translate }}
+                        <strong class="normalize">{{
+                            commitHistory?.mergedCommitHistory.mergedCommitsTo[0]?.inboundDeliveryNumber
+                            }}</strong>, {{ 'commitDialogForm.quantity' | translate }}{{ ': ' }}
+                        <strong class="normalize">{{
+                            commitHistory?.mergedCommitHistory.mergedCommitsTo[0]?.quantity
+                            }}</strong>, {{ 'commitDialogForm.eta' | translate }}{{ ': ' }}
+                        <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                            commitHistory?.mergedCommitHistory.mergedCommitsTo[0]?.etaDate | date : 'yyyy-MM-dd'
+                            }}</strong>
+                        <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                            commitHistory?.mergedCommitHistory.mergedCommitsTo[0]?.etaDate | date : 'd.M.yyyy'
+                            }}</strong>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="
+                commitHistory.type == commitHistoryType.MERGED &&
+                commitOperationType?.CHANGE_PO_COMMIT == commitHistory.mergedCommitHistory.type
+                ">
+                    <div>
+                        <ng-container *ngIf="!commitHistory.mergedCommitHistory.modifiedBy">{{
+                            'commitDialogForm.changePOCreateMsg' | translate }}
+                        </ng-container>
+                        <ng-container *ngIf="commitHistory.mergedCommitHistory.modifiedBy">{{
+                            'commitDialogForm.changePOCreateMsgBy' | translate }}
+                            <strong class="normalize">{{ commitHistory.mergedCommitHistory.modifiedBy }}</strong>
+                        </ng-container>
+                    </div>
+                    <div>
+                        {{ 'commitDialogForm.originalQty' | translate }}
+                        <strong class="normalize">{{
+                            commitHistory?.mergedCommitHistory.mergedCommitsFrom[0]?.quantity
+                            }}</strong>
+                    </div>
+                    <div>
+                        {{ 'commitDialogForm.newCommitMsg' | translate }}
+                    </div>
+                    <div *ngFor="let commit of commitHistory.mergedCommitHistory.mergedCommitsTo; let i = index">
+                        {{ 'commitDialogForm.commitId' | translate }}
+                        <strong class="normalize">{{ commit?.inboundDeliveryNumber }}</strong>, {{
+                        'commitDialogForm.quantity' | translate }}{{ ': '
+                        }}<strong class="normalize">{{ commit.quantity }}</strong>, {{ 'commitDialogForm.eta' | translate
+                        }}{{ ': ' }}
+                        <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                            commit.etaDate | date : 'yyyy-MM-dd'
+                            }}</strong>
+                        <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                            commit.etaDate | date : 'd.M.yyyy'
+                            }}</strong>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="
+                commitHistory.type == commitHistoryType.MERGED &&
+                commitOperationType?.REMERGE_COMMIT == commitHistory.mergedCommitHistory.type
+                ">
+                    <div>
+                        <ng-container *ngIf="!commitHistory.mergedCommitHistory.modifiedBy">{{
+                            'commitDialogForm.remergeCreateMsg' | translate }}
+                        </ng-container>
+                        <ng-container *ngIf="commitHistory.mergedCommitHistory.modifiedBy">{{
+                            'commitDialogForm.remergeCreateMsgBy' | translate }}
+                            <strong class="normalize">{{ commitHistory.mergedCommitHistory.modifiedBy }}</strong>
+                        </ng-container>
+                    </div>
+                    <div>
+                        {{ 'commitDialogForm.originalQty' | translate }}
+                        <strong class="normalize">{{
+                            commitHistory?.mergedCommitHistory.mergedCommitsFrom[0]?.quantity
+                            }}</strong>
+                    </div>
+                    <div>
+                        {{ 'commitDialogForm.newCommitMsg' | translate }}
+                    </div>
+                    <div *ngFor="let commit of commitHistory.mergedCommitHistory.mergedCommitsTo; let i = index">
+                        {{ 'commitDialogForm.commitId' | translate }}
+                        <strong class="normalize">{{ commit?.inboundDeliveryNumber }}</strong>, {{
+                        'commitDialogForm.quantity' | translate }}{{ ': '
+                        }}<strong class="normalize">{{ commit.quantity }}</strong>, {{ 'commitDialogForm.eta' | translate
+                        }}{{ ': ' }}
+                        <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                            commit.etaDate | date : 'yyyy-MM-dd'
+                            }}</strong>
+                        <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                            commit.etaDate | date : 'd.M.yyyy'
+                            }}</strong>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="commitHistory.type == commitHistoryType.SAP">
+                    <div>
+                        {{ 'commitDialogForm.changedBy' | translate }}:
+                        <strong class="normalize">{{ commitHistory.createBy }}</strong>
+                    </div>
+                    <div>
+                        {{ 'commitDialogForm.changedDate' | translate }}:
+                        <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                            commitHistory.createDate | date : 'yyyy-MM-dd HH:mm:ss'
+                            }}</strong>
+                        <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                            commitHistory.createDate | date : 'd.M.yyyy HH:mm:ss'
+                            }}</strong>
+                    </div>
+                    <ng-container *ngIf="commitHistory.commitHistories && commitHistory.commitHistories !== null">
+                        <div class="commit-history-item" *ngFor="let history of commitHistory.commitHistories">
+                            <div>
+                                {{ 'commitDialogForm.inboundDeliveryNumber' | translate }}:
+                                <strong class="normalize">{{ history.inboundDeliveryNumber }}</strong>
+                            </div>
+
+                            <div>
+                                {{ 'commitDialogForm.changedDate' | translate }}:
+                                <strong *ngIf="currentLang?.code === 'en'" class="normalize">{{
+                                    history.changeDate | date : 'yyyy-MM-dd HH:mm:ss'
+                                    }}</strong>
+                                <strong *ngIf="currentLang?.code === 'cz'" class="normalize">{{
+                                    history.changeDate | date : 'd.M.yyyy HH:mm:ss'
+                                    }}</strong>
+                            </div>
+                            <div>
+                                {{ 'commitDialogForm.field' | translate }}:
+                                <strong class="normalize">{{ history.field }}</strong>
+                            </div>
+
+                            <!--              <div>{{'commitDialogForm.sapField' | translate}}: <strong class="normalize">{{history.sapField}}</strong></div>-->
+                            <!--              <div>{{'commitDialogForm.transaction' | translate}}: <strong class="normalize">{{history.transaction}}</strong></div>-->
+
+                            <div>
+                                {{ 'commitDialogForm.oldValue' | translate }}:
+                                <strong class="normalize">{{ history.oldValue }}</strong>
+                            </div>
+                            <div>
+                                {{ 'commitDialogForm.newValue' | translate }}:
+                                <strong class="normalize">{{ history.newValue }}</strong>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div *ngIf="!(commitHistories?.length || loading)" class="historybox">
+                <span class="dot"></span>
+                <div>
+                    {{ 'commitDialogForm.no-data' | translate }}
+                </div>
+            </div>
+        </div>
+        <div *ngIf="currentHistoryView == view.TABLE_VIEW" class="mat-dialog-content pb-3">
+            <table mat-table [dataSource]="commitHistoryTableData" class="custom-table">
+              <ng-container *ngFor="let column of columns" [matColumnDef]="column">
+                <th mat-header-cell *matHeaderCellDef class="custom-header"> {{column}} </th>
+                <td mat-cell *matCellDef="let element" class="custom-cell">
+                  <span [innerHTML]="element[column]"></span>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columns"></tr>
+              <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+            </table>
+          </div>
+    </ng-template>
+    <!--END History Template -->
+
+
+    <!-- DialogMode -->
+    <div *ngIf="!explicitData" class="shared--dialog">
+        <mat-card-header class="shared--dialog--header">
+            <button mat-icon-button [mat-dialog-close]="false" autofocus="false"
+                aria-label="Close dialog" class="close">
+                <mat-icon>close</mat-icon>
+            </button>
+            <mat-card-title class="title">
+                {{ title }}
+            </mat-card-title>
+            <mat-card-subtitle>
+                <ng-content select="[subtitle]"></ng-content>
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content class="shared--dialog--content">
+
+            <!-- Commit History Panel -->
+            <ng-container *ngTemplateOutlet="commitHistory">
+            </ng-container>
+
+        </mat-card-content>
+        <mat-card-actions align="end" class="supply-visibility--commit--form-actions">
+            <p class="commit-modifier">
+                <!-- TODO:-  Commit doesnot exist in the file NEED TO CHECK -->
+                <!-- <span *ngIf="commit?.responsibleEmail"><strong>Modified by:</strong> {{ commit?.responsibleEmail }}</span> --> 
+            </p>
+        </mat-card-actions>
+        <mat-card-footer>
+            <ng-content select="[footer]" class="shared--dialog--footer"></ng-content>
+        </mat-card-footer>
+    </div>
+
+    <!-- StandaloneMode -->
+    <ng-container *ngIf="explicitData">
+        <ng-container *ngTemplateOutlet="commitHistory">
+        </ng-container>
+    </ng-container>
+</div>

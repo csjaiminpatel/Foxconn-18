@@ -1,0 +1,251 @@
+supply-visibility--commit--form-actions.supply-visibility--commit--form-content {
+    cursor: pointer;
+    overflow: hidden;
+    justify-content: space-between;
+  }
+  
+  .supply-visibility--commit--form-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  
+    p.commit-modifier {
+      font-size: 0.8rem;
+      color: #666;
+    }
+  }
+  
+  .mat-radio-button {
+    margin-right: 20px;
+  }
+  
+  .cdf--spinner-wrapper {
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+    background: none;
+    color: transparent;
+  
+    .cdf--spinner {
+      position: absolute;
+      align-content: center;
+      align-self: center;
+      top: 50%;
+      left: 50%;
+      z-index: 1000;
+    }
+  }
+  
+  mat-form-field {
+    width: 250px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+  }
+  
+  mat-checkbox {
+    width: 250px;
+    margin-bottom: 5px;
+    margin-top: 20px;
+  }
+  
+  .dx-fieldset {
+    margin: 18px 0;
+    width: 250px;
+  }
+  
+  .dx-field-value-static,
+  .dx-field-value:not(.dx-switch):not(.dx-checkbox):not(.dx-button) {
+    width: 100%;
+  }
+  
+  .grey_icon {
+    color: grey;
+  }
+  
+  .spacer {
+    width: 250px;
+    height: 1px;
+  }
+  
+  .shared--dialog {
+    ::ng-deep .mat-card-actions,
+    .mat-card-content,
+    .mat-card-subtitle {
+      margin-bottom: 0;
+    }
+  
+    &--header {
+      display: flex;
+      justify-content: space-between;
+      height: 50px;
+      padding: 0;
+      margin: 0;
+      margin-top: -2px;
+      margin-bottom: -2px;
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      .view-btn {
+        .btn {
+          border-color: transparent;
+          color: black;
+          background: transparent;
+          padding: 0.25rem;
+          height: 2.1rem;
+          &.active {
+            color: #9a9a9a;
+            border: 1px solid #dedede;
+            border-width: 1px;
+            border-radius: 0.25rem;
+          }
+          &:hover {
+            color: #9a9a9a;
+        }
+        }
+      }
+  
+      .close {
+        position: relative;
+        top: -20px;
+        right: -20px;
+        margin-top: 10px;
+        margin-right: 10px;
+        overflow: visible;
+  
+        .mat-icon-button {
+          padding: 0;
+          min-width: 0;
+          width: 50px;
+          height: 50px;
+          flex-shrink: 0;
+          line-height: 50px;
+          border-radius: 50%;
+          border: 0;
+        }
+      }
+    }
+  
+    &--content {
+      padding-bottom: 10px;
+    }
+  
+    &--actions {
+    }
+  
+    &--footer {
+    }
+  }
+  
+  .wd-100 {
+    width: 100%;
+  }
+  
+  .display-block {
+    display: block;
+  }
+  
+  .historybox {
+    border-left: 1px solid #d1d1d1;
+    padding-left: 30px;
+    line-height: 25px;
+    position: relative;
+    padding-bottom: 30px;
+  }
+  
+  .dot {
+    height: 20px;
+    width: 20px;
+    background-color: #ffe600;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    left: -11px;
+    top: 20px;
+  }
+  .dx-texteditor.dx-editor-outlined {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+  }
+  
+  .dx-texteditor.dx-state-hover {
+    border-bottom: 2.5px solid black;
+  }
+  
+  .commit-history-item {
+    margin: 0.5rem 0;
+    font-size: 0.8rem;
+    padding-bottom: 0.5rem;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid #eee;
+    }
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  tr.detail-row {
+    height: 0;
+  }
+  
+  tr.element-row:not(.expanded-row):hover {
+    background: whitesmoke;
+  }
+  
+  tr.element-row:not(.expanded-row):active {
+    background: #efefef;
+  }
+  
+  .element-row td {
+    border-bottom-width: 0;
+  }
+  
+  .element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  
+
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .custom-header, .custom-cell {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .custom-header {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .custom-cell {
+    text-align: left;
+  }
+  
+  .custom-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .custom-table th, .custom-table td {
+    width: auto;
+  }
+  
+  .custom-table th:first-child, .custom-table td:first-child {
+    width: 150px;
+  }
+  
+  .custom-table th:last-child, .custom-table td:last-child {
+    width: 100px;
+  }
+  

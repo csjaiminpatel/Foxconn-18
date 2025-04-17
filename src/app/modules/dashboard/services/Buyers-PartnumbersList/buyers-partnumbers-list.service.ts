@@ -42,13 +42,13 @@ export class BuyersPartnumbersListService {
   //   // MaterialManagement/SupplyVisibilityReadOnly/GetPNsPrecalculateProjectionByFilter?filter=ForecastQty(w2_w8) > 100000 OR HOI > 2 AND FOI > 500
 
   getPNsPrecalculateProjectionByFilter(
-    formula: string,
+    formula?: string,
     vendor: string[] = [],
     buyer: string[] = [],
     partNumbers: PnVendorCode[] = [],
     flags: string[] = [],
-    skip = 0,
-    top = 30,
+    skip:number = 0,
+    top:number = 30,
     filterDeliveryTerms: string[] = [],
     filterTaxCodes: string[] = [],
     filterVirtualVC?: boolean,

@@ -466,16 +466,11 @@ export class AuthService {
 
     this.oidcSecurityService.preloadAuthWellKnownDocument().subscribe(endpoints => {
       if (endpoints) {
-        if (endpoints.jwksUri) {
-          this.ignoreUrls.push(endpoints.jwksUri);
-        }
-        if (endpoints.authorizationEndpoint) {
-          this.ignoreUrls.push(endpoints.authorizationEndpoint);
-        }
-        if (endpoints.tokenEndpoint) {
-          this.ignoreUrls.push(endpoints.tokenEndpoint);
-        }
-
+        this.ignoreUrls = [
+          endpoints.jwksUri || '',
+          endpoints.authorizationEndpoint || '',
+          endpoints.tokenEndpoint || ''
+        ].filter(url => url); // Remove empty values
       } else {
         this.ignoreUrls = [];
       }

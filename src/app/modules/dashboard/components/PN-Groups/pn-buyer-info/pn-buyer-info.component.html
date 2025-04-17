@@ -1,0 +1,73 @@
+<div class="header">
+    <mat-card-title class="title">
+      {{ 'vpns.buyerInformation' | translate }}
+    </mat-card-title>
+    <button mat-icon-button (click)="dialogClose()" class="ml-auto">
+      <mat-icon> close </mat-icon>
+    </button>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center center" class="mat-loader">
+    <mat-spinner *ngIf="loading" color="primary"></mat-spinner>
+  </div>
+  <div *ngIf="!loading">
+    <!-- OLD Implementation -->
+    <!-- <p>
+      <b>{{ 'vpns.name' | translate }}:</b>&nbsp;{{ buyerInfo.name ? buyerInfo.name : 'N/A' }}<br />
+      <b>{{ 'vpns.email' | translate }}:</b>&nbsp;{{ buyerInfo.email ? buyerInfo.email : 'N/A'
+      }}<br />
+      <b>{{ 'vpns.phone' | translate }}:</b>&nbsp;{{ buyerInfo.phone ? buyerInfo.phone : 'N/A' }}
+    </p> -->
+  
+    <!-- NEW Implementation -->
+    <div *ngIf="dataSource && dataSource.length ; else elseBlock">
+      <table mat-table [dataSource]="dataSource" class="w-100">
+    
+    
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> {{ 'vpns.name' | translate }} </th>
+          <td mat-cell *matCellDef="let element"> {{ element.firstName && element.lastName ? element.firstName + ' ' + element.lastName : 'N/A' }} </td>
+        </ng-container>
+    
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef> {{ 'vpns.email' | translate }} </th>
+          <td mat-cell *matCellDef="let element"> {{ element.email ? element.email : 'N/A' }} </td>
+        </ng-container>
+    
+        <!-- Phone Column -->
+        <ng-container matColumnDef="phone">
+          <th mat-header-cell *matHeaderCellDef> {{ 'vpns.phone' | translate }} </th>
+          <td mat-cell *matCellDef="let element"> {{ element.phone ? element.phone : 'N/A' }} </td>
+        </ng-container>
+  
+        <!-- Create and Delete Column -->
+        <ng-container matColumnDef="createDelete">
+          <th class="text-center" mat-header-cell *matHeaderCellDef> Actions </th>
+          <td class="text-center" mat-cell *matCellDef="let element">
+            <ng-container *ngIf="element && !element.active">
+              <mat-icon matTooltip="{{ 'vpns.create' | translate }}" class="cursor-pointer mx-2" (click)="createData(element)">add_circle</mat-icon>
+            </ng-container>
+            <ng-container *ngIf="element && element.active">
+              <mat-icon matTooltip="{{ 'vpns.delete' | translate }}" class="cursor-pointer mx-2" (click)="deleteData(element)">delete</mat-icon>
+            </ng-container>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+    <ng-template  #elseBlock>
+      <div class="text-center p-3">
+       <strong>{{ 'global.noData' | translate }}</strong>
+      </div>
+    </ng-template>
+  </div>
+  <mat-dialog-actions fxLayout="row" class="mb-0">
+    <div class="ml-auto">
+      <button id="close" (click)="dialogClose()" mat-button mat-raised-button color="primary">
+        {{ 'vpns.ok' | translate }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+  

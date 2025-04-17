@@ -1,0 +1,37 @@
+<div class="widget">
+    <header class="drag-handler">
+      <div class="headers">
+        <h2 title="{{ dashboardPanelModel.title }}">
+          {{ dashboardPanelModel.title }}
+        </h2>
+      </div>
+    </header>
+    <div class="widget-content">
+      <div *ngIf="loading" class="loading-rotate">
+          <orion-platform-progress-spinner></orion-platform-progress-spinner>
+        <div class="syncing">
+          <span>Syncing...</span>
+        </div>
+      </div>
+      <div *ngIf="!loading" class="link-icon">
+        <button (click)="onSync()">
+          <mat-icon class="logo" svgIcon="{{ icon }}"> </mat-icon>
+        </button>
+      </div>
+    </div>
+    <footer>
+      <div class="footer-left"></div>
+      <div class="counts"></div>
+      <div class="footer-right"></div>
+    </footer>
+    <button class="settings-icon" [hidden]="visibility.onDashboard" [matMenuTriggerFor]="menu" mat-button>
+      <span class="material-symbols-outlined">settings</span>
+    </button>
+  </div>
+  <mat-menu #menu="matMenu" [overlapTrigger]="true" class="workflow-card--mat-menu">
+    <button mat-menu-item (click)="deleteWidget()">
+      <mat-icon>delete</mat-icon>
+      <span>{{ 'global.delete' | translate }}</span>
+    </button>
+  </mat-menu>
+  

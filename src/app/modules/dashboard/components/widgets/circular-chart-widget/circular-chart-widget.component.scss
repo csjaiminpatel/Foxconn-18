@@ -1,0 +1,82 @@
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/widget';
+
+.widget{
+  .widget-content {
+    position: relative;
+    container-type: inline-size;
+    container-name: widget-container;
+
+    button {
+      position: absolute;
+      bottom: 0.5rem;
+      left: 1rem;
+      padding: 0;
+      min-width: 0;
+      width: 24px;
+      &[hidden] {
+        display: none;
+      }
+    }
+    .circle-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.8rem;
+      font-weight: 200;
+      padding: 0;
+      margin: 0;
+      a:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .animated-circle{
+      animation: progress .3s ease-out;
+      &.orange{
+        stroke: #ff9f00;
+      }
+      &.green{
+        stroke: #55a571;
+      }
+      &.white{
+        stroke: #fff;
+      }
+      &.maroon{
+        stroke: #ce1010;
+      }
+      &.blue{
+        stroke: #2d65ba;
+      }
+      &.gray{
+        stroke: #f4f4f4;
+      }
+      &.purple{
+        stroke: #7242bf;
+      }
+      &.yellow{
+        stroke: #fdec57;
+      }
+      &.pink{
+        stroke: #e23969;
+      }
+    }
+  }
+  &.without-subtitle{
+    header{
+      height: 30px;
+      &:after{
+        display: none;
+      }
+    }
+  }
+}
+
+@container widget-container (min-width: 151px) {
+  .circle-text {
+    font-weight: bold !important;
+    font-size: 1rem !important;
+  }
+}
+

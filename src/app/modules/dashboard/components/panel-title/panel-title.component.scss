@@ -1,0 +1,61 @@
+@import '../../../../../styles/variables';
+
+.title{
+  display: flex;
+  gap: 2rem;
+  .main-icon{
+    background: $primary-gradient;
+    border-radius: .5rem;
+    width: 64px;
+    height: 64px;
+    font-size: 2rem;
+    color: $white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transform: translateX(1rem) translateY(-1rem);
+    box-shadow: 0 10px 10px rgba(163, 25, 70, .6);
+    span, mat-icon{
+      height: 32px;
+      width: 32px;
+      font-size: 2rem;
+    }
+    &.primary{
+      background: $primary-gradient;
+      box-shadow: $shadow-primary;
+    }
+    &.secondary{
+      background: $secondary-gradient;
+      box-shadow: $shadow-secondary;
+    }
+    &.success{
+      background: $success-gradient;
+      box-shadow: $shadow-success;
+    }
+    &.warning{
+      background: $warning-gradient;
+      box-shadow: $shadow-warning;
+    }
+    &.danger{
+      background: $danger-gradient;
+      box-shadow: $shadow-danger;
+    }
+    &.info{
+      background: $info-gradient;
+      box-shadow: $shadow-info;
+    }
+    &.dark{
+      background: $dark-gradient;
+      box-shadow: $shadow-dark;
+    }
+  }
+  h2{
+    font-size: 1.3rem;
+    margin-top: 0.8rem;
+    font-weight: bolder;
+  }
+}
+
+
+

@@ -1,0 +1,204 @@
+<mat-toolbar class="supply-visibility--toolbar mat-elevation-z6" color="primary">
+    <div
+      *ngIf="showBreadcrumbs === false; then showtitle; else breadcrumbsBlock"
+      class="supply-visibility--toolbar--title"></div>
+    <div style="display: flex; justify-content: space-between; width: 100%">
+      <div class="breadcrumb">
+        <ng-template #showtitle>{{ title }}</ng-template>
+        <ng-template #breadcrumbsBlock>
+          <a
+            *ngFor="let breadcrumb of breadcrumbs"
+            class="breadcrumbs-link"
+            routerLink="{{ breadcrumb.routerLink }}"
+            title="{{ breadcrumb.routerTitle }}">
+            {{ breadcrumb.routerTitle }}
+          </a>
+          <span [ngClass]="{'title-subtitle-link': subtitle}">{{ title }}</span>
+          <ng-container *ngIf="subtitle">{{ subtitle }}</ng-container>
+        </ng-template>
+      </div>
+      <div class="right-section">
+        <ng-container *ngIf="isSharedSettingsEnabled">
+          <div class="from-group" style="margin-right: 15px">
+            <label style="margin-right: 10px; font-size: 14px">{{
+              'shared-sv.availableDashboard' | translate
+            }}</label>
+            <mat-form-field appearance="fill">
+              <mat-select [formControl]="selectDashboard">
+                <ng-container *ngFor="let group of dashboardList">
+                  <mat-optgroup [label]="group.name" [disabled]="group.disabled || disableToolbar">
+                    <!-- START self -->
+                    <ng-container *ngIf="group.type == 'self'">
+                      <mat-option *ngFor="let dashboard of group.data" [value]="dashboard.id">
+                        {{ dashboard.name }}
+                      </mat-option>
+                    </ng-container>
+                    <!-- END self -->
+  
+                    <!-- START shared -->
+                    <ng-container *ngIf="group.type == 'shared'">
+                      <ng-container *ngFor="let users of group.data">
+                        <ng-container *ngFor="let dashboard of users.sharedDashboards; let i = index">
+                          <ng-container *ngIf="i === 0">
+                            <div class="label">{{ users.userName }}</div>
+                          </ng-container>
+  
+                          <mat-option [value]="dashboard.id">
+                            {{ dashboard.name }}
+                          </mat-option>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                    <!-- END shared end-->
+                  </mat-optgroup>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <ng-container *ngIf="!isDashboardLocked">
+            <ng-container *ngIf="modificationRights">
+              <button
+                matTooltip="Edit Dashboard"
+                type="button"
+                [disabled]="!selectedDashboard || disableToolbar"
+                (click)="dashboardEdit()"
+                mat-button>
+                <mat-icon>edit</mat-icon>
+              </button>
+            </ng-container>
+  
+            <ng-container *ngIf="!modificationRights">
+              <button
+                matTooltip="Copy dashboard"
+                type="button"
+                [disabled]="!selectedDashboard || disableToolbar"
+                (click)="copyDashboard()"
+                mat-button>
+                <mat-icon>save_alt</mat-icon>
+              </button>
+            </ng-container>
+  
+            <button
+              matTooltip="Add Dashboard"
+              type="button"
+              [disabled]="disableToolbar"
+              (click)="dashboardAdd()"
+              mat-button>
+              <mat-icon>add</mat-icon>
+            </button>
+            <!-- <button type="button" [disabled]="!selectedDashboard" mat-button>
+          <mat-icon>share</mat-icon>
+        </button> -->
+            <ng-container *ngIf="modificationRights && selectDashboard">
+              <button
+                matTooltip="Delete Dashboard"
+                type="button"
+                [disabled]="disableToolbar"
+                (click)="dashboardDelete()"
+                mat-button>
+                <mat-icon>delete</mat-icon>
+              </button>
+            </ng-container>
+            <ng-container>
+  
+              <button type="button" class="" #MatMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="importExportMenu" (menuOpened)="openMenu()" (menuClosed)="closeMenu()" mat-button>
+                <mat-icon>data_object</mat-icon><mat-icon>{{ isMenuOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+              </button>
+              <mat-menu #importExportMenu="matMenu">
+                <button mat-menu-item
+                (click)="exportDashboard()">
+                <mat-icon>file_upload</mat-icon>Export Dashboard
+              </button>
+              <button mat-menu-item
+              (click)="importDashboard()">
+              <mat-icon>file_download</mat-icon>Import Dashboard
+              
+            </button>
+          </mat-menu>
+          <input type="file" #fileInput style="display: none" accept=".dashboard" (change)="handleFileInput($event)">
+        </ng-container>
+          </ng-container>
+          <ng-container *ngIf="dashboardRights">
+            <button type="button" [disabled]="disableToolbar" (click)="dashboardLock()" mat-button>
+              <mat-icon *ngIf="isDashboardLocked">lock</mat-icon>
+              <mat-icon *ngIf="!isDashboardLocked">lock_open</mat-icon>
+            </button>
+          </ng-container>
+        </ng-container>
+  
+        <!-- MultiPN Review Flags Settings -->
+        <div
+          *ngIf="sidenavControls == true"
+          style="display: flex; justify-content: space-between; width: 100%">
+  
+          <div *ngIf=" multiSV && multiSV === true">
+            <ng-container *ngIf="isFlagLoaded && additionalFlags?.flags && additionalFlags?.flags?.length">
+              <button
+              mat-icon-button
+              class="flag-position"
+                title="{{ 'vpns.flags' | translate }}"
+                (click)="userRights?.reviewFlags == true ? openPnVcFlags(additionalFlags, 'detail') : null"    
+               >
+                <mat-icon  matBadge="{{ additionalFlags?.flags?.length }}" matBadgePosition="above after" class="flag-icon flag-bg"> <span class="material-symbols-outlined">flag</span></mat-icon>
+              </button>
+            </ng-container>
+            <ng-container *ngIf="isFlagLoaded && (!additionalFlags?.flags || additionalFlags?.flags?.length == 0)">
+              <button
+                mat-icon-button
+                (click)="userRights?.reviewFlagsEdit == true ? openPnVcFlags(additionalFlags, 'create') : null"
+                title="{{ 'vpns.createFlag' | translate }}"
+                class="grey-flag-bg">
+                <mat-icon><span class="material-symbols-outlined grey-flag">flag_circle</span></mat-icon>
+              </button>
+            </ng-container>
+            <ng-container *ngIf="!isFlagLoaded">
+              <p class="loading-flag">Loading flag....</p>
+            </ng-container>
+          </div>
+          <div *ngIf="!isFlagLoaded" class="supply-visibility--spinner-wrapper d-flex align-self-center">
+            <orion-platform-progress-spinner [diameter]="20" class="supply-visibility--spinner">
+            </orion-platform-progress-spinner>
+          </div>
+          <div *ngIf="isFlagLoaded && multiSV" class="item me-5 alarm-list justify-content-center" fxLayout="row"
+            fxLayoutAlign="space-between center">
+            <button [ngClass]="{'custom-icon-active':multiSVFlag?.flags?.includes(REVIEW_BUYER_FLAG)}"
+              [title]="multiSVFlag?.flags?.includes(REVIEW_BUYER_FLAG) ? 'Reviewed by Buyer' : 'not reviewed'"
+              *ngIf="userRights?.reviewFlagsForBuyer" mat-icon-button
+              (click)="setReviewed(REVIEW_BUYER_FLAG ,multiSVFlag?.flags?.includes(REVIEW_BUYER_FLAG), userRights?.reviewFlagsForBuyerEdit)"
+              (mouseenter)="isBuyerHovered = true" (mouseleave)="isBuyerHovered = false">
+              <mat-icon  matBadge="{{isBuyerHovered ? 'Buyer' : 'B'}}" matBadgePosition="above after" class="custom-icon"
+              [ngClass]="{'custom-icon1':multiSVFlag?.flags?.includes(REVIEW_BUYER_FLAG) , 'mat-badge-color':!multiSVFlag?.flags?.includes(REVIEW_BUYER_FLAG)}">{{multiSVFlag?.flags?.includes(REVIEW_BUYER_FLAG) ? 'access_alarm' :
+                'alarm_off'}}</mat-icon>
+              <span>{{multiSVFlag?.flags?.includes(REVIEW_BUYER_FLAG) ? 'Reviewed' : 'N/A' }}</span>
+            </button>
+            <button [ngClass]="{'custom-icon-active':multiSVFlag?.flags?.includes(REVIEW_CUSTOMER_FLAG)}"
+              [title]="multiSVFlag?.flags?.includes(REVIEW_CUSTOMER_FLAG) ? 'Reviewed by Customer' : 'not reviewed'"
+              *ngIf="userRights?.reviewFlagsForCustomer" mat-icon-button
+              (click)="setReviewed(REVIEW_CUSTOMER_FLAG, multiSVFlag?.flags?.includes(REVIEW_CUSTOMER_FLAG), userRights?.reviewFlagsForCustomerEdit)"
+              (mouseenter)="isCustomerHovered = true" (mouseleave)="isCustomerHovered = false">
+              <mat-icon matBadge="{{isCustomerHovered ? 'Customer' : 'C'}}" matBadgePosition="above after" class="custom-icon"
+              [ngClass]="{'custom-icon2':multiSVFlag?.flags?.includes(REVIEW_CUSTOMER_FLAG) , 'mat-badge-color':!multiSVFlag?.flags?.includes(REVIEW_CUSTOMER_FLAG)}">{{multiSVFlag?.flags?.includes(REVIEW_CUSTOMER_FLAG) ? 'access_alarm' :
+                'alarm_off'}}</mat-icon>
+              <span>{{multiSVFlag?.flags?.includes(REVIEW_CUSTOMER_FLAG) ? 'Reviewed' : 'N/A' }}</span>
+            </button>
+            <button [ngClass]="{'custom-icon-active':multiSVFlag?.flags?.includes(REVIEW_SUPPLIER_FLAG)}"
+              [title]="multiSVFlag?.flags?.includes(REVIEW_SUPPLIER_FLAG) ? 'Reviewed by Supplier' : 'not reviewed'"
+              *ngIf="userRights?.reviewFlagsForSupplier" mat-icon-button
+              (click)="setReviewed(REVIEW_SUPPLIER_FLAG, multiSVFlag?.flags?.includes(REVIEW_SUPPLIER_FLAG), userRights?.reviewFlagsForSupplierEdit)"
+              (mouseenter)="isSupplierHovered = true" (mouseleave)="isSupplierHovered = false">
+              <mat-icon matBadge="{{isSupplierHovered ? 'Supplier' : 'S'}}" matBadgePosition="above after" class="custom-icon"
+              [ngClass]="{'custom-icon3':multiSVFlag?.flags?.includes(REVIEW_SUPPLIER_FLAG) , 'mat-badge-color':!multiSVFlag?.flags?.includes(REVIEW_SUPPLIER_FLAG)}">{{multiSVFlag?.flags?.includes(REVIEW_SUPPLIER_FLAG) ? 'access_alarm' :
+                'alarm_off'}}</mat-icon>
+              <span>{{multiSVFlag?.flags?.includes(REVIEW_SUPPLIER_FLAG) ? 'Reviewed' : 'N/A' }}</span>
+            </button>
+          </div>
+  
+          
+          <button *ngIf="multiSV" (click)="toggleSidebar()" mat-icon-button>
+            <span class="material-symbols-outlined">right_panel_close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-toolbar>
+  

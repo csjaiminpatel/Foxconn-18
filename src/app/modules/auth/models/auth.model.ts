@@ -48,6 +48,7 @@ export interface UserRights {
   menuAccessRightList?: string[];
   widgetAccessRightList?: string[];
   statusRightList?: string[];
+  carriersModuleRights?: CarriersModuleRights;
 }
 
 export interface WidgetsRights {
@@ -122,6 +123,7 @@ export interface ConfigurationRights {
   reviewVisibilityForCustomer?: boolean;
   searchConfiguration?: boolean;
   qapSettings?: boolean;
+  portfolioDelete?: boolean;
 }
 
 export interface FinancialModuleRights {
@@ -168,6 +170,19 @@ export interface DateTypeRights {
   actualETADate?: boolean;
   receiveDate?: boolean;
   plannedOrderStatus?: boolean;
+}
+
+export interface CarriersModuleRights {
+  carriersView?: boolean;
+  carriersEdit?: boolean;
+  carriersDelete?: boolean;
+  carriersCreate?: boolean;
+  carriersContactsCreate?: boolean;
+  carriersContactsDelete?: boolean;
+  carriersTransportsCreate?: boolean;
+  carriersTransportsDelete?: boolean;
+  carriersNotificationsCreate?: boolean;
+  carriersNotificationsDelete?: boolean;
 }
 
 export interface dateTypeRightList {

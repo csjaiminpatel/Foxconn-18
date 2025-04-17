@@ -17,6 +17,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "object-hash",
+              "moment"
+           ],
             "outputPath": "dist/orion18",
             "index": "src/index.html",
             "browser": "src/main.ts",

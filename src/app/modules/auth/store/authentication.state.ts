@@ -499,8 +499,13 @@ export class AuthenticationState {
 
   private async getActivePlants() {
     const apiUrl = this.configService.getSettings('userSettingsService');
+
+    // TODO: need to remove Bearer
+    const token = this.authService.getToken();
+    const headers = { Authorization: `Bearer ${token}` };
+
     const result = await lastValueFrom(
-      this.http.get<any>(`${apiUrl}${environment.activePlants.getactiveplants}`)
+      this.http.get<any>(`${apiUrl}${environment.activePlants.getactiveplants}`, { headers })
     );
     return result;
   }

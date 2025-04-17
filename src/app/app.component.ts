@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { SidebarComponent } from "./modules/dashboard/sidebar/sidebar.component";
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { Actions, ofActionDispatched, Store } from '@ngxs/store';
@@ -13,11 +13,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { Common } from 'devextreme-angular';
 import { CommonModule } from '@angular/common';
 import { ToolbarComponent } from './modules/dashboard/toolbar/toolbar.component';
+import { SetApplicationUrl } from './modules/shared/store/configure/configuration.actions';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, CommonModule, ToolbarComponent],
+  imports: [RouterOutlet, SidebarComponent, CommonModule, ToolbarComponent,RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -78,7 +79,7 @@ export class AppComponent implements OnInit {
         map((event) => this.buildBreadCrumb(this.activatedRoute.root))
       )
       .subscribe((res) => {
-        // this.store.dispatch(new SetApplicationUrl(res));
+        this.store.dispatch(new SetApplicationUrl(res));
       });
 
     this.actions

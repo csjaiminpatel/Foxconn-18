@@ -7,7 +7,7 @@
     </span> -->
   </div>
   <span class="app-title">
-    <img src="/assets/img/core/orion-logo.svg" class="brand" />
+    <img src="img/core/orion-logo.svg" class="brand" />
   </span>
 
   <div class="flex-spacer"></div>
@@ -42,22 +42,24 @@
         (change)="setActivePlant($event)"
         class="toolbar-radio-group"
       >
-        <div mat-menu-item *ngFor="let plant of plants">
-          <mat-radio-button
-            [checked]="activePlant?.Code === plant?.Code"
-            [value]="plant"
-          >
-            {{ plant?.Code + " | " + plant?.Name }}
-          </mat-radio-button>
-          <ng-template #visualizator>
+        @for (plant of plants; track plant) {
+          <div mat-menu-item>
             <mat-radio-button
-              [checked]="activePlant === plant?.Code"
+              [checked]="activePlant?.Code === plant?.Code"
               [value]="plant"
             >
               {{ plant?.Code + " | " + plant?.Name }}
             </mat-radio-button>
-          </ng-template>
-        </div>
+            <ng-template #visualizator>
+              <mat-radio-button
+                [checked]="activePlant === plant?.Code"
+                [value]="plant"
+              >
+                {{ plant?.Code + " | " + plant?.Name }}
+              </mat-radio-button>
+            </ng-template>
+          </div>
+        }
       </mat-radio-group>
     </mat-menu>
 

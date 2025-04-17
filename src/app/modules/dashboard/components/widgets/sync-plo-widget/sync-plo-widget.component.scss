@@ -1,0 +1,74 @@
+@import '../../../../../../styles/widget';
+
+.widget{
+  position: relative;
+  header{
+    &:after{
+      display: none;
+    }
+    height: 30px;
+    .icons{
+      justify-content: flex-end;
+      gap: 0;
+      padding: 0;
+      border-left: none;
+      button {
+        margin: 0;
+        padding: 0;
+        width: auto;
+        min-width: 0;
+      }
+    }
+  }
+  .widget-content{
+    .loading-rotate{
+      transform: translateY(0) !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .syncing{
+      span{
+        font-weight: 200;
+        font-size: .8rem;
+      }
+    }
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    .link-icon{
+      height: 100%;
+      width: 100%;
+      cursor: pointer;
+      button{
+        height: 80px;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: none;
+        cursor: pointer;
+        mat-icon{
+          height: 100%;
+          width: 100%;
+          aspect-ratio: 1;
+        }
+      }
+    }
+  }
+  footer{
+    display: none;
+  }
+  .settings-icon{
+    min-width: 0;
+    position: absolute;
+    left: 1rem;
+    bottom: .5rem;
+    padding: 0;
+    margin: 0;
+    &[hidden]{
+      display: none;
+    }
+  }
+}

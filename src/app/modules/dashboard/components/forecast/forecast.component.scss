@@ -1,0 +1,584 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
+/*Color*/
+$gray: #707070;
+$purple: #7242bf;
+$yellow: #fdec57;
+$red: #ff0000;
+$green: #55a571;
+$orange: #ed8437;
+$white: #fff;
+
+table {
+  thead {
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: white;
+      &:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+      }
+    }
+  }
+  tbody {
+    th {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: white;
+    }
+  }
+  tfoot {
+    th {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: white;
+    }
+  }
+}
+
+.forecast--container {
+  overflow-x: auto;
+  // min-height: 350px;
+  flex: none;
+
+  .forecast--info-box {
+    text-align: left;
+    align-self: flex-start;
+    &--list {
+      .mat-list-item {
+        font-size: 14px;
+        height: 30px;
+        white-space: normal;
+        span {
+          min-width: 100px;
+        }
+      }
+    }
+  }
+
+  .forecast--range-navigator {
+    padding: 0px;
+    margin: 5px 10px 10px 10px;
+    #forecastReangeNavigator {
+      /*position: relative;
+      display: block;*/
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .forecast--table--container {
+    .forecast--table {
+      min-height: 200px;
+      width: 100%;
+      font-size: 14px;
+      td.mat-cell:first-of-type,
+      td.mat-footer-cell:first-of-type,
+      th.mat-header-cell:first-of-type {
+        padding-left: 24px;
+        font-size: 12px;
+        font-weight: 500;
+        min-width: 140px;
+        max-width: 200px;
+        color: $light-gray-header;
+      }
+      td.mat-cell,
+      td.mat-footer-cell,
+      th.mat-header-cell {
+        padding-left: 20px;
+        min-width: 50px;
+      }
+      tr.mat-header-row {
+        height: 42px;
+      }
+      tr.mat-footer-row,
+      tr.mat-row {
+        height: 37px;
+      }
+      tr:nth-child(odd) {
+        background-color: $light-gray;
+      }
+      thead {
+        tr.mat-header-row.ng-star-inserted {
+          background-color: $white;
+        }
+      }
+    }
+  }
+  .shortage {
+    background-color: $shortage;
+  }
+  .excess {
+    background-color: $excess;
+  }
+}
+
+.static-values-table {
+  margin-bottom: 15px;
+  border: 1px solid #eee;
+  background: #f6f6f6;
+  td {
+    padding: 5px 5px;
+  }
+}
+
+.forecast--static-value-table {
+  margin-bottom: 15px;
+  text-align: center;
+  vertical-align: top;
+  background: #eee;
+  &.left {
+    text-align: left;
+  }
+  &.pn-info {
+    max-width: 250px;
+  }
+
+  .label {
+    color: rgba(0, 0, 0, 0.54);
+    font-weight: 500;
+  }
+  .value {
+    color: rgba(0, 0, 0, 0.87);
+    font-weight: 500;
+    line-height: 150%;
+  }
+  td {
+    background: #eee;
+  }
+}
+.small-font-size {
+  font-size: 10px !important;
+}
+.medium-font-size {
+  font-size: 13px !important;
+}
+.large-font-size {
+  font-size: 18px !important;
+}
+
+.a1 {
+  color: white;
+  background-color: green;
+  // we need font color, background color, cell border styles
+}
+.a2 {
+  color: orange;
+}
+.a3 {
+  color: yellow;
+}
+
+.e-grid {
+  .e-rowcell {
+    &.cell-primary {
+      color: #673ab7;
+      background-color: #ede2ff;
+      border: 1px dashed #8b57e0 !important;
+    }
+    &.cell-secondary {
+      color: #383d41;
+      background-color: #e2e3e5;
+      border: 1px dashed #adadad !important;
+    }
+    &.cell-success {
+      color: #155724;
+      background-color: #d4edda;
+      border: 1px dashed #65dc80 !important;
+    }
+    &.cell-info {
+      color: #0c5460;
+      background-color: #d1ecf1;
+      border: 1px dashed #bee5eb !important;
+    }
+    &.cell-warning {
+      color: #856404;
+      background-color: #fff3cd;
+      border: 1px dashed #ecc859 !important;
+    }
+    &.cell-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border: 1px dashed #ea6c7a !important;
+    }
+    &[class*='bg-'] {
+      color: #fff;
+    }
+    &.bg-yellow {
+      background: #fdec57;
+      color: #333333;
+    }
+    &.bg-purple {
+      background: #7242bf;
+    }
+    &.bg-gray {
+      background: #f4f4f4;
+      color: #707070;
+    }
+    &.bg-orange {
+      background: #ed8437;
+    }
+    &.bg-maroon {
+      background: #ce1010;
+    }
+    &.bg-lavender {
+      background: #a685de;
+    }
+    &.bg-bright_orange {
+      background: #ffcd4c;
+
+      color: #333333;
+    }
+    &.bg-yellow_green {
+      background: #f6feb9;
+      color: #333333;
+    }
+    &.bg-white_maroon {
+      background: #ffffff;
+      color: #ce1010;
+    }
+    &.bg-white_grey {
+      background: #ffffff;
+      color: #707070;
+    }
+    &.bg-bright-orange_maroon {
+      background: #ffcd4c;
+      color: #ce1010;
+    }
+    &.bg-yellow-green_maroon {
+      background: #f6feb9;
+      color: #ce1010;
+    }
+    &.bg-yellow_maroon {
+      background: #fdec57;
+      color: #ce1010;
+    }
+    &.bg-light-blue_black {
+      background: rgb(197, 217, 241);
+      color: black;
+    }
+    &.bg-light-blue_red {
+      background: rgb(197, 217, 241);
+      color: red;
+    }
+    &.bg-green {
+      background: #55a571;
+    }
+    &.bg-white {
+      background: #fff;
+      color: #707070;
+    }
+    &.border-gray {
+      box-shadow: inset 2px 2px 0px $gray, inset -2px -2px 0px $gray;
+    }
+    &.border-yellow {
+      box-shadow: inset 2px 2px 0px $yellow, inset -2px -2px 0px $yellow;
+    }
+    &.border-purple {
+      box-shadow: inset 2px 2px 0px $purple, inset -2px -2px 0px $purple;
+    }
+    &.border-maroon {
+      box-shadow: inset 2px 2px 0px $red, inset -2px -2px 0px $red;
+    }
+    &.border-green {
+      box-shadow: inset 2px 2px 0px $green, inset -2px -2px 0px $green;
+    }
+    &.border-orange {
+      box-shadow: inset 2px 2px 0px $orange, inset -2px -2px 0px $orange;
+    }
+    &.border-white {
+      box-shadow: inset 2px 2px 0px $white, inset -2px -2px 0px $white;
+    }
+  }
+}
+
+.sv-cell {
+  &.cell-primary {
+    color: #673ab7;
+    background-color: #ede2ff;
+    border: 1px dashed #8b57e0 !important;
+  }
+  &.cell-secondary {
+    color: #383d41;
+    background-color: #e2e3e5;
+    border: 1px dashed #adadad !important;
+  }
+  &.cell-success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px dashed #65dc80 !important;
+  }
+  &.cell-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border: 1px dashed #bee5eb !important;
+  }
+  &.cell-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border: 1px dashed #ecc859 !important;
+  }
+  &.cell-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px dashed #ea6c7a !important;
+  }
+  &[class*='bg-'] {
+    color: #fff;
+  }
+  &.bg-yellow {
+    background: #fdec57;
+    color: #333333;
+  }
+  &.bg-purple {
+    background: #7242bf;
+  }
+  &.bg-gray {
+    background: #f4f4f4;
+    color: #707070;
+  }
+  &.bg-orange {
+    background: #ed8437;
+  }
+  &.bg-maroon {
+    background: #ce1010;
+  }
+  &.bg-lavender {
+    background: #a685de;
+  }
+  &.bg-bright_orange {
+    background: #ffcd4c;
+    color: #333333;
+  }
+  &.bg-yellow_green {
+    background: #f6feb9;
+    color: #333333;
+  }
+  &.bg-white_maroon {
+    background: #ffffff;
+    color: #ce1010;
+  }
+  &.bg-white_grey {
+    background: #ffffff;
+    color: #707070;
+  }
+  &.bg-bright-orange_maroon {
+    background: #ffcd4c;
+    color: #ce1010;
+  }
+  &.bg-yellow-green_maroon {
+    background: #f6feb9;
+    color: #ce1010;
+  }
+  &.bg-yellow_maroon {
+    background: #fdec57;
+    color: #ce1010;
+  }
+  &.bg-light-blue_black {
+    background: rgb(197, 217, 241);
+    color: black;
+  }
+  &.bg-light-blue_red {
+    background: rgb(197, 217, 241);
+    color: red;
+  }
+  &.bg-green {
+    background: #55a571;
+  }
+  &.bg-white {
+    background: #fff;
+    color: #707070;
+  }
+  &.bg-violet {
+    background: #27235e;
+  }
+  &.bg-dark-blue {
+    background: #313284;
+  }
+  &.bg-cyan {
+    background: #4ba6dd;
+  }
+  &.bg-cyan_magenta {
+    background: #4ba6dd;
+    color: #5e3b66;
+  }
+
+  /*Borders with Width*/
+  /*Grey Border*/
+  &.border-gray-small {
+    box-shadow: inset 0.3px 0.3px 0px $gray, inset -1.3px -1.3px 0px $gray;
+  }
+  &.border-gray-medium {
+    box-shadow: inset 1px 1px 0px $gray, inset -2px -2px 0px $gray;
+  }
+  &.border-gray-large {
+    box-shadow: inset 1.7px 1.7px 0px $gray, inset -2.7px -2.7px 0px $gray;
+  }
+
+  /*Yellow Border*/
+  &.border-yellow-small {
+    box-shadow: inset 0.3px 0.3px 0px $yellow, inset -1.3px -1.3px 0px $yellow;
+  }
+  &.border-yellow-medium {
+    box-shadow: inset 1px 1px 0px $yellow, inset -2px -2px 0px $yellow;
+  }
+  &.border-yellow-large {
+    box-shadow: inset 1.7px 1.7px 0px $yellow, inset -2.7px -2.7px 0px $yellow;
+  }
+
+  /*Purple Border*/
+  &.border-purple-small {
+    box-shadow: inset 0.3px 0.3px 0px $purple, inset -1.3px -1.3px 0px $purple;
+  }
+  &.border-purple-medium {
+    box-shadow: inset 1px 1px 0px $purple, inset -2px -2px 0px $purple;
+  }
+  &.border-purple-large {
+    box-shadow: inset 1.7px 1.7px 0px $purple, inset -2.7px -2.7px 0px $purple;
+  }
+
+  /*Purple Border*/
+  &.border-maroon-small {
+    box-shadow: inset 0.3px 0.3px 0px $red, inset -1.3px -1.3px 0px $red;
+  }
+  &.border-maroon-medium {
+    box-shadow: inset 1px 1px 0px $red, inset -2px -2px 0px $red;
+  }
+  &.border-maroon-large {
+    box-shadow: inset 1.7px 1.7px 0px $red, inset -2.7px -2.7px 0px $red;
+  }
+
+  /*Green Border*/
+  &.border-green-small {
+    box-shadow: inset 0.3px 0.3px 0px $green, inset -1.3px -1.3px 0px $green;
+  }
+  &.border-green-medium {
+    box-shadow: inset 1px 1px 0px $green, inset -2px -2px 0px $green;
+  }
+  &.border-green-large {
+    box-shadow: inset 1.7px 1.7px 0px $green, inset -2.7px -2.7px 0px $green;
+  }
+
+  /*Orange Border*/
+  &.border-orange-small {
+    box-shadow: inset 0.3px 0.3px 0px $orange, inset -1.3px -1.3px 0px $orange;
+  }
+  &.border-orange-medium {
+    box-shadow: inset 1px 1px 0px $orange, inset -2px -2px 0px $orange;
+  }
+  &.border-orange-large {
+    box-shadow: inset 1.7px 1.7px 0px $orange, inset -2.7px -2.7px 0px $orange;
+  }
+
+  /*White Border*/
+  &.border-white-small {
+    box-shadow: inset 0.3px 0.3px 0px $white, inset -1.3px -1.3px 0px $white;
+  }
+  &.border-white-medium {
+    box-shadow: inset 1px 1px 0px $white, inset -2px -2px 0px $white;
+  }
+  &.border-white-large {
+    box-shadow: inset 1.7px 1.7px 0px $white, inset -2.7px -2.7px 0px $white;
+  }
+}
+
+.invalid-quota-banner {
+  padding: 20px 0;
+  margin: 20px auto 30px;
+  background: #eee;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  color: #999;
+  text-align: center;
+  width: 100%;
+}
+
+table.forecast-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-weight: 300;
+  td {
+    padding: 10px 2px;
+    text-align: center;
+    font-size: 13px;
+  }
+  td.small {
+    padding: 10px 2px;
+    text-align: center;
+    font-size: 10px;
+  }
+  td.medium {
+    padding: 10px 2px;
+    text-align: center;
+    font-size: 13px;
+  }
+  td.large {
+    padding: 10px 2px;
+    text-align: center;
+    font-size: 18px;
+  }
+  thead th {
+    padding: 10px 5px;
+    font-size: 90%;
+    color: #707070;
+    &:first-of-type {
+      border-right: 1px solid #fff;
+      text-align: left;
+      padding-left: 0;
+      width: 100px;
+    }
+
+    font-weight: 400;
+  }
+  thead tr:first-of-type th {
+    padding-bottom: 2.5px;
+  }
+  thead tr:nth-of-type(2) th {
+    border-bottom: 1px solid #707070;
+    font-weight: 100;
+    font-size: 80%;
+    padding-top: 2.5px;
+  }
+
+  tbody th {
+    border-right: 1px solid #707070;
+    text-align: left;
+    font-weight: 400;
+    color: #707070;
+    padding-right: 5px;
+    vertical-align: center;
+    width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 150px;
+  }
+
+  tfoot th {
+    border-top: 1px solid #707070;
+    border-right: 1px solid #fff;
+    font-weight: 400;
+    text-align: left;
+    color: #707070;
+  }
+  tfoot td {
+    border-top: 1px solid #707070;
+    .range-nv {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  tbody tr td:first-of-type {
+    border-left: 1px solid #707070;
+  }
+
+  
+}
+p.right{  text-align: right;}

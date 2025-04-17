@@ -11,8 +11,8 @@ import { NotificationService } from '../../../auth/services/Notification/notific
 import { AuthenticationState } from '../../../auth/store/authentication.state';
 import { Helper } from '../../../shared/helper';
 import { RequestStatus } from '../../models/commits.model';
-import { ForecastVirtualVc, ForecastDetail } from '../../models/forecast.model';
-import { DummyCommitHeader, UserSettings, NewUserSetting, WaterfallDto, BasicParameters, DateRangeParameters, Commit, NewCommit, DummyCommitDetail, DummyCommitHeadersFilter, PnReviewed, PnVendorCode, SvUrlWithParams, PurchaseOrders } from '../../models/supply-visibility.model';
+import { ForecastVirtualVc, ForecastDetail, ForecastDate } from '../../models/forecast.model';
+import { DummyCommitHeader, UserSettings, NewUserSetting, WaterfallDto, BasicParameters, DateRangeParameters, Commit, NewCommit, DummyCommitDetail, DummyCommitHeadersFilter, PnReviewed, PnVendorCode, SvUrlWithParams, PurchaseOrders, ManufacturerDetailsDto } from '../../models/supply-visibility.model';
 import { DashboardPanelModel, DashboardType, AdditionalFilter, DownloadSupplyVisibilityTableByWidget } from '../../models/sv-dashboard';
 import { SetDateRangeParameters, SetPnReviewed, DeletePnFlags } from '../../stores/supply-visibility/supply-visibility.actions';
 import { AuthService } from '../../../auth/services/auth.service';
@@ -20,13 +20,12 @@ import { DashboardSetting, SharedWidget } from '../../models/shared-sv.model';
 import moment from 'moment';
 import { VirtualPnGroupsService } from '../Virtual-pn-group/virtual-pn-groups.service';
 import { MaterialManagementViews } from '../../models/material-management-views.model';
+import { v4 as uuidv4 } from 'uuid';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SupplyVisibilityService {
-  private apiUrl: string;
-  private userSettingsUrl;
+  // private apiUrl: string;
+  // private userSettingsUrl;
   public svUrlList: SvUrlWithParams[] = [];
   private isColumnLoaded = new Subject<any>();
   private dummyCommitHeader: DummyCommitHeader | undefined = undefined;
@@ -64,8 +63,8 @@ export class SupplyVisibilityService {
     private notificationService: NotificationService,
     private vpnsService: VirtualPnGroupsService
   ) {
-    this.apiUrl = this.configService.getSettings('apiBaseUrl');
-    this.userSettingsUrl = this.configService.getSettings('userSettingsService');
+    // this.apiUrl = this.configService.getSettings('apiBaseUrl');
+    // this.userSettingsUrl = this.configService.getSettings('userSettingsService');
   }
 
   private svCalled: boolean = false;
@@ -86,6 +85,9 @@ export class SupplyVisibilityService {
     return this.chartSettings.asObservable();
   }
 
+  get apiUrl():string{
+    return this.configService.getSettings('apiBaseUrl')
+  }
   setChartSetting(data?: any) {
     this.chartSettings.next(data);
   }
@@ -173,7 +175,7 @@ export class SupplyVisibilityService {
    * (GET)MaterialManagement/UserSettings/GetUserSettings?key=materialDashboard
    */
   getApiUrlUserSettings(action: string) {
-    return `${this.userSettingsUrl}${environment.modulesBaseUrl.materialManagement.userSettings}/${action}`;
+    return `${this.configService.getSettings('userSettingsService')}${environment.modulesBaseUrl.materialManagement.userSettings}/${action}`;
   }
 
 
@@ -226,7 +228,7 @@ export class SupplyVisibilityService {
   getManufacturerDetails(partNumber: any, vendorCode: any) {
     let url = this.getApiUrlPartNumbers('getpartnumberciscodatas');
     let params = new HttpParams().set("partNumber", partNumber ? partNumber.toUpperCase() : null).set("vendorCode", vendorCode); //Create new HttpParams
-    return this.http.get(url, { params: params });
+    return this.http.get<ManufacturerDetailsDto[]>(url, { params: params });
   }
 
 
@@ -263,8 +265,11 @@ export class SupplyVisibilityService {
   getUserSettings(
     key: string
   ): Observable<any> {
+                // TODO: need to remove Bearer
+                const token = this.authService.getToken();
+                const headers = { Authorization: `Bearer ${token}` };
     const plant = this.store.selectSnapshot(AuthenticationState.getActiveplant);
-    return this.http.get<UserSettings>(`${this.getApiUrlUserSettings('')}${key}-${plant}`, {});
+    return this.http.get<UserSettings>(`${this.getApiUrlUserSettings('')}${key}-${plant}`, {headers});
   }
 
   /**
@@ -974,7 +979,7 @@ export class SupplyVisibilityService {
    * @returns {Observable<any>}
    * @memberof SupplyVisibilityService
    */
-  getForecast(parameters: BasicParameters, dummyCommitHeader: DummyCommitHeader, requestFilter: boolean = false): Observable<any> {
+  getForecast(parameters: BasicParameters, dummyCommitHeader?: DummyCommitHeader, requestFilter: boolean = false): Observable<any> {
 
     if (!parameters.vendorCode) {
       return throwError(() => new Error('Vendor code is required'));
@@ -1492,7 +1497,7 @@ export class SupplyVisibilityService {
 
   // * Create list of partnumbers from the widget so it is always the same
   //following method createPartNumbersList is deprecated
-  createPNVendorList(partNumbersList: string, vendorCode: string, separateByTab: boolean = false) {
+  createPNVendorList(partNumbersList: string, vendorCode?: string, separateByTab: boolean = false) {
     if (separateByTab) {
       const partNumbers = partNumbersList ? partNumbersList.trim().split(/\r\n|\n|\r|,/).filter(c => c).map(c => c ? c.trim() : '').map(c => {
         const pnVn = c.split(/[\|]|\t/).filter(c => c);
@@ -1613,10 +1618,12 @@ export class SupplyVisibilityService {
   }
 
 
-  getValidCombination(partNumber: any, vendorCode: any): Observable<any> {
+  getValidCombination(partNumber?: string, vendorCode?: string): Observable<any> {
     let params = new HttpParams();
-    params = params.append("PartNumber", partNumber.toUpperCase());
-    params = params.append("vendorCode", vendorCode);
+    if(partNumber){
+    params = params.append("PartNumber", partNumber.toUpperCase());}
+    if(vendorCode){
+    params = params.append("vendorCode", vendorCode);}
 
     const url = `${this.apiUrl}${environment.modulesBaseUrl.materialManagement.ValidatePartNumberVendorCode}`;
     return this.http.get(url, {
@@ -1908,7 +1915,7 @@ export class SupplyVisibilityService {
    * Shared Widget Settings
    */
   private getSharedWidgetEndpoint() {
-    return `${this.userSettingsUrl}${environment.modulesBaseUrl.materialManagement.sharedWidgets}`;
+    return `${this.configService.getSettings('userSettingsService')}${environment.modulesBaseUrl.materialManagement.sharedWidgets}`;
   }
 
   insertSharedWidget(widgetData: SharedWidget): Observable<any> {
@@ -1935,11 +1942,11 @@ export class SupplyVisibilityService {
    * Shared Widget Settings
    */
   private getDashboardEndpoint() {
-    return `${this.userSettingsUrl}${environment.modulesBaseUrl.materialManagement.dashboards}`;
+    return `${this.configService.getSettings('userSettingsService')}${environment.modulesBaseUrl.materialManagement.dashboards}`;
   }
 
   private getTemplateSettingsEndpoint() {
-    return `${this.userSettingsUrl}${environment.modulesBaseUrl.materialManagement.templateSettings}`;
+    return `${this.configService.getSettings('userSettingsService')}${environment.modulesBaseUrl.materialManagement.templateSettings}`;
   }
 
   insertDashboard(dashboard: DashboardSetting): Observable<any> {
@@ -1951,11 +1958,17 @@ export class SupplyVisibilityService {
   }
 
   getDashboardList(): Observable<any> {
-    return this.http.get(`${this.getDashboardEndpoint()}`);
+            // TODO: need to remove Bearer
+            const token = this.authService.getToken();
+            const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get(`${this.getDashboardEndpoint()}`,{headers});
   }
 
   getDashboardDetail(id: string): Observable<any> {
-    return this.http.get(`${this.getDashboardEndpoint()}/${id}`);
+                // TODO: need to remove Bearer
+                const token = this.authService.getToken();
+                const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get(`${this.getDashboardEndpoint()}/${id}`,{headers});
   }
 
   deleteDashboard(id: string): Observable<any> {
@@ -1991,7 +2004,7 @@ export class SupplyVisibilityService {
 
   getForecastDate() {
     const url = `${this.apiUrl}${environment.modulesBaseUrl.materialManagement.forecastDate}`;
-    return this.http.get(url);
+    return this.http.get<ForecastDate>(url);
   }
 
   getReadOnlyFieldsForCommits() {
@@ -2009,11 +2022,14 @@ export class SupplyVisibilityService {
    * Notifications
    */
   private getNotificationsEndpoint() {
-    return `${this.userSettingsUrl}${environment.modulesBaseUrl.materialManagement.notifications}`;
+    return `${this.configService.getSettings('userSettingsService')}${environment.modulesBaseUrl.materialManagement.notifications}`;
   }
 
   getNotificationsList(): Observable<any> {
-    return this.http.get(`${this.getNotificationsEndpoint()}`);
+        // TODO: need to remove Bearer
+        const token = this.authService.getToken();
+        const headers = { Authorization: `Bearer ${token}` };
+    return this.http.get(`${this.getNotificationsEndpoint()}`, { headers });
   }
 
   getNotificationDetail(id: string): Observable<any> {
@@ -2124,8 +2140,4 @@ export class SupplyVisibilityService {
     return this.http.get(url, { responseType: 'text', headers: headers, withCredentials: true });
   }
 
-}
-
-function uuidv4() {
-  throw new Error('Function not implemented.');
 }

@@ -1,0 +1,60 @@
+<h4 mat-dialog-title>
+    <ng-container *ngIf="postedData.new === true">
+      {{ 'vpns.new' | translate }}
+      {{ 'vpns.pnGroup' | translate }}
+    </ng-container>
+    <ng-container *ngIf="postedData.new !== true">
+      {{ 'vpns.edit' | translate }}
+      {{ 'vpns.pnGroup2' | translate }}
+    </ng-container>
+  </h4>
+  <form #f="ngForm">
+    <mat-dialog-content>
+      <div fxLayout="row" fxLayoutAlign="space-between start">
+        <div fxLayout="column" fxLayoutAlign="center none">
+          <input ngModel type="hidden" name="key" [(ngModel)]="postedData.key" />
+          <mat-form-field appearance="fill">
+            <mat-label>{{ 'vpns.groupName' | translate }}</mat-label>
+            <input
+              maxlength="60"
+              [(ngModel)]="postedData.name"
+              matInput
+              placeholder="{{ 'vpns.insert' | translate }} {{ 'vpns.groupName' | translate }}"
+              name="name"
+              required
+              #nameInput="ngModel" />
+            <mat-hint>{{ 'vpns.maxLength' | translate }}: 60</mat-hint>
+            <mat-error *ngIf="nameInput.hasError('required')">{{
+              'vpns.nameNotSet' | translate
+            }}</mat-error>
+          </mat-form-field>
+  
+          <!-- <mat-form-field appearance="standard">
+                  <mat-label>{{ 'vpns.calculationType' | translate }}</mat-label>
+                  <mat-select [(ngModel)]="postedData.calculationType" name="calculationType" required #calculationTypeSelect="ngModel">
+                      <mat-option value="SUM">{{ 'vpns.summarize' | translate }}</mat-option>
+                      <mat-option value="AVG">{{ 'vpns.average' | translate }}</mat-option>
+                      <mat-option value="EOC">{{ 'vpns.eoc' | translate }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="calculationTypeSelect.hasError('required')">{{ 'vpns.cTypeNotSelected' | translate }}</mat-error>
+              </mat-form-field> -->
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end none">
+      <button mat-button [mat-dialog-close]="false">
+        {{ 'vpns.cancel' | translate }}
+      </button>
+      <button
+        [disabled]="f.invalid"
+        type="submit"
+        mat-button
+        mat-raised-button
+        color="primary"
+        (click)="addOrUpdateGroup()">
+        <ng-container *ngIf="postedData.new === true">{{ 'vpns.add' | translate }}</ng-container>
+        <ng-container *ngIf="postedData.new !== true">{{ 'vpns.update' | translate }}</ng-container>
+      </button>
+    </mat-dialog-actions>
+  </form>
+  

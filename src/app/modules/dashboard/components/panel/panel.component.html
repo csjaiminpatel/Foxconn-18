@@ -1,0 +1,40 @@
+<div class="panel {{class}}" id="panel-{{ panelId }}">
+    <header>
+      <orion-platform-panel-title
+        [icon]="icon"
+        [module]="module"
+        [title]="title || panelTitle"
+        [width]="width"
+        [titleClass]="titleClass"
+      >
+      </orion-platform-panel-title>
+  
+  <!--    <span *ngIf="description" class="description">-->
+  <!--      <span *ngIf="description.value > 0">-->
+  <!--        {{ description.label }}-->
+  <!--        <strong>{{ description.value }}</strong>-->
+  <!--      </span>-->
+  <!--    </span>-->
+      <div class="controls">
+        <ng-content
+          select="[controls]"
+          *ngIf="collapsedPanel == false && screenWidth !== 'xs'"
+          class="external-controls">
+        </ng-content>
+  
+        <button class="arrow" mat-icon-button aria-label="Collapse panel">
+          <mat-icon
+            [ngClass]="collapsedPanel ? 'collapsed' : 'expanded'"
+            (click)="collapsedPanel = !collapsedPanel">
+            expand_less
+          </mat-icon>
+        </button>
+      </div>
+    </header>
+    <div [class]="(!collapsedPanel ? '' : 'collapsed') + ' content'">
+      <div>
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+  

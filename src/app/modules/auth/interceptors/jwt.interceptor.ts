@@ -1,68 +1,42 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { mergeMap, takeUntil } from 'rxjs/operators';
+import { from, mergeMap, Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { ConfigService } from '../../../services/config.service';
-import { AuthenticationState } from '../store/authentication.state';
-import { Store } from '@ngxs/store';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  private authService = inject(AuthService);
+  private authService!: AuthService;
 
-  constructor(
-  ) {
-  }
+  constructor(private injector: Injector) {}
+
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log('JwtInterceptor: Checking AuthService instance:', this.authService);
-
     if (!this.authService) {
-      console.error('JwtInterceptor: AuthService is undefined!');
+      this.authService = this.injector.get(AuthService);
+      console.log('✅ JwtInterceptor AuthService Loaded:', this.authService.idToken);
+    }
+
+    if (!this.authService || typeof this.authService.ignoreUrlsToSetToken !== 'function') {
       return next.handle(req);
     }
 
-
-    console.log('✅ JwtInterceptor: Intercepting request', req);
-
-    const ignoreUrlsForToken: string[] = this.authService.ignoreUrlsToSetToken?.() || [];
-    const ignoreUrls = [...ignoreUrlsForToken, '/config/config.', 'i18n/', 'openid-configuration', 'openid-connect'];
-
-    // 1️⃣ **Skip authentication for ignored URLs**
-    console.log('❌ ignoreUrls: ', this.authService.isAuth());
-    let ignoreUrl = ignoreUrls.some(url => req.url.includes(url));
-    if (ignoreUrl) {
-      console.warn('⚠️ JwtInterceptor: Ignoring token attachment for URL', req.url);
+    const ignoredUrls = this.authService.ignoreUrlsToSetToken();
+    if (ignoredUrls.some(url => req.url.includes(url))) {
       return next.handle(req);
     }
 
-    // 2️⃣ **Ensure user is authenticated**
-    const isAuthenticated = this.authService.isAuth();
-    if (!isAuthenticated) {
-      console.warn('JwtInterceptor: User is not authenticated, skipping token attachment.');
-      return next.handle(req);
-    } else {
-      console.log('JwtInterceptor: User is authenticated');
-    }
+    return from(this.authService.getToken()).pipe(
+      mergeMap(token => {
+        if (!token) {
+          return next.handle(req);
+        }
 
-    // 3️⃣ **Retrieve token**
-    const token = this.authService.getIdToken();
-    if (!token) {
-      console.warn('JwtInterceptor: No token found, skipping token attachment.');
-      return next.handle(req);
-    } else {
-      console.log('JwtInterceptor: Token found', token);
-    }
+        const authReq = req.clone({
+          setHeaders: { Authorization: `Bearer ${token}` }
+        });
 
-    // 4️⃣ **Modify request to include Authorization header**
-    const modifiedReq = req.clone({
-      setHeaders: { Authorization: `Bearer ${token}` }
-    });
-
-    console.log('JwtInterceptor: Token added to request', modifiedReq);
-
-    return next.handle(modifiedReq);
+        return next.handle(authReq);
+      })
+    );
   }
-
 }

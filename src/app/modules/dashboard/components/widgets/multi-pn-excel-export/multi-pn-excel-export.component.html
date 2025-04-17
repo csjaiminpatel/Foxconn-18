@@ -1,0 +1,50 @@
+<!-- loading dialog -->
+<div class="commits--spinner-wrapper">
+    <orion-platform-progress-spinner
+      *ngIf="!allLoaded || !allChildrenLoaded"
+      class="commits--spinner">
+    </orion-platform-progress-spinner>
+    <p *ngIf="!loadingText">
+      {{ 'multiPnExcelExport.preparingMsg' | translate }}
+    </p>
+    <p *ngIf="loadingText">{{ 'multiPnExcelExport.downloadingMsg' | translate }}{{ loadingText }}</p>
+  </div>
+  <!-- /loading dialog -->
+  
+  <!-- Forecast panel -->
+  <orion-platform-panel
+    [hidden]="true"
+    icon="equalizer"
+    module="Material"
+    title="{{ 'supplyVisibilityMultiPN.supplyLevelAnalytics' | translate }}"
+    [description]="description"
+    class="supplly-visibility--panel-component">
+    <table id="multiPNTable" #multiPNTable class="w-100">
+      <tr *ngFor="let selectedPartNumber of selectedPartNumberList$ | async; let i = index">
+        <td>
+          <orion-platform-multi-pn-supply-level-analytics
+            [indexInList]="i"
+            [weeks]="basicParameters?.weeks"
+            [selectedPartNumber]="selectedPartNumber"
+            (childDataFilled)="childDataFilled($event)"
+            (goToForecastEvent)="goToForecast($event)">
+          </orion-platform-multi-pn-supply-level-analytics>
+        </td>
+      </tr>
+    </table>
+    <div fxLayout="row" fxLayoutAlign="space-between center" *ngIf="allLoaded">
+      <div><strong>Weeks</strong></div>
+      <div *ngIf="value.length > 0">
+        <orion-platform-range-navigator
+          [rangeDataSource]="rangeDataSource"
+          [value]="value"
+          (selectedRange)="changeWeekRange($event)"></orion-platform-range-navigator>
+      </div>
+      <div>
+        <button mat-raised-button class="right" [disabled]="!allLoaded" (click)="downloadExcel()">
+          <mat-icon>download</mat-icon>
+        </button>
+      </div>
+    </div>
+  </orion-platform-panel>
+  

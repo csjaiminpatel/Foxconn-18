@@ -1,0 +1,163 @@
+<p>commit-documents works!</p>
+<div *ngIf="loading" class="spinner-wrapper">
+    <orion-platform-progress-spinner class="spinner">
+    </orion-platform-progress-spinner>
+</div>
+
+<div *ngIf="!loading">
+
+    <button *ngIf="!showForm" mat-raised-button matTooltip="Upload Document" class="move-to-grid mb-2"
+        style="background-color: black;color: white;" (click)="showUploadForm()">
+        <mat-icon>upload_file</mat-icon>
+        <span> UPLOAD</span>
+    </button>
+
+    <div *ngIf="showForm && uploadDocument" class="bg-whitesmoke mb-3 p-3">
+        <div>
+            <h2 class="mt-0">Upload Document</h2>
+        </div>
+        <form [formGroup]="uploadDocument" class="doc-grid position-relative f-width d-flex align-items-center">
+            <ng-container *ngFor="let control of createFields">
+                <ng-container [ngSwitch]="control?.controlType">
+                    <mat-form-field appearance="fill" class="w-25" *ngSwitchCase="'file'">
+                        <input matInput formControlName="{{control?.field}}" placeholder="No file chosen" [value]="selectedFileName" readonly>
+                          <button mat-icon-button matSuffix matTooltip="choose file" *ngIf="!selectedFileName" (click)="fileInput.click()" type="button">
+                            <mat-icon >folder_open</mat-icon>
+                          </button>
+                          <button mat-icon-button matSuffix matTooltip="clear file" *ngIf="selectedFileName" (click)="clearFile()" type="button">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                          <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)">
+                    </mat-form-field>
+                                            
+                      <!-- <button mat-raised-button color="primary" (click)="uploadFile()">Upload</button> -->
+                    <mat-form-field appearance="fill" class="w-25" *ngSwitchCase="'simple'">
+                        <mat-label>{{ control?.headerText }} </mat-label>
+                        <input matInput placeholder="{{ control?.headerText }}" formControlName="{{control?.field}}"
+                            [required]="control?.isRequired" />
+                    </mat-form-field>
+
+                </ng-container>
+            </ng-container>
+        </form>
+
+        <div class="doc-action f-width d-flex align-items-center justify-content-start bg-whitesmoke pt-0">
+            <div class="move-to-grid me-4">
+                <button mat-raised-button [disabled]="!(selectedFileName && uploadDocument.valid)" color="primary" type="button"
+                    (click)="uploadFile()">
+                    Upload
+                </button>
+            </div>
+            <div class="move-to-grid">
+                <button mat-raised-button matTooltip="Close" type="button" (click)="onCloseForm()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-3 clearfix"></div>
+    <ng-container>
+        <dx-data-grid class="grid-height" #grid *ngIf="commitDocuments && commitDocuments.length"  id="gridContainer" [dataSource]="commitDocuments" [columns]="columns" 
+            [showColumnLines]="showColumnLines" [showRowLines]="showRowLines" [hoverStateEnabled]="true"
+            [columnAutoWidth]="true" [autoNavigateToFocusedRow]="true">
+
+            <dxo-scrolling [mode]="'standard'" direction="both"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-master-detail [enabled]="false" template="detail"></dxo-master-detail>
+
+            <div *dxTemplate="let details of 'detail'" class="p-3">
+                <div>
+                    <h2 class="mt-0">Edit file description</h2>
+                </div>
+                <form *ngIf="editDocument"   [formGroup]="editDocument" class="w-100 form-control">
+                    <ng-container *ngFor="let control of editFields">
+                        <ng-container [ngSwitch]="control?.controlType">
+                            <mat-form-field appearance="fill" *ngSwitchCase="'simple'">
+                                <mat-label>{{ control?.headerText }} </mat-label>
+                                <input matInput placeholder="{{ control?.headerText }}" type="{{control?.type}}"
+                                    formControlName="{{control?.field}}" [required]="control?.isRequired" />
+                            </mat-form-field>
+                        </ng-container>
+                    </ng-container>
+                </form>
+        
+                <div class="d-flex align-items-center justify-content-end">
+                    <button id="submit" (click)="updateCommitDocument()" color="primary" mat-raised-button>
+                        Save
+                    </button>
+                </div>
+            </div>
+
+            <ng-template #template ngFor let-column [ngForOf]="columns">
+
+                <ng-container *ngIf="(column.type=='string' || column.type=='number' )">
+                    <dxi-column [dataField]="column.field" [caption]="column.headerText" [(visible)]="column.visible"
+                        ></dxi-column>
+                </ng-container>
+
+                <ng-container *ngIf="(column.type=='actions')">
+                    <dxi-column [width]="150" [caption]="column.headerText" [dataField]="column.field"
+                        [allowExporting]="false" [allowSorting]="false" cellTemplate="actionTemplate"
+                        alignment="center">
+
+                        <ng-container *dxTemplate="let template of 'actionTemplate'">
+                            <!-- Action Icon Template -->
+                            <ng-template let-icon="icon" #actionIcon>
+                                <span class="material-symbols-outlined">
+                                    {{icon}}
+                                </span>
+                            </ng-template>
+
+                            <div class="d-flex align-items-center justify-content-center">
+
+                                <!-- Edit Action -->
+                                <div class="actions-icon d-flex align-items-center justify-content-center">
+                                    <button *ngIf="selectedRowId != template?.data?.name" matTooltip="Expand Document" mat-icon-button
+                                        (click)="actionClick('Open',template)">
+                                        <ng-container *ngTemplateOutlet="actionIcon; context:{icon:'expand_more'}">
+                                        </ng-container>
+                                    </button>
+                                </div>
+
+                                <!-- Close Action -->
+                                <div class="actions-icon d-flex align-items-center justify-content-center">
+                                    <button *ngIf="selectedRowId == template?.data?.name" matTooltip="Close Document" mat-icon-button 
+                                        (click)="actionClick('Close')">
+                                        <ng-container *ngTemplateOutlet="actionIcon; context:{icon:'expand_less'}">
+                                        </ng-container>
+                                    </button>
+                                </div>
+
+                                <!-- Download Action -->
+                                <div class="actions-icon d-flex align-items-center justify-content-center">
+                                    <button matTooltip="Download Document" mat-icon-button
+                                        (click)="actionClick('Download', template?.data)">
+                                        <ng-container *ngTemplateOutlet="actionIcon; context:{icon:'download'}">
+                                        </ng-container>
+                                    </button>
+                                </div>
+
+                                <!-- Delete Action -->
+                                <div class="actions-icon d-flex align-items-center justify-content-center">
+                                    <button matTooltip="Delete Document" mat-icon-button
+                                        (click)="actionClick('Delete',template?.data)">
+                                        <ng-container *ngTemplateOutlet="actionIcon; context:{icon:'delete'}">
+                                        </ng-container>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </ng-container>
+                    </dxi-column>
+
+                </ng-container>
+            </ng-template>
+
+        </dx-data-grid>
+
+        <orion-platform-status-message *ngIf="!commitDocuments || commitDocuments.length == 0" type="info"
+            message="No document available">
+        </orion-platform-status-message>
+    </ng-container>
+</div>

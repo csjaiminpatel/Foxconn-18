@@ -79,14 +79,10 @@ export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
   sideNavData: SideNavDataSource = new SideNavDataSource();
 
   constructor() {
-    console.log('SidebarComponent');
     // this.dataSource.data = this.sideNavData.sideNavDataSource;
   }
 
-  ngOnInit() {
-
-    console.log('SignalRService:', this.signalRService);
-    
+  ngOnInit() {    
     this.userRights =
       this.store.selectSnapshot(AuthenticationState.menuAccessRightList) || [];
     this.router.events

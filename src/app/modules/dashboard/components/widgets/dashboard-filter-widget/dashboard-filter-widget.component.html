@@ -1,0 +1,78 @@
+<div class="widget">
+    <header class="drag-handler">
+      <div class="headers">
+        <h2 title="{{ dashboardPanelModel.title ? dashboardPanelModel.title : 'paramsInput.title' | translate }}">
+          {{
+            dashboardPanelModel.title ? dashboardPanelModel.title : "'paramsInput.title' | translate"
+          }}
+        </h2>
+        <h3>
+          {{ dashboardPanelModel.subTitle ? dashboardPanelModel.subTitle : ''}}
+        </h3>
+      </div>
+      <div class="icons">
+        <mat-slide-toggle [checked]="applyAllFilter" (change)="applyFilter($event)" color="primary"></mat-slide-toggle>
+      </div>
+    </header>
+    <div class="widget-content">
+      <div class="filter-input">
+        <mat-form-field>
+          <mat-label>{{ 'cards.filterWidget.newFilter' | translate }}</mat-label>
+          <input matInput [(ngModel)]="newFilter" placeholder="{{ 'cards.filterWidget.enterFilter' | translate }}"
+                 (keyup.enter)="createToggle()">
+        </mat-form-field>
+      </div>
+      <div class="filters-area">
+        <div class="filter-item" *ngFor="let toggle of toggleButtons">
+          <div class="filter-toggle">
+            <mat-slide-toggle [disabled]="!applyAllFilter" (change)="configureTo($event, toggle.filter)"
+                              [(ngModel)]="toggle.enabled" color="accent">
+              {{toggle.filter}}
+            </mat-slide-toggle>
+          </div>
+          <button mat-icon-button [disabled]="!applyAllFilter" (click)="deleteToggle(toggle)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+  
+    </div>
+    <footer>
+      <div class="footer-left">
+        <button class="no-left-padding" [matMenuTriggerFor]="menu" mat-button>
+          <span class="material-symbols-outlined">settings</span>
+        </button>
+      </div>
+      <div class="counts">
+        {{ toggleButtons.length }} {{ 'cards.filterWidget.filters' | translate }}
+      </div>
+      <div class="footer-right">
+        <ng-container *ngIf="toggleButtons.length > 0">
+          <button [disabled]="!applyAllFilter" class="reload-button no-right-padding" (click)="clearAll()" color="accent" mat-button>
+            <span class="material-symbols-outlined">done_all</span>
+          </button>
+        </ng-container>
+      </div>
+    </footer>
+  </div>
+  <mat-menu #menu="matMenu" [overlapTrigger]="true" class="workflow-card--mat-menu">
+    <button [disabled]="!applyAllFilter" mat-menu-item (click)="checkAll()">
+      <ng-container *ngIf="!allChecked">
+        <mat-icon>check_circle_outline</mat-icon>
+        <span>{{ 'global.checkAll' | translate }}</span>
+      </ng-container>
+      <ng-container *ngIf="allChecked">
+        <mat-icon>remove_circle_outline</mat-icon>
+        <span>{{ 'global.unCheckAll' | translate }}</span>
+      </ng-container>
+    </button>
+    <button *ngIf="visibility['onMenuConfig']" mat-menu-item (click)="configureWidget()">
+      <mat-icon>settings</mat-icon>
+      <span>{{ 'global.configure' | translate }}</span>
+    </button>
+    <button *ngIf="visibility.onMenuDelete" mat-menu-item (click)="deleteWidget()">
+      <mat-icon>delete</mat-icon>
+      <span>{{ 'global.delete' | translate }}</span>
+    </button>
+  </mat-menu>
+  

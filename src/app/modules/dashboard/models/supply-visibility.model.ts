@@ -91,8 +91,8 @@ export interface DummyCommitHeader {
   dateModified?: string;
   createdBy?: string;
   modifiedBy?: string;
-  forPrecalculate?: boolean;
-  enumSimulationSet?: number;
+  forPrecalculate: boolean;
+  enumSimulationSet: number;
 }
 export class DummyCommitHeaderCls {
   name?: string;
@@ -176,6 +176,7 @@ export interface BasicParameters {
   $avlLoaded?: boolean;
   records?: number;
   variant?: string;
+  partNo ?: string;
 }
 export interface VendorParametersFilter {
   vendors: string[];

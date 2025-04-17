@@ -1,0 +1,29 @@
+<mat-menu #mainMenu="matMenu" [overlapTrigger]="true" class="workflow-card--mat-menu">
+    <button mat-menu-item [matMenuTriggerFor]="sortFor" [matMenuTriggerData]="{type: 'ascending'}">
+      <mat-icon>text_rotate_up</mat-icon>
+      <span>{{ 'sortMenu.ascending' | translate }}</span>
+    </button>
+  
+    <button mat-menu-item [matMenuTriggerFor]="sortFor" [matMenuTriggerData]="{type: 'descending'}">
+      <mat-icon>text_rotation_down</mat-icon>
+      <span>{{ 'sortMenu.descending' | translate }}</span>
+    </button>
+    <button mat-menu-item (click)="setSort(null)">
+      <mat-icon>clear</mat-icon>
+      <span>{{ 'sortMenu.clear' | translate }}</span>
+    </button>
+  </mat-menu>
+  
+  <mat-menu #sortFor="matMenu" [overlapTrigger]="true" class="workflow-card--mat-menu">
+    <ng-template matMenuContent let-sortType="type">
+      <ng-container *ngFor="let option of childMenu">
+        <button mat-menu-item (click)="setSort({key: option, type: sortType})">
+          <span>{{ 'sortMenu.' + option | translate }}</span>
+          <mat-icon class="icon-margin" *ngIf="isSelected({key: option, type: sortType})"
+            >check_circle</mat-icon
+          >
+        </button>
+      </ng-container>
+    </ng-template>
+  </mat-menu>
+  

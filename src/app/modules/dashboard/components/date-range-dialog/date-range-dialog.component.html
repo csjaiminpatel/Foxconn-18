@@ -1,0 +1,54 @@
+<orion-platform-dialog title="{{ 'dateRangeDialog.title' | translate }}">
+    <div content class="date-range--form--content" fxFlex>
+      <!-- Date filter for commits table -->
+  
+      <form
+        [formGroup]="dateRangeForm"
+        #formDirective="ngForm"
+        fxFlex
+        fxLayout="row wrap"
+        fxLayout.xs="column"
+        fxLayoutGap="20px"
+        fxLayoutAlign="space-around center">
+        <mat-form-field fxFlex>
+          <input
+            matInput
+            placeholder="{{ 'dateRangeDialog.fromDate' | translate }}"
+            [matDatepicker]="dateFrom"
+            formControlName="dateFrom"
+            type="text" />
+          <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
+          <mat-datepicker #dateFrom></mat-datepicker>
+        </mat-form-field>
+  
+        <mat-form-field fxFlex>
+          <input
+            matInput
+            placeholder="{{ 'dateRangeDialog.toDate' | translate }}"
+            [matDatepicker]="dateTo"
+            formControlName="dateTo"
+            type="text" />
+          <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+          <mat-datepicker #dateTo></mat-datepicker>
+        </mat-form-field>
+      </form>
+      <!-- / Date filter for commits table -->
+    </div>
+  
+    <div actions class="date-range--form--actions">
+      <button
+        id="submit"
+        type="submit"
+        (click)="sendForm()"
+        mat-raised-button
+        color="primary"
+        [mat-dialog-close]="true"
+        cdkFocusInitial>
+        {{ 'form.submit' | translate }}
+      </button>
+      <button id="close" (click)="onCancel()" mat-button [mat-dialog-close]="false">
+        {{ 'form.cancel' | translate }}
+      </button>
+    </div>
+  </orion-platform-dialog>
+  

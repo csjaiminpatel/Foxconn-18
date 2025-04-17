@@ -1,0 +1,17 @@
+@for (item of notifications; track $index) {
+<div
+  id="signalr-notification-container"
+  class="signalr-notification-bottom-right">
+  <div class="signalr-notification" style="display: block">
+    <div class="signalr-notification-icon">
+      <mat-icon class="notification-icon">notifications</mat-icon>
+    </div>
+    <div class="signalr-notification-message">
+      <b>{{ item?.Title }}</b>
+      <br />
+      <br />
+      <div id="parentLinkEvents" [innerHTML]="item?.ShortMessage | sanitizedHtml"></div>
+    </div>
+  </div>
+</div>
+}

@@ -1,0 +1,104 @@
+<!-- <div *ngIf="!infoMessage || loading" class="forecast--container" fxLayout="column"> -->
+<!-- Spinner -->
+<div *ngIf="loading" class="forecast--spinner-wrapper">
+    <orion-platform-progress-spinner class="forecast--spinner"> </orion-platform-progress-spinner>
+  </div>
+  <!-- / Spinner -->
+  <div class="invalid-quota-banner" *ngIf="!validQuota">
+    <p>{{ 'supply-visibility.invalidQuota' | translate }}</p>
+  </div>
+  <div class="d-block p-1">
+    <div *ngIf="!infoMessage || loading" class="forecast--container w-100" fxLayout="column">
+      <ng-container *ngIf="!loading && !loadingFailed">
+        <table class="static-values-table" [ngClass]="fontSizeClass">
+          <tr>
+            <td *ngFor="let item of staticValues" class="forecast--static-value-table">
+              <div *ngIf="item.label === 'PN'; else other_content">
+                <span class="label">{{ item.label }}</span> <br />
+                <a (click)="goToForecast()" style="cursor: pointer">
+                  <span class="value">{{ item.value }}</span></a
+                >
+              </div>
+  
+              <ng-template #other_content
+                ><span class="label">{{ item.label }}</span> <br />
+                <span class="value">{{ item.value }}</span>
+              </ng-template>
+            </td>
+            <!-- <td class="forecast--static-value-table">
+              <span class="label">AVL Buyer</span><br><span class="value">{{ approvedVendorDetail?.avlBuyer?.firstName }}
+                {{ approvedVendorDetail?.avlBuyer?.lastName }}</span>
+            </td>
+            <td class="forecast--static-value-table">
+              <span class="label">Description</span><br><span class="value"
+                title="{{ approvedVendorDetail?.materialMaster?.partNoDesc }}">{{
+                (approvedVendorDetail?.materialMaster?.partNoDesc?.length > 50) ?
+                (approvedVendorDetail?.materialMaster?.partNoDesc | slice:0:50)+ '...' :
+                (approvedVendorDetail?.materialMaster?.partNoDesc)}}</span>
+            </td> -->
+          </tr>
+        </table>
+        <table class="forecast-table last-border" [ngClass]="fontSizeClass" style="word-wrap: unset;white-space: nowrap;">
+          <thead>
+            <tr>
+              <th [ngClass]="fontSizeClass">{{ forecastDate[0] }}</th>
+              <th [ngClass]="fontSizeClass" *ngFor="let column of filteredColumns">
+                {{ column.headerText | replace : 'Week ' : 'WK&nbsp;' }}
+              </th>
+            </tr>
+            <tr>
+              <th [ngClass]="fontSizeClass">{{ forecastDate[1] }}</th>
+              <th [ngClass]="fontSizeClass" *ngFor="let column of filteredColumns">
+                {{ column.date | replace : ' ' : '&nbsp;' }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of dataSource">
+              <th>{{ row.label }}</th>
+              <ng-template ngFor let-field [ngForOf]="filteredColumns">
+                <td
+                  title="{{
+                    row['c_' + field.field] != 'UNDEFINED' &&
+                    row['c_' + field.field] != 'You are not allowed to see this.'
+                      ? row['c_' + field.field]
+                      : ''
+                  }}"
+                  [ngClass]="getClasses(row['f_' + field.field])">
+                  {{ row[field.field] }}
+                </td>
+              </ng-template>
+            </tr>
+          </tbody>
+          <tfoot></tfoot>
+        </table>
+      </ng-container>
+      <ng-container *ngIf="loading">
+        Loading for
+        {{
+          cumulativeListParams
+            ? 'CumulativeList'
+            : selectedPartNumber?.partNumber + '|' + selectedPartNumber?.vendorCode
+        }}.....
+      </ng-container>
+      <ng-container *ngIf="loadingFailed">
+        Loading failed for
+        {{
+          cumulativeListParams
+            ? 'CumulativeList'
+            : selectedPartNumber?.partNumber + '|' + selectedPartNumber?.vendorCode
+        }}
+      </ng-container>
+      <button
+        mat-button
+        mat-raised-button
+        color="primary"
+        class="reload-pn-button"
+        (click)="reloadPN($event)"
+        *ngIf="loadingFailed">
+        {{ 'supplyVisibilityMultiPN.reloadPN' | translate }}
+      </button>
+    </div>
+  </div>
+  <!-- </div> -->
+  

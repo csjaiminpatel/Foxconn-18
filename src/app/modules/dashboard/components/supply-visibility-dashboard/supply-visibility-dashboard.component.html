@@ -1,0 +1,305 @@
+<orion-platform-supply-visibility-configure-widget
+  (refreshChild)="refreshChild($event)"
+  fxLayout="column"
+  fxFlexFill
+  fxLayoutAlign="start stretch"
+>
+  <!-- Toolbar -->
+  <orion-platform-page-header
+    title="{{ 'navigation.dashboard' | translate }}"
+    [isSharedSettingsEnabled]="true"
+    (resetWidgetBehavior)="resetWidgetBehavior($event)"
+    (pageAction)="pageHeaderActionHandler($event)"
+  >
+  </orion-platform-page-header>
+  <!-- / Toolbar -->
+
+  <div fxLayoutAlign="center center" class="visi-spin">
+    <orion-platform-progress-spinner *ngIf="loading">
+    </orion-platform-progress-spinner>
+  </div>
+  <ng-container *ngIf="data && !loading && options">
+    <gridster [options]="options" class="bg-none dashboard-gridster">
+      <gridster-item
+        [item]="item"
+        *ngFor="let item of data; let i = index; trackBy: trackByFun"
+        class="e-panel supply-configuration"
+        [ngClass]="{
+          'card-lg': item.fontSize === 'large',
+          'card-sm': item.fontSize === 'small',
+        }"
+        style="background: transparent"
+      >
+        <ng-container [ngSwitch]="item.type">
+          <ng-container *ngSwitchCase="'simplePNList'">
+            <orion-platform-simple-pn-list-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              (sharedNA)="setUnavailableWidget($event)"
+              class=""
+              [dashboardPanelModel]="item"
+              [widgetBehavior]="widgetBehavior"
+            >
+            </orion-platform-simple-pn-list-widget>
+          </ng-container>
+          <ng-container *ngSwitchCase="'smartPNList'">
+            <orion-platform-simple-pn-list-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class=""
+              (sharedNA)="setUnavailableWidget($event)"
+              [dashboardPanelModel]="item"
+              [widgetBehavior]="widgetBehavior"
+            >
+            </orion-platform-simple-pn-list-widget>
+          </ng-container>
+          <ng-container *ngSwitchCase="'filterWidget'">
+            <orion-platform-dashboard-filter-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class=""
+              (sharedNA)="setUnavailableWidget($event)"
+              [dashboardPanelModel]="item"
+              icon="filter-icon"
+              [widgetBehavior]="widgetBehavior"
+            >
+            </orion-platform-dashboard-filter-widget>
+          </ng-container>
+          <ng-container *ngSwitchCase="'reviewSupplyVisibility'">
+            <orion-platform-params-input-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class="supply-visibility-dashboard--item"
+              [dashboardPanelModel]="item"
+            >
+            </orion-platform-params-input-widget>
+          </ng-container>
+          <ng-container *ngIf="userConfigRights?.materialManagementViewsView">
+            <ng-container *ngSwitchCase="'configurationLink'">
+              <orion-platform-configuration-link-widget
+                [title]="materialManagementTitle.title || ''"
+                [widgetClass]="'no-card'"
+                [subtitle]="materialManagementTitle.subtitle || ''"
+                (configure)="configure($event)"
+                (delete)="delete($event)"
+                [dashboardPanelModel]="item"
+                link="material-management/material-management-views"
+                icon="configurator-logo"
+              >
+              </orion-platform-configuration-link-widget>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="userConfigRights?.virtualGroupsView">
+            <ng-container *ngSwitchCase="'pnGroupsLink'">
+              <orion-platform-configuration-link-widget
+                [title]="pnGroupsTitle.title || ''"
+                [widgetClass]="'no-card'"
+                [subtitle]="''"
+                (configure)="configure($event)"
+                (delete)="delete($event)"
+                [dashboardPanelModel]="item"
+                link="material-management/pn-groups"
+                icon="pn-groups"
+              >
+              </orion-platform-configuration-link-widget>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="'commitsLink'">
+            <orion-platform-configuration-link-widget
+              [title]="materialManagementTitle.title || ''"
+              [widgetClass]="'no-card'"
+              [subtitle]="''"
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              [dashboardPanelModel]="item"
+              link="material-management/commits"
+              icon="commits"
+            >
+            </orion-platform-configuration-link-widget>
+          </ng-container>
+          <ng-container *ngSwitchCase="'circularChart'">
+            <!-- <orion-platform-circular-chart-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class=""
+              (sharedNA)="setUnavailableWidget($event)"
+              [dashboardPanelModel]="item"
+              [widgetBehavior]="widgetBehavior"
+            >
+            </orion-platform-circular-chart-widget> -->
+          </ng-container>
+          <ng-container *ngSwitchCase="'searchV2'">
+            <!-- <orion-platform-search-pn-list-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class="supply-visibility-dashboard--item"
+              [dashboardPanelModel]="item"
+              style="height: 100%; display: block"
+            >
+            </orion-platform-search-pn-list-widget> -->
+          </ng-container>
+          <ng-container *ngSwitchCase="'statusMonitor'">
+            <!-- <orion-platform-status-report-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class="supply-visibility-dashboard--item"
+              [dashboardPanelModel]="item"
+              style="height: 100%; display: block"
+            >
+            </orion-platform-status-report-widget> -->
+          </ng-container>
+          <ng-container *ngSwitchCase="'orders'">
+            <!-- <orion-platform-orders-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class="supply-visibility-dashboard--item"
+              [dashboardPanelModel]="item"
+              style="height: 100%; display: block"
+            >
+            </orion-platform-orders-widget> -->
+          </ng-container>
+          <ng-container *ngIf="userConfigRights?.vendorCodesView">
+            <ng-container *ngSwitchCase="'vendorcodeRightsLink'">
+              <orion-platform-configuration-link-widget
+                [title]="materialManagementTitle.title || ''"
+                [widgetClass]="'no-card'"
+                [subtitle]="''"
+                (configure)="configure($event)"
+                (delete)="delete($event)"
+                [dashboardPanelModel]="item"
+                link="material-management/vendorcodes-rights"
+                icon="vendorcode-rights"
+              >
+              </orion-platform-configuration-link-widget>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="'qapLink'">
+            <orion-platform-configuration-link-widget
+              [title]="materialManagementTitle.title || ''"
+              [widgetClass]="'no-card'"
+              [subtitle]="''"
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              [dashboardPanelModel]="item"
+              link="material-management/qap"
+              icon="qap"
+            >
+            </orion-platform-configuration-link-widget>
+          </ng-container>
+          <ng-container *ngSwitchCase="'commitList'">
+            <!-- <orion-platform-filter-commits-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class="supply-visibility-dashboard--item"
+              [dashboardPanelModel]="item"
+              [widgetBehavior]="widgetBehavior"
+            >
+            </orion-platform-filter-commits-widget> -->
+          </ng-container>
+          <ng-container *ngSwitchCase="'mypnlist'">
+            <!-- <orion-platform-my-pn-list-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class=""
+              (sharedNA)="setUnavailableWidget($event)"
+              [dashboardPanelModel]="item"
+              [widgetBehavior]="widgetBehavior"
+            >
+            </orion-platform-my-pn-list-widget> -->
+          </ng-container>
+          <ng-container *ngSwitchCase="'ploSync'">
+            <orion-platform-sync-plo-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class="supply-visibility-dashboard--item"
+              [dashboardPanelModel]="item"
+              icon="ploSync"
+            ></orion-platform-sync-plo-widget>
+          </ng-container>
+          <ng-container *ngSwitchCase="'waterfall'">
+            <!-- <orion-platform-waterfall
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class="supply-visibility-dashboard--item"
+              [dashboardPanelModel]="item"
+              icon="waterfall"
+            ></orion-platform-waterfall> -->
+          </ng-container>
+          <ng-container *ngSwitchCase="'sharedUnavailable'">
+            <!-- <orion-platform-shared-warning-widget
+              [widgetClass]="'no-card'"
+              icon="warning"
+              (delete)="delete($event)"
+              [dashboardPanelModel]="item"
+            >
+            </orion-platform-shared-warning-widget> -->
+          </ng-container>
+          <ng-container *ngSwitchCase="'fileUpload'">
+            <!-- <orion-platform-file-upload-widget
+              [title]="materialManagementTitle.title || ''"
+              [widgetClass]="'no-card'"
+              [subtitle]="''"
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              [dashboardPanelModel]="item"
+              link="material-management/commits"
+              icon="file-upload"
+            ></orion-platform-file-upload-widget> -->
+          </ng-container>
+          <ng-container *ngSwitchCase="'invoiceList'">
+            <!-- <orion-platform-invoice-list-widget
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              class="supply-visibility-dashboard--item"
+              [dashboardPanelModel]="item"
+              [widgetBehavior]="widgetBehavior"
+            >
+            </orion-platform-invoice-list-widget> -->
+          </ng-container>
+          <ng-container *ngSwitchCase="'aiLink'">
+            <orion-platform-configuration-link-widget
+              [title]="materialManagementTitle.title || ''"
+              [widgetClass]="'no-card'"
+              [subtitle]="''"
+              (configure)="configure($event)"
+              (delete)="delete($event)"
+              [dashboardPanelModel]="item"
+              link="/dashboard/ai"
+              icon="artificial"
+            >
+            </orion-platform-configuration-link-widget>
+          </ng-container>
+        </ng-container>
+      </gridster-item>
+    </gridster>
+  </ng-container>
+
+  <ng-container *ngIf="allowModification">
+    <div class="main-buttons">
+      <button
+        mat-fab
+        [matTooltip]="'Add widgets'"
+        color="primary"
+        class="add-btn"
+        [disabled]="(isDashboardLocked$ | async) || loading"
+        (click)="openDashboardSelectDialog()"
+        multiple
+        ngDefaultControl
+      >
+        <mat-icon aria-label>add</mat-icon>
+      </button>
+      <button
+        mat-fab
+        [matTooltip]="'Reset to default'"
+        class="reset-btn"
+        [disabled]="(isDashboardLocked$ | async) || loading"
+        type="button"
+        (click)="resetDashboard()"
+        multiple
+        ngDefaultControl
+      >
+        <mat-icon aria-label>delete</mat-icon>
+      </button>
+    </div>
+  </ng-container>
+</orion-platform-supply-visibility-configure-widget>

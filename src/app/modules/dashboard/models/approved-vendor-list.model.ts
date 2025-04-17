@@ -18,6 +18,8 @@ export interface ApprovedVendorDetailResult {
   contacts: Contact[];
   quota: Quota;
   additionInfos: additionInfoG[];
+  partNumber?: string;
+  vendorCode?: string;
 }
 
 export interface additionInfoG {
@@ -51,6 +53,9 @@ export interface Contact {
   contactType: string;
   addresses: Address[];
   additionInfos: additionInfo[];
+  active?: boolean;
+  vendorCode?: string;
+  partNumber?: string;
 }
 
 export interface ApprovedVendor {

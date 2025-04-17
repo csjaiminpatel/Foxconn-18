@@ -1,0 +1,24 @@
+@import '../../../../../styles/variables';
+
+.data-error{
+  margin: 1rem auto;
+  padding: .5rem;
+  border-radius: .5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid rgba(255, 0, 0, 0.01);
+  font-weight: 200;
+  color: $fire-red;
+  mat-icon{
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+    transition: all .3s ease-in-out;
+    color: $fire-red;
+  }
+  &:hover mat-icon{
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,26 @@
+<!-- Error message box -->
+<div class="message--error" *ngIf="type === 'error'">
+    <mat-list class="message--error--content">
+      <mat-list-item>
+        <mat-icon color="warn" mat-list-icon>warning </mat-icon>
+        <mat-error>
+          {{ message }}
+        </mat-error>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <!-- / Error message box -->
+  
+  <!-- Info message -->
+  <div class="message--info" *ngIf="type === 'info'">
+    <mat-list class="message--info--content">
+      <mat-list-item>
+        <mat-icon mat-list-icon>info </mat-icon>
+        <h4>
+          {{ message }}
+        </h4>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <!-- Info message -->
+  

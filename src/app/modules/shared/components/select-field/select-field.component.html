@@ -1,0 +1,92 @@
+<orion-platform-dialog
+  [title]="title | translate"
+  [disableClose]="true">
+  <div content mat-dialog-content fxFlex fxLayout="column">
+    <!-- CommitHistory-Commits -->
+
+    <div
+      id="searchfilter"
+      [hidden]="
+        !(  
+          (structureType == enumCommitFieldStructure.CommitTable && baseModule == getCommitBaseModule) ||
+          (structureType == enumCommitFieldStructure.CommitForm && baseModule == getCommitBaseModule) ||
+          (structureType == enumGoodsReceiptsFieldStructure.GoodsReceiptsTable && baseModule == getGoodReceiptsBaseModule) ||
+          (structureType == enumInvoicingFieldStructure.InvoicingTable && baseModule == getInvoicingBaseModule) ||
+          (structureType == enumQuotationsFieldStructure.QuotationsTable && baseModule == getQuotationsBaseModule) ||
+          (structureType == enumQuotationsFieldStructure.QuotationCreateForm && baseModule == getQuotationsBaseModule) ||
+          (structureType == enumQuotationsFieldStructure.QVEditForm && baseModule == getQuotationsBaseModule) ||
+          (structureType == enumVendorsFieldStructure.VendorTable && baseModule == getVendorsBaseModule) ||
+          (structureType == enumVendorsFieldStructure.VendorCreateForm && baseModule == getVendorsBaseModule ) ||
+          (structureType == enumCarriersFieldStructure.CarriersTable && baseModule == getCarriersBaseModule) ||
+          (structureType == enumCarriersFieldStructure.CarriersCreateForm && baseModule == getCarriersBaseModule ) ||
+          (structureType == enumPortfolioFieldStructure.PortfolioTable && baseModule == getPortfolioBaseModule ) ||
+          (structureType == enumPortfolioFieldStructure.PortfolioCreateForm && baseModule == getPortfolioBaseModule ) ||
+          (structureType == enumPartNumbersFieldStructure.PartNumberTable && baseModule == getPartNumbersBaseModule ) ||
+          (structureType == enumShipmentFieldStructure.ShipmentTable && baseModule == getShipmentsBaseModule ) ||
+          (structureType == enumStocksFieldStructure.StocksTable && baseModule == getStocksBaseModule) ||
+          (structureType == enumStocksFieldStructure.StocksCreateForm && baseModule == getStocksBaseModule ) 
+          )
+      ">
+      <!-- -------------------Start DX DATAGRID ------------------- -->
+      <dx-data-grid
+        #grid
+        id="gridContainer"
+        [dataSource]="fieldList"
+        [showBorders]="true"
+        [showColumnLines]="false"
+        [showRowLines]="true"
+        [hoverStateEnabled]="true"
+        [columnAutoWidth]="true">
+        <dxo-row-dragging [allowReordering]="true" [onReorder]="onReorder" dropFeedbackMode="push">
+        </dxo-row-dragging>
+
+        <dxo-filter-row [visible]="showFilterRow" [applyFilter]="currentFilter"></dxo-filter-row>
+        <dxo-header-filter [visible]="showHeaderFilter"></dxo-header-filter>
+        <dxo-search-panel [visible]="true" [width]="380" placeholder=""> </dxo-search-panel>
+        <dxo-paging [enabled]="false"></dxo-paging>
+
+        <dxi-column
+          dataField="visible"
+          caption=""
+          cellTemplate="selectionTemplate"
+          alignment="left"></dxi-column>
+
+        <ng-container *dxTemplate="let template of 'selectionTemplate'">
+          <dx-check-box
+            [value]="template?.data?.visible"
+            [disabled]="template?.data?.isRequired"
+            (onValueChanged)="checkboxChange($event, template?.data?.headerText)">
+          </dx-check-box>
+        </ng-container>
+
+        <dxi-column dataField="headerText" caption="Fields" alignment="left"></dxi-column>
+      </dx-data-grid>
+      <!-- -------------------END DX DATAGRID------------------- -->
+
+      <!-- <ejs-grid #grid [allowRowDragAndDrop]='true' [selectionSettings]='selectOptions' 
+      (rowDataBound)="rowDataBound($event)"
+        [dataSource]="fieldList" [rowHeight]= "35">
+        <e-columns>
+          <e-column field='visible' headerText='' width='50'>
+            <ng-template #template let-data>
+              <div>
+                <ejs-checkbox #checkbox [checked]='data.visible' [disabled]='data.isRequired' (change)='checkboxChange($event,data.headerText)'>
+                </ejs-checkbox>
+              </div>
+            </ng-template>
+          </e-column>
+          <e-column field='headerText' headerText='Fields' width='200'>
+          </e-column>
+        </e-columns>
+      </ejs-grid> -->
+    </div>
+  </div>
+  <div actions class="supply-visibility--commit--form-actions">
+    <button id="submit" color="primary" (click)="sendForm()" mat-raised-button cdkFocusInitial>
+      {{ 'form.submit' | translate }}
+    </button>
+    <button id="close" (click)="dialogClose()" mat-button [mat-dialog-close]="false">
+      {{ 'form.close' | translate }}
+    </button>
+  </div>
+</orion-platform-dialog>

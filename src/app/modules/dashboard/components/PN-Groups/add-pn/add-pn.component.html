@@ -1,0 +1,56 @@
+<h4 mat-dialog-title>{{ 'vpns.' + data.title | translate }}</h4>
+@if (form) {
+<form [formGroup]="form">
+  <mat-dialog-content>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <div class="form-side-left" fxLayout="column" fxLayoutAlign="center none">
+        <mat-form-field appearance="fill">
+          <mat-label>{{ 'vpns.pn' | translate }}</mat-label>
+          <input
+            matInput
+            placeholder="{{ 'vpns.insert' | translate }} {{ 'vpns.pn' | translate }}"
+            formControlName="partNumber" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>{{ 'vpns.vendor' | translate }}</mat-label>
+          <input
+            matInput
+            placeholder="{{ 'vpns.insert' | translate }} {{ 'vpns.vendor' | translate }}"
+            formControlName="vendorCode" />
+        </mat-form-field>
+      </div>
+      <div *ngIf="data.actionType == 'new'" class="divider"></div>
+      <div
+        *ngIf="data.actionType == 'new'"
+        class="form-side-right"
+        fxLayout="column"
+        fxLayoutAlign="none">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'vpns.pnVList' | translate }}</mat-label>
+          <textarea
+            matInput
+            placeholder="{{ 'vpns.pasteFromExel' | translate }}"
+            formControlName="pnList"></textarea>
+          <mat-hint
+            >{{ 'vpns.pasteFromExel' | translate }} : {{ 'vpns.pn' | translate }} |
+            {{ 'vpns.vendor' | translate }}</mat-hint
+          >
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="end none">
+    <button mat-button [mat-dialog-close]="false">
+      {{ 'vpns.cancel' | translate }}
+    </button>
+    <button
+      type="submit"
+      mat-button
+      mat-raised-button
+      color="primary"
+      (click)="sendForm(form.value)">
+      {{ 'vpns.add' | translate }}
+    </button>
+  </mat-dialog-actions>
+</form>
+}

@@ -1,0 +1,35 @@
+<!-- loading dialog -->
+<div class="commits--spinner-wrapper">
+    <orion-platform-progress-spinner *ngIf="!allLoaded" class="commits--spinner">
+    </orion-platform-progress-spinner>
+    <p *ngIf="!loadingText">
+      {{ 'multiPnExcelExport.preparingMsg' | translate }}
+    </p>
+    <p *ngIf="loadingText">{{ 'multiPnExcelExport.downloadingMsg' | translate }}{{ loadingText }}</p>
+  </div>
+  <!-- /loading dialog -->
+  
+  <!-- Background Process -->
+  <div hidden="true">
+    <orion-platform-panel
+      icon="equalizer"
+      module="Material"
+      title="Forecast"
+      [description]="description"
+      class="supplly-visibility--panel-component"
+      id="sv-forecast">
+      <div *ngIf="loading" class="supply-visibility--spinner-wrapper">
+        <orion-platform-progress-spinner class="supply-visibility--spinner">
+        </orion-platform-progress-spinner>
+      </div>
+  
+      <orion-platform-forecast
+        [hidden]="loading"
+        [validQuota]="validQuota"
+        [basicParameters]="basicParameters"
+        [isFromSinglePnExport]="true"
+        (isSinglePnExportFinished)="resultHandler($event)"></orion-platform-forecast>
+    </orion-platform-panel>
+  </div>
+  <!-- /Background Process -->
+  

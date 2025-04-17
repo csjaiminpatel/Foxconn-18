@@ -1,0 +1,43 @@
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/widget';
+form{
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+:host ::ng-deep .mat-form-field-infix {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.widget{
+  header{
+    height: 30px;
+  }
+  .widget-content{
+    padding-inline: 1rem;
+    padding-block: 1rem .5rem;
+    display: block;
+    mat-form-field{
+      width: 100%;
+    }
+
+    .vc-weeks-days{
+      display: grid;
+      grid-template-columns: 3fr 2fr 1fr;
+      gap: .5rem;
+    }
+  }
+  footer{
+    .footer-right{
+      button {
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+mat-icon {
+  cursor: pointer;
+}
